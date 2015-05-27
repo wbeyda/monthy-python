@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock %}
+{% load staticfiles %}
+{% block nav %}
+<div class="header">
+    <div>
+        <img class="home-header" src="{% static 'zipcode/images/spring_banner2.jpg' %}">
+    </div>
+</div>
+
+
+<nav class="navbar navbar-default">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="value">Value Care</a></li>
+        <li><a href="careers">Careers</a></li>
+        <li><a href="gallery">Gallery</a></li>   
+      </ul>     
+    </div><!-- /.navbar-collapse -->
+</nav>
+
+<div id="wrapper">
+    <div id="sidebar-wrapper">
+        <h3 id="schedule">SCHEDULE A PROJECT</h3>
+        
+        {% load zipcode_extras %}
+        {% show_search_form %}
+    </div>
+    <div id="sidebar-ad">
+        <h3>HAVE AN EMERGENCY?</h3>
+        <H5>Call us directly at</H5>
+        <H3>801-933-4663</H3>
+
+    </div>
+    <div id="page-content-wrapper">
+        <div class="page-content">
+{% endblock %}
+{% block content %}
+<div class="row container">
+    <div id="repair-boxes" class="row">
+        <div class="col-lg-3">
+            <img class="repair-boxes img-circle" src="{% static 'zipcode/images/AC.jpg' %}">
+        </div>
+        <div class="col-lg-3">
+            <img class="repair-boxes img-circle" src="{% static 'zipcode/images/sink.jpg' %}">
+        </div>
+        <div class="col-lg-3"> 
+            <img class="repair-boxes img-circle" src="{% static 'zipcode/images/Linear-Garage-Door-Opener.jpg' %}">
+        </div>
+        <div class="col-lg-3">
+            <img class="repair-boxes img-circle" src="{% static 'zipcode/images/hardwood_may13.jpg' %}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8"><h1 class="monthly">Our Monthly Specials</h1></div>
+        <div class="col-md-2"></div>
+        
+    </div>
+    <div class="row">
+        <div class="col-md-12"><img id="gdoor" src="{% static 'zipcode/images/gdoor.jpg' %}"></div>
+    </div>
+    <div class="row">       
+        <div class="col-md-12"><h2 class="all-gdoors">All Garage Door Repairs 10% Off*</h2></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h3 id="heading3">The At Home Difference</h3>
+            <p class="athomeserv">At Home Services is unique in the home repair industry.
+            We help local technicians build their businesses, allowing
+            them to focus on the most important thing: satisfaction
+            and happiness in your own home.<BR><BR>
+            
+            Our goal is to provide a hero for your home, and that’s not
+            just a gimmick. When you have a repair situation arise, we
+            want it to be the same technician who comes to your home
+            as the time before. They’ll know your name and how best
+            to help you with access to a database, calendar, parts lists,
+            and much more. What’s more, you’ll know them.
+            <BR><BR>
+            Truly a Home Hero you can trust.<BR><BR>
+            Your neighborhood’s Hero is their own business owner.
+            Your satisfaction is their responisbility and ultimate goal.
+            If you have questions or concerns, your Hero wants to
+            know about them. Estimates, payments, and timelines on
+            projects will all be worked out between your Hero and you.
+            </p>
+        </div>
+        <div class="col-md-6">
+            <h3 id="heading3">Our Neighborhood Heroes</h3>
+            <img id="smiles" src="{% static 'zipcode/images/smiles.jpg' %}">
+        </div>
+    </div>
+</div>
+
+<div class="blue-container">
+    <div class="row container">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 id="heading4">Printable Brochures</h3>
+                <img id="printable"src="{% static 'zipcode/images/printable.jpg' %}">
+            </div>
+            <div class="col-md-6">
+                <h3 id="heading4">What Our Heros Do</h3>
+                <p id="someofour">Some of our Heroes have specialties another
+                Hero might not. We want to make sure we
+                have all the bases covered, so if the Hero in
+                your area can’t do the project you need, we
+                can find another Hero with the proper skill set
+                to help you, no problem. Below you’ll find a list of the work our Heroes can perform. If you
+                have questions about a project, be sure to call
+                your Neighborhood Hero and ask.</p>
+            </div>
+        </div>
+        
+        <div class="row service-row">
+            <div class="col-lg-3">
+                <p class="service-links"><a href="air-conditioning">AIR CONDITIONING</a></p>
+                <p class="service-links"><a href="furnace-boiler">FURNACE & BOILER</a></p>
+                <p class="service-links"><a href="electrical-systems">ELECTRICAL SYSTEMS</a></p>
+                <p class="service-links"><a href="outlets-switches">OUTLETS & SWITCHES</a></p>
+            </div>
+            <div class="col-lg-3">
+                <p class="service-links"><a href="interior-lighting">INTERIOR LIGHTING</a></p>
+                <p class="service-links"><a href="home-appliances">HOME APPLIANCES</a></p>
+                <p class="service-links"><a href="home-remodeling">HOME REMODELING</a></p>
+                <p class="service-links"><a href="deck-installation">DECK INSTALLATION</a></p>
+            </div>
+            <div class="col-lg-3">
+                <p class="service-links"><a href="door-hanging">DOOR HANGING</a></p>
+                <p class="service-links"><a href="plumbing-lines">PLUMBING LINES</a></p>
+                <p class="service-links"><a href="plumbing-fixtures">PLUMBING FIXTURES</a></p>
+                <p class="service-links"><a href="trim-installation">TRIM INSTALLATION</a></p>
+            </div>
+            <div class="col-lg-3">
+                <p class="service-links"><a href="window-hanging">WINDOW HANGING</a></p>
+                <p class="service-links"><a href="window-sealing">WINDOW SEALING</a></p>
+                <p class="service-links"><a href="interior-painting">INTERIOR PAINTING</a></p>
+                <p class="service-links"><a href="#">AND MUCH MORE!</a></p>
+            </div>
+        </div>
+        <div class="row">
+            <h1 id="phone">801-933-4663</h1>
+        </div>
+    </div>
+</div>
+
+<div class="row container">
+    <div class="row">
+        <h1 class="monthly">Testimonials</h1>    
+    </div>
+    <div class="row">
+        <div class="col-lg-6 testimonials">
+            <p>Whose toe was it, Walter? Dolor sit amet, consectetur adipiscing elit praesent ac magna justo pellentesque ac lectus. JUST BECAUSE WE'RE BEREAVED DOESN'T MEAN WE'RE SAPS! Quis elit blandit fringilla. I just want to say, sir, that we're both enormous—on a personal level. A ut turpis praesent felis ligula. No, the, uh, police chief of Malibu. A real reactionary. Malesuada suscipit malesuada non, ultrices non. I mean his wife goes out and owes money and they pee on my rug. Urna sed orci ipsum, placerat id condimentum rutrum, rhoncus ac lorem aliquam placerat posuere.<BR><BR>-Walter from Engelwood</p>
+        </div>
+        <div class="col-lg-6 testimonials">
+            <p>Whose toe was it, Walter? Dolor sit amet, consectetur adipiscing elit praesent ac magna justo pellentesque ac lectus. JUST BECAUSE WE'RE BEREAVED DOESN'T MEAN WE'RE SAPS! Quis elit blandit fringilla. I just want to say, sir, that we're both enormous—on a personal level. A ut turpis praesent felis ligula. No, the, uh, police chief of Malibu. A real reactionary. Malesuada suscipit malesuada non, ultrices non. I mean his wife goes out and owes money and they pee on my rug. Urna sed orci ipsum, placerat id condimentum rutrum, rhoncus ac lorem aliquam placerat posuere.<BR><BR>-The Dude from LA</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 testimonials">
+            <p>Whose toe was it, Walter? Dolor sit amet, consectetur adipiscing elit praesent ac magna justo pellentesque ac lectus. JUST BECAUSE WE'RE BEREAVED DOESN'T MEAN WE'RE SAPS! Quis elit blandit fringilla. I just want to say, sir, that we're both enormous—on a personal level. A ut turpis praesent felis ligula. No, the, uh, police chief of Malibu. A real reactionary. Malesuada suscipit malesuada non, ultrices non. I mean his wife goes out and owes money and they pee on my rug. Urna sed orci ipsum, placerat id condimentum rutrum, rhoncus ac lorem aliquam placerat posuere.<BR><BR>-Donny From Brentwood</p>
+        </div>
+        <div class="col-lg-6 testimonials">
+            <p>Whose toe was it, Walter? Dolor sit amet, consectetur adipiscing elit praesent ac magna justo pellentesque ac lectus. JUST BECAUSE WE'RE BEREAVED DOESN'T MEAN WE'RE SAPS! Quis elit blandit fringilla. I just want to say, sir, that we're both enormous—on a personal level. A ut turpis praesent felis ligula. No, the, uh, police chief of Malibu. A real reactionary. Malesuada suscipit malesuada non, ultrices non. I mean his wife goes out and owes money and they pee on my rug. Urna sed orci ipsum, placerat id condimentum rutrum, rhoncus ac lorem aliquam placerat posuere.<BR><BR>-Jesus from The Bowling Alley</p>
+    </div>
+</div>
+
+<div class="blue-container">
+    <div class="row">
+        <div class="col-md-8">
+            {% show_contact_form %}
+        </div>
+        <div class="col-md-1">
+            <a href="facebook.com/athomeservices">
+                <i class="fa fa-facebook-official fa-5x"></i>    
+            </a>
+        </div>
+        <div class="col-md-1">
+            <a href="twitter.com/athomeservices">
+                <i class="fa fa-facebook-official fa-5x"></i>
+            </a>
+        </div>
+        <div class="col-md-1">
+            <a href="instagram.com/athomeservices">
+                <i class="fa fa-facebook-official fa-5x"></i>
+            </a>
+        </div>
+        <div class="col-md-1">
+            <a href="googleplus.com/athomeservices">
+                <i class="fa fa-facebook-official fa-5x"></i>
+            </a>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>     
+{% endblock  %}
+
