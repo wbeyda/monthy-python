@@ -51,6 +51,8 @@ class GenericCalendar(LocaleHTMLCalendar):
 def results(request, postcode):
 	#con has every both Contractors (Jeffrey and Walter) each have 2 ContractorSchedule events
 	con = Contractor.objects.all().filter(areacode=postcode).prefetch_related().order_by("firstname")
+        ''' concal returns 4 objects, so when you loop over both contractors (2) and the concal obejcts you get 8 items
+        I don't think this is what you meant to do.'''
 	concal = ContractorSchedule.objects.all().filter(firstname__areacode=postcode).prefetch_related().order_by("firstname")
 	cal = []
 
