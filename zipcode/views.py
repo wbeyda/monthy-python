@@ -59,12 +59,10 @@ def results(request, postcode):
 		counter = conevents.count() #2
 		n = 1
 		for i in conevents:
-			print(i.title, i.firstname)
 			y,m = i.start_date.year,i.start_date.month
 			event = "<ul><li>" + i.start_date.strftime("%I:%M")+" "+ i.title +" "+ i.end_date.strftime("%I:%M") +"</li></ul>"
 			#loop through the days of the month
-			for j in range(1,monthrange(y,m)[1]+1):	#1-31
-				default = None				
+			for j in range(1,monthrange(y,m)[1]+1):	#1-31				
 				if i.start_date.day == j and j not in eventdict:
 					eventdict[j] = event
 				elif j not in eventdict:
@@ -79,9 +77,9 @@ def results(request, postcode):
 					htmlcalendar = GenericCalendar(y,m).formatmonth(y,m, eventdict)
 				elif j == monthrange(y,m)[1] and n != counter:
 					n+=1
-		cal[s.firstname] = htmlcalendar
-	print(cal)
-	return render(request, 'results.html', {'con': con, 'cal': cal,})
+		setattr(s, 'htmlcalendar', htmlcalendar)
+	for i in con:print(i.htmlcalendar)
+	return render(request, 'results.html', {'con': con})
 
 
 
