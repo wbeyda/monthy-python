@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Results for {{ con.0.firstname.areacode }}{% endblock %}
+{% block title %}Results for {{ con.0.areacode }}{% endblock %}
 {% load staticfiles %}
 {% block nav %}
 <div class="header">
@@ -25,8 +25,8 @@
 <div id="wrapper">
     <div id="sidebar-wrapper">
         <h3 id="schedule">MY SKILLS</h3>
-        <h4>{{ k.firstname.trade }}</h4>
-        <h4>{{ k.firstname.secondaryTrades }}</h4>
+        <h4>{{ k.trade }}</h4>
+        <h4>{{ k.secondaryTrades }}</h4>
         
     </div>
     <div id="sidebar-ad">
@@ -36,46 +36,28 @@
     </div>
     <div id="page-content-wrapper">
         <div class="page-content">
-			<h2 class="heading3">Contractors in {{ con.0.firstname.areacode }}</h2>
+			<h2 class="heading3">Contractors in {{ con.0.areacode }}</h2>
 			<div class="row container">
 				<div class="row">
 					<div class="col-lg-6">
-						<img class="profile-pic" src="../media/{{ k.firstname.pic }}">
-						<h2 class="profile-name">{{ k.firstname.firstname | capfirst}} {{ k.firstname.lastname | capfirst }}, {{ k.firstname.trade | capfirst}}</h2>
+						<img class="profile-pic" src="../media/{{ k.pic }}">
+						<h2 class="profile-name">{{ k.firstname | capfirst}} {{ k.lastname | capfirst }}, {{ k.trade | capfirst}}</h2>
 					</div>
 					<div class="col-lg-6">
 						<img class="home-header" src="{% static 'zipcode/images/logo.jpg' %}">
-						<p class="contractor-bio">{{ k.firstname.bio }}</p>
+						<p class="contractor-bio">{{ k.bio }}</p>
 					</div>
 				</div>
 
                 <div class="row">
                     <div class="col-lg-6">
-                        <h1>{{ k.firstname.firstname | capfirst}}'s Calendar</h1>
-                        <h4>{{ k.start_date }}</h4>
-                        <h4>{{ k.end_date }}</h4>
-                        <h4>{{ k.all_day }}</h4>
-                        <h4>{{ k.title }}</h4>
-                        <h4>{{ k.description }}</h4>
-                    {% for j in k.location.all %}
-                        <h4>{{ j.name }}</h4>
-                        <h4>{{ j.address_line_1 }}</h4>
-                        <h4>{{ j.address_line_2 }}</h4>
-                        <h4>{{ j.address_line_3 }}</h4>
-                        <h4>{{ j.state }}</h4>
-                        <h4>{{ j.city }}</h4>
-                        <h4>{{ j.zipcode }}</h4>
-                    </div>
-                    {% endfor %}
-                    {% for html in cal %}
-                        <div class="col-lg-6 month-event-list">{{ html | safe}}</div>
-                    {% endfor %}
+                        <h1>{{ k.firstname | capfirst}}'s Calendar</h1>
+                        {% for html in cal %}
+                            {{ html.parentloop | safe}}
+                        {%endfor%}
                     </div>
                 </div>
-
 {% endfor %}
-
-
 			</div>
 		</div>
 	</div>

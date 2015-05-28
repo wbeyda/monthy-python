@@ -50,35 +50,37 @@ class GenericCalendar(LocaleHTMLCalendar):
 
 def results(request, postcode):
 	#con has every both Contractors (Jeffrey and Walter) each have 2 ContractorSchedule events
-	con = Contractor.objects.all().filter(areacode=postcode).prefetch_related().order_by("firstname")
-	concal = ContractorSchedule.objects.all().filter(firstname__areacode=postcode).prefetch_related().order_by("firstname")
-	cal = []
-
-	for c in con:
-		for i in concal:
-			#concal = ContractorSchedule.objects.all().filter(c.firstname)
-			print(c.firstname)
-			eventdict = {}
+	con = Contractor.objects.filter(areacode=postcode).prefetch_related().order_by("lastname")
+	cal = {}
+	
+	for s in con:	
+		eventdict = {}	
+		conevents = s.contractorschedule_set.all().order_by("firstname__lastname") #<ContractorSchedule: ContractorSchedule object>, <ContractorSchedule: ContractorSchedule object>
+		counter = conevents.count() #2
+		n = 1
+		for i in conevents:
+			print(i.title, i.firstname)
 			y,m = i.start_date.year,i.start_date.month
 			event = "<ul><li>" + i.start_date.strftime("%I:%M")+" "+ i.title +" "+ i.end_date.strftime("%I:%M") +"</li></ul>"
 			#loop through the days of the month
-			for j in range(1,monthrange(y,m)[1]+1):					
-				if i.start_date.day == j:
-					print("before:\n",eventdict)
+			for j in range(1,monthrange(y,m)[1]+1):	#1-31
+				default = None				
+				if i.start_date.day == j and j not in eventdict:
 					eventdict[j] = event
-					print("after:\n",eventdict,"\n")
-				else:
+				elif j not in eventdict:
 					eventdict[j] = None
-				if i.start_date.day == j and eventdict[j] != "" and eventdict[j] != None and eventdict[j] != event:
+				#add to a day with an event
+				if i.start_date.day == j and eventdict[j] != "" and eventdict[j] is not None and eventdict[j] != event:
 					eventdict[j] += event
-				#check if it is the last day of the month if so make a calendar and add it to cal list.
-				#I need to check if there was already a calendar for a Contractor and add an event to it
-				#before the I send eventdict to GenericCalendar and make the calendar
-				if j == monthrange(y,m)[1]:
-					print(i)
+				#change day from none to event 
+				if i.start_date.day == j and eventdict[j] is None:
+					eventdict[j] = event
+				if j == monthrange(y,m)[1] and n == counter:
 					htmlcalendar = GenericCalendar(y,m).formatmonth(y,m, eventdict)
-					cal.append(htmlcalendar)
-					print(cal)
+				elif j == monthrange(y,m)[1] and n != counter:
+					n+=1
+		cal[s.firstname] = htmlcalendar
+	print(cal)
 	return render(request, 'results.html', {'con': con, 'cal': cal,})
 
 
