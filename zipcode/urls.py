@@ -10,4 +10,5 @@ urlpatterns = patterns('',
    url(r'^contact/$', views.get_contact, name="contact"),
    url(r'^thanks/$', TemplateView.as_view(template_name="thanks.html"), name="thanks"),
    url(r'^careers/$', views.get_resume, name="careers"),
+   url(r'^gallery/$', views.show_gallery, name="gallery"),
 )

@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpRequest
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
-from zipcode.models import Contractor, CareerResume, ContractorSchedule, Location
+from zipcode.models import Contractor, CareerResume, ContractorSchedule, Location, Gallery, Testimonials
 from django import forms
 from django.core.mail import send_mail
 from calendar import LocaleHTMLCalendar, month_name, monthrange
@@ -78,10 +78,9 @@ def results(request, postcode):
 				elif j == monthrange(y,m)[1] and n != counter:
 					n+=1
 		setattr(s, 'htmlcalendar', htmlcalendar)
-	for i in con:print(i.htmlcalendar)
+		setattr(s, 'contractorschedule', ContractorScheduleForm( initial={"firstname": s.firstname} ) )
+
 	return render(request, 'results.html', {'con': con})
-
-
 
 class ZipForm(forms.Form):
 	zipsearch = forms.CharField(label='Enter your zipcode below to find the neighborhood hero in your area.', max_length=5)
@@ -133,8 +132,6 @@ class CareerForm(forms.ModelForm):
         
         class Meta:
             model = CareerResume
-
-
         '''name = forms.CharField(label='Name', max_length=50)
 	address = forms.CharField(label='Address', max_length=50)
 	email = forms.EmailField(label='Email', max_length=50)
@@ -142,6 +139,14 @@ class CareerForm(forms.ModelForm):
 	resume = forms.FileField(validators=[validate_file_extension])
 
 '''
+class ContractorScheduleForm(forms.ModelForm):
+        
+        class Meta:
+            model = ContractorSchedule
+            #start_date = forms.DateField(widget=DateInput())
+            #end_date = forms.DateField(widget=DateInput())
+            #exclude = ('firstname')
+
 def handle_uploaded_file(f):
 	with open(f, 'wb+') as destination:
 		for chunk in f.chunks():
@@ -159,3 +164,8 @@ def get_resume(request):
 	else:
 		careerform = CareerForm()
 	return render(request, 'careers.html', {'careerform':careerform})
+
+def show_gallery(request):
+	gallery = Gallery.objects.all()
+	return render(request, 'gallery.html', {'gallery':gallery})
+

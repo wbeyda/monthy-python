@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,14 +8,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
-<link rel="icon" href="http://getbootstrap.com/favicon.ico">
+<link rel="icon" href="{% static 'zipcode/images/favicon.ico' %}">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 <!-- Bootstrap core CSS -->
-{% load staticfiles %}
+
 <link rel="stylesheet" type="text/css" href="{% static 'zipcode/css/style.css' %}"/>
 <link rel="stylesheet" type="text/css" href="{% static 'zipcode/css/calendar.css' %}"/>
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'zipcode/css/bootstrap.min.css' %}">
+{% block extra-css %}{% endblock %}
 <!-- Bootstrap core CSS -->
 <link href="{% static 'zipcode/css/bootstrap.min.css' %}" rel="stylesheet">
 <script>
@@ -26,23 +28,26 @@
   ga('create', 'UA-53569941-1', 'auto');
   ga('send', 'pageview');
 
+
 </script>
 <title> {% block title %}{% endblock %} </title>
 </head>
 <body>
-{% block nav %}
-{% endblock %}
+{% block nav %}{% endblock %}
 {% block content %}
-{% load staticfiles %}
+  {% load staticfiles %}
 {% endblock %}
-
-
 
 <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{% static 'zipcode/js/jquery-2.1.1.js' %}"></script>
-    <script src="{% static 'zipcode/js/bootstrap.js' %}"></script>
-    <script src="{% static 'zipcode/js/animatescroll.js' %}"></script>
-    <script src="{% static 'zipcode/js/calendar.js' %}"></script>
+<script src="{% static 'zipcode/js/jquery-2.1.1.js' %}"></script>
+<script src="{% static 'zipcode/js/bootstrap.js' %}"></script>
+<script src="{% static 'zipcode/js/animatescroll.js' %}"></script>
+<script src="{% static 'zipcode/js/calendar.js' %}"></script>
+{% block extra-javascript%}{% endblock %}
+{% load zipcode_extras %}
+{% show_testimonials %}
+{% include "footer.html" %}
+</div>
 </body></html>

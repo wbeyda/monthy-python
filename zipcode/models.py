@@ -49,3 +49,16 @@ class Location(models.Model):
 
     def __str__(self):
         return self.name
+
+class Gallery(models.Model):
+    picture   = models.FileField(upload_to='gallery/%Y/%m/%d')
+    caption   = models.CharField(_('caption'), max_length=255, blank=True)
+    author    = models.CharField(_('author'), max_length=255, blank=True)
+    sourceURL = models.URLField(_('source URL'), blank=True)
+    picdate   = models.DateTimeField(_("pic date"))
+
+class Testimonials(models.Model):
+    customer_name        = models.CharField(_('customer name'), max_length=255, blank=True)
+    customer_city        = models.CharField(_('customer city'), max_length=255, blank=True)
+    customer_testimonial = models.TextField(_('customer testimonial'), max_length=255, blank=True)
+    customer_date        = models.DateTimeField(_("customer date"))
