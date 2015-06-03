@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block extra-css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'zipcode/css/gallery.css' %}">
+{% endblock %}
+{% block title %}Image Gallery{% endblock %}
+
+{% block nav %}
+<div class="header">
+    <div>
+        <img class="home-header" src="{% static 'zipcode/images/spring_banner2.jpg' %}">
+    </div>
+</div>
+
+<nav class="navbar navbar-default">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="value">Value Care</a></li>
+        <li><a href="careers">Careers</a></li>
+        <li><a href="gallery">Gallery</a></li>   
+      </ul>     
+    </div><!-- /.navbar-collapse -->
+</nav>
+{% endblock %}
+{% block content %}
+<div id="wrapper">
+    <div id="sidebar-ad">
+        <h3>HAVE AN EMERGENCY?</h3>
+        <H5>Call us directly at</H5>
+        <H3>801-933-4663</H3>
+    </div>
+    <div id="page-content-wrapper">
+        <div class="page-content">
+			<h2 class="heading3">Images from our Contractors</h2>
+			<div class="row container">
+				<div class="row">
+					<div class="col-lg-2"></div>
+                    <div class="col-lg-10 gallery">  
+                        <ul>
+                        {% for i in gallery %}
+                            <li><img class="gallery-pic"src="../media/{{i.picture}}"></li>
+                            <h2>{{i.caption}}</h2>
+                            <h2>{{i.author}}</h2>
+                            {% if i.sourceURL %}
+                                <h2>{{i.sourceURL}}</h2>
+                            {%endif%}
+                            <h2>{{i.picdate}}</h2>
+                        {% endfor %}
+                        </ul>
+                        <a href="#" class="unslider-arrow prev">Previous slide</a>
+                        <a href="#" class="unslider-arrow next">Next slide</a>
+                    </div>    
+                    <div class="col-lg-2"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block extra-javascript %}
+<script src="{% static 'zipcode/js/unslider/src/unslider.min.js' %}"></script>
+<script type="text/javascript">
+    var unslider = $('.gallery').unslider();
+    
+    $('.unslider-arrow').click(function() {
+        var fn = this.className.split(' ')[1];
+        
+        //  Either do unslider.data('unslider').next() or .prev() depending on the className
+        unslider.data('unslider')[fn]();
+    });
+
+</script>
+{% endblock %}
