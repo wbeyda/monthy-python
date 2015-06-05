@@ -1,0 +1,7 @@
+<h1>Contact Us</h1>
+
+<form id="contact-form" action="/contact/" method="post">
+    {% csrf_token %}
+    {{ contactform }}
+    <input type="submit" id="contact-submit"value="Submit" />
+</form>

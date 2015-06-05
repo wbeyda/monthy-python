@@ -1,0 +1,12 @@
+<div class="row container">
+    <div class="row">
+        <h1 class="monthly">Testimonials</h1>    
+    </div>
+    {% for i in testimonials %}
+    {% if forloop.first %}<div class="row"> {% endif%}
+        <div class="col-lg-6 testimonials">
+            <p>{{ i.customer_testimonial }}
+            <BR><BR>-{{ i.customer_name }} from {{ i.customer_city }} on {{ i.customer_date }}</p>
+        </div>
+    {% endfor %}
+</div>

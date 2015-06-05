@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Results for {{ con.0.areacode }}{% endblock %}
+{% load staticfiles %}
+{% block nav %}
+<div class="header">
+    <div>
+        <img class="home-header" src="{% static 'zipcode/images/spring_banner2.jpg' %}">
+    </div>
+</div>
+
+<nav class="navbar navbar-default">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="value">Value Care</a></li>
+        <li><a href="careers">Careers</a></li>
+        <li><a href="gallery">Gallery</a></li>   
+      </ul>     
+    </div><!-- /.navbar-collapse -->
+</nav>
+{% endblock %}
+{% block content %}
+{% for k in con %}
+<div id="wrapper">
+    <div id="sidebar-wrapper">
+        <h3 id="schedule">MY SKILLS</h3>
+        <h4>{{ k.trade }}</h4>
+        <h4>{{ k.secondaryTrades }}</h4>
+        
+    </div>
+    <div id="sidebar-ad">
+        <h3>HAVE AN EMERGENCY?</h3>
+        <H5>Call us directly at</H5>
+        <H3>801-933-4663</H3>
+    </div>
+    <div id="page-content-wrapper">
+        <div class="page-content">
+			<h2 class="heading3">Contractors in {{ con.0.areacode }}</h2>
+			<div class="row container">
+				<div class="row">
+					<div class="col-lg-6">
+						<img class="profile-pic" src="../media/{{ k.pic }}">
+						<h2 class="profile-name">{{ k.firstname | capfirst}} {{ k.lastname | capfirst }}, {{ k.trade | capfirst}}</h2>
+					</div>
+					<div class="col-lg-6">
+						<img class="home-header" src="{% static 'zipcode/images/logo.jpg' %}">
+						<p class="contractor-bio">{{ k.bio }}</p>
+					</div>
+				</div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h1>{{ k.firstname | capfirst}}'s Calendar</h1>
+                        {{ k.htmlcalendar | safe}}
+                    </div>
+                    <div class="col-lg-6">
+                        <h1>Schedule an Event</h1>
+                        {{ k.contractorschedule}}
+                    </div>
+                    
+                </div>
+{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

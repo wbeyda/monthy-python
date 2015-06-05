@@ -1,0 +1,5 @@
+<form action="/search/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input id="search_submit"type="submit" value="Submit" />
+</form>

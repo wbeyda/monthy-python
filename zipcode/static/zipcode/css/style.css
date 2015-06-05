@@ -1,0 +1,165 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+a,p,h1,h2,h3,h4,h5,h6,ul,li,input,select,textarea {font-family: 'Open Sans', sans-serif;}
+.home-header {width: 100%;}
+.navbar { border: 0px solid transparent; }
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+	/* border-color: #e7e7e7; */
+	background-color: #2ebad1;
+	color: white;
+	height: 6em !important;
+  font-weight: bold;
+}
+
+.navbar-default .navbar-nav>li>a {
+	color: #fff;
+	font-size: x-large;
+	margin: 0.5em;
+  margin-left: 6em;
+  margin-right: 6em;
+}
+
+.navbar .navbar-nav {
+	display: inline-block;
+	float: none;
+	vertical-align: top;
+}
+
+.navbar .navbar-collapse {text-align: center;}
+
+.container {  float: none; margin: 0 auto;font-family: arial;}
+
+.repair-boxes {width: 10em; margin: 2em 2em 2em 0;}
+.monthly {color: #2ebad1; font-size: 4em; float: none; margin: 1em 0; text-align: center;}
+
+#gdoor {width: 100%;margin-bottom: 0;}
+
+.all-gdoors { 
+	height: 2em;
+	text-align: center; 
+	background-color: #777; 
+	color: white; font-size: 3em; 
+	padding: 0.5em;
+	margin-top: -1em;
+	margin-bottom: 1em;
+}
+.heading3 {color: #2ebad1; font-size: 2em; text-align: center; font-weight: bold;margin:1em;}
+#heading3 {color: #2ebad1; font-size: 2em; text-align: center; font-weight: bold;margin:1em;}
+#heading4 {color: white; font-size: 2em; text-align: center; font-weight: bold; margin-top: 3em;margin-bottom: 1.5em;}
+.athomeserv {text-align: justify;line-height: 1.5em;font-size: 1.5em;}
+#smiles {width: 100%}
+#printable {width:100%;}
+#phone {text-align: center;font-size: 13em;}
+
+.service-row {margin-top: 4em;}
+.service-links a{color: white;}
+#someofour {text-align: justify;line-height: 1.7em;font-size: 1.7em;}
+.blue-container { background-color: #2ebad1; color: white;width: 115.7%;}
+.blue-container2 {background-color: #2ebad1; color: white;width: 115.7%; height: 43em;}
+.testimonials {
+margin-top: 3em;
+margin-bottom: 2em;
+margin-right: 2em;
+text-align: justify;
+margin-left: 2em;
+width: 37em;
+}
+
+#wrapper {
+  padding-right: 250px;
+  transition: all 0.4s ease 0s;
+}
+
+#sidebar-wrapper {
+margin-top: 2em;
+margin-right: -12em;
+right: 18em;
+width: 16em;
+background: #ef3b70;
+position: absolute;
+height: 21em;
+z-index: 1000;
+transition: all 0.4s ease 0s;
+color: white;
+padding: 2em;
+box-shadow: 1px 3px 3px #777;
+text-align: center;
+}
+
+#sidebar-ad {
+margin-top: 25em;
+margin-right: -12em;
+right: 18em;
+width: 16em;
+background: #ef3b70;
+position: absolute;
+height: 21em;
+ overflow-y: auto;
+z-index: 999;
+transition: all 0.4s ease 0s;
+color: white;
+padding: 2em;
+box-shadow: 1px 3px 3px #777;
+text-align: center;
+}
+
+#page-content-wrapper {
+  width: 100%;
+}
+
+.sidebar-nav {
+  position: absolute;
+  top: 0;
+  width: 250px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width:767px) {
+
+    #wrapper {
+      padding-right: 0;
+    }
+
+    #sidebar-wrapper {
+      right: 0;
+    }
+
+    #wrapper.active {
+      position: relative;
+      right: 250px;
+    }
+
+    #wrapper.active #sidebar-wrapper {
+      right: 250px;
+      width: 250px;
+      transition: all 0.4s ease 0s;
+    }
+}
+#schedule {font-weight: bold; font-size: 1.5em;}
+
+
+#id_zipsearch {width: 11em;}
+#search_submit {color: #2ebad1;}
+#id_firstName {margin: 0.5em; width: 24em;}
+#id_address {margin: 0.5em; width: 24em;}
+#id_sender {margin: 0.5em; width: 24em;}
+#id_problem {margin: 0.5em; width: 24em;}
+#contact-form {width: 11em;}
+#contact-submit {margin-left: 20.3em;}
+label {margin: 0.4em;}
+textarea:focus, input:focus {
+    color: #000;
+}
+
+input, select, textarea{
+    color: #000;
+}
+.profile-pic {margin: 1em;}
+.profile-name{height: 2em;
+text-align: center;
+background-color: #777;
+color: white;
+padding: 0.5em;
+margin-bottom: 1em;}
+
