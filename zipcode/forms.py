@@ -36,6 +36,12 @@ class ContactForm(forms.Form):
 	email = forms.EmailField(label='Email', max_length=50)
 	problem = forms.CharField(widget=forms.Textarea, label='Description', max_length=200)
 
+class CareerForm(forms.ModelForm):
+        
+        class Meta:
+            model = CareerResume
+ 
+
 class ContractorScheduleForm(forms.ModelForm):
         start_date = forms.SplitDateTimeWidget()
         end_date = forms.SplitDateTimeWidget()

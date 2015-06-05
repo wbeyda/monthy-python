@@ -3,9 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpRequest
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
-#from zipcode.models import Contractor, CareerResume, ContractorSchedule, Location, Gallery, Testimonials
 from zipcode.models import * 
-from django import forms
 from zipcode.forms import *
 from django.core.mail import send_mail
 from calendar import LocaleHTMLCalendar, month_name, monthrange
@@ -84,7 +82,6 @@ def results(request, postcode):
 
 	return render(request, 'results.html', {'con': con})
 
-
 def get_zip(request):
 	if request.method == 'POST':
 		form = ZipForm(request.POST)
@@ -121,7 +118,6 @@ def validate_file_extension(value):
 	valid_extensions = ['.pdf','.doc','.docx']
 	if not ext in valid_extensions:
 		raise ValidationError(u'File not supported!')
-
 
 def handle_uploaded_file(f):
 	with open(f, 'wb+') as destination:

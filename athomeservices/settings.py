@@ -13,14 +13,9 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 TIME_ZONE = 'America/Denver'
+#SECRET_KEY = '4+sc-$v%8gqzg%fx)wckc$)64%1rl44l6*#2bdh4=kw_r6izu6'
+SECRET_KEY = '5(_7bbfo6qv-e76ce#n_-sa2u=*j1nye0))+3ryi$8wm&zxc=r'
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '4+sc-$v%8gqzg%fx)wckc$)64%1rl44l6*#2bdh4=kw_r6izu6'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 TEMPLATE_DEBUG = True
@@ -28,9 +23,6 @@ TEMPLATE_DEBUG = True
 TEMPLATE_DIRS = [os.path.join(BASE_DIR,'templates'), 'zipcode/templates/zipcode']
 
 ALLOWED_HOSTS = []
-
-
-# Application definition
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -53,6 +45,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
 
 ROOT_URLCONF = 'athomeservices.urls'
 
