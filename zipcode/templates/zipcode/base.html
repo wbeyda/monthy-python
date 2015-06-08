@@ -37,7 +37,10 @@
 {% block content %}
   {% load staticfiles %}
 {% endblock %}
-
+{% load zipcode_extras %}
+{% show_testimonials %}
+{% include "footer.html" %}
+</div>
 <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -45,9 +48,7 @@
 <script src="{% static 'zipcode/js/bootstrap.js' %}"></script>
 <script src="{% static 'zipcode/js/animatescroll.js' %}"></script>
 <script src="{% static 'zipcode/js/calendar.js' %}"></script>
-{% block extra-javascript%}{% endblock %}
-{% load zipcode_extras %}
-{% show_testimonials %}
-{% include "footer.html" %}
-</div>
-</body></html>
+{% block extra-javascript %}{% endblock %}
+</body>
+</html>
+

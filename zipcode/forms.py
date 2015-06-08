@@ -1,8 +1,9 @@
-from django.forms import MultiWidget 
+from django.forms import MultiWidget
+from django.forms import SplitDateTimeField  
 from django import forms
 from zipcode.models import *
 
-class SplitSelectDateTimeWidget(MultiWidget):
+"""class SplitSelectDateTimeWidget(MultiWidget):
     def __init__(self, attrs=None, hour_step=None, minute_step=None, second_step=None, twelve_hr=None, years=None):
         widgets = (SelectDateWidget(attrs=attrs, years=years),\
                 SelectTimeWidget(attrs=attrs,\
@@ -21,7 +22,7 @@ class SplitSelectDateTimeWidget(MultiWidget):
     def format_output(self, rendered_widgets):
         rendered_widgets.insert(-1, '<br/>')
         return u''.join(rendered_widgets)
-
+"""
 
 class CareerForm(forms.ModelForm):
         class Meta:
@@ -36,16 +37,11 @@ class ContactForm(forms.Form):
 	email = forms.EmailField(label='Email', max_length=50)
 	problem = forms.CharField(widget=forms.Textarea, label='Description', max_length=200)
 
-class CareerForm(forms.ModelForm):
-        
-        class Meta:
-            model = CareerResume
- 
 
 class ContractorScheduleForm(forms.ModelForm):
-        start_date = forms.SplitDateTimeWidget()
-        end_date = forms.SplitDateTimeWidget()
+        start_date = SplitDateTimeField()
+        end_date   = SplitDateTimeField()
 
         class Meta:
             model = ContractorSchedule
-            #exclude = ('firstname')
+            #exclude = ('firstname',)

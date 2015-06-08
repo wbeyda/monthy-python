@@ -55,7 +55,12 @@
                     </div>
                     <div class="col-lg-6">
                         <h1>Schedule an Event</h1>
-                        {{ k.contractorschedule}}
+                        {{ k.contractorschedule.non_field_errors }}
+						<form action="/schedule/" method="post">
+                             {% csrf_token %}
+                             {{ k.contractorschedule }}
+                            <input id="search_submit"type="submit" value="Submit" />
+                        </form>
                     </div>
                     
                 </div>
@@ -63,4 +68,23 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block extra-javascript %}
+<script type="text/javascript">
+$( document ).ready(function() {
+
+	console.log("this is loaded");
+
+	var d = $("#id_start_date_1");
+	d.before("<label for='id_start_date_1'>Start Time:</label>");
+
+
+/*
+	d.each(function(i){
+		$(this).before("<label for='id_start_date_1'>Start Time:</label>");
+	});
+*/
+});
+</script>
 {% endblock %}

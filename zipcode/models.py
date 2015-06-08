@@ -9,7 +9,7 @@ class Contractor(models.Model):
 	secondaryTrades = models.CharField(max_length=200)
 	bio = models.TextField()
 	pic = models.ImageField(upload_to = 'photos/%Y/%m/%d')
-
+	
 	def __str__(self):
 		return self.firstname
 

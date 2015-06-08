@@ -13,7 +13,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 TIME_ZONE = 'America/Denver'
-#SECRET_KEY = '4+sc-$v%8gqzg%fx)wckc$)64%1rl44l6*#2bdh4=kw_r6izu6'
+
 SECRET_KEY = '5(_7bbfo6qv-e76ce#n_-sa2u=*j1nye0))+3ryi$8wm&zxc=r'
 
 DEBUG = True
