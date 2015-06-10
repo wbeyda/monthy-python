@@ -1,5 +1,8 @@
+import datetime
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
+
 
 class Contractor(models.Model):
 	areacode = models.PositiveIntegerField(max_length=5)
@@ -27,9 +30,10 @@ class ContractorSchedule(models.Model):
     all_day = models.BooleanField(_("all day"), default=False)
     title = models.CharField(_("title"), max_length=255, blank=True)
     description = models.TextField(_("description"),blank=True)
-    location = models.ManyToManyField(
-        'Location', verbose_name=_('locations'), blank=True
-    )
+    location = models.ManyToManyField('Location', verbose_name=_('locations'), blank=True)
+	
+    def start_date_before_now(self):
+		return self.start_date >= timezone.now() - datetime.timedelta(days=1)
 
 class Location(models.Model):
     name = models.CharField(_('Name'), max_length=255)

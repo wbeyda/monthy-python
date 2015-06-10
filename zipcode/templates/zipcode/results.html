@@ -44,25 +44,11 @@
 					</div>
 					<div class="col-lg-6">
 						<img class="home-header" src="{% static 'zipcode/images/logo.jpg' %}">
-						<p class="contractor-bio">{{ k.bio }}</p>
+						<p class="contractor-bio">{{ k.bio |truncatewords:25  }}</p>
+						<a href=" {% url 'contractor' k.id %}"> Read more... </a>
 					</div>
 				</div>
-
-                <div class="row">
-                    <div class="col-lg-6">
-                        <h1>{{ k.firstname | capfirst}}'s Calendar</h1>
-                        {{ k.htmlcalendar | safe}}
-                    </div>
-                    <div class="col-lg-6">
-                        <h1>Schedule an Event</h1>
-                        {{ k.contractorschedule.non_field_errors }}
-						<form action="/schedule/" method="post">
-                             {% csrf_token %}
-                             {{ k.contractorschedule }}
-                            <input id="search_submit"type="submit" value="Submit" />
-                        </form>
-                    </div>
-                    
+                                    
                 </div>
 {% endfor %}
 			</div>
@@ -77,14 +63,15 @@ $( document ).ready(function() {
 	console.log("this is loaded");
 
 	var d = $("#id_start_date_1");
-	d.before("<label for='id_start_date_1'>Start Time:</label>");
 
-
-/*
 	d.each(function(i){
 		$(this).before("<label for='id_start_date_1'>Start Time:</label>");
 	});
-*/
+
+	$("body").each(function(){
+
+	});
+
 });
 </script>
 {% endblock %}

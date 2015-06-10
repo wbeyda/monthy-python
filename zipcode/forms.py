@@ -2,28 +2,7 @@ from django.forms import MultiWidget
 from django.forms import SplitDateTimeField  
 from django import forms
 from zipcode.models import *
-
-"""class SplitSelectDateTimeWidget(MultiWidget):
-    def __init__(self, attrs=None, hour_step=None, minute_step=None, second_step=None, twelve_hr=None, years=None):
-        widgets = (SelectDateWidget(attrs=attrs, years=years),\
-                SelectTimeWidget(attrs=attrs,\
-                    hour_step=hour_step,\
-                   minute_step=minute_step, \
-                   second_step=second_step, \
-                   twelve_hr=twelve_hr\
-                  ))
-        super(SplitSelectDateTimeWidget, self).__init__(widgets, attrs)
-
-    def decompress(self, value):
-        if value:
-            return [value.date(), value.time().replace(microsecond=0)]
-        return [None, None]
-
-    def format_output(self, rendered_widgets):
-        rendered_widgets.insert(-1, '<br/>')
-        return u''.join(rendered_widgets)
-"""
-
+        
 class CareerForm(forms.ModelForm):
         class Meta:
             model = CareerResume
@@ -39,9 +18,8 @@ class ContactForm(forms.Form):
 
 
 class ContractorScheduleForm(forms.ModelForm):
-        start_date = SplitDateTimeField()
-        end_date   = SplitDateTimeField()
-
-        class Meta:
-            model = ContractorSchedule
-            #exclude = ('firstname',)
+		start_date = SplitDateTimeField()
+		end_date   = SplitDateTimeField()
+		
+		class Meta:
+			model = ContractorSchedule	

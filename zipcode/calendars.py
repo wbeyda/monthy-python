@@ -39,4 +39,30 @@ class GenericCalendar(LocaleHTMLCalendar):
 		a('\n')
 		return ''.join(v)
 
+def contractor_calendar(queryset):
+    for s in queryset:   
+        eventdict = {}  
+        conevents = s.contractorschedule_set.all() 
+        counter = conevents.count() #2
+        n = 1
+        for i in conevents:
+            y,m = i.start_date.year,i.start_date.month
+            event = "<ul><li>" + i.start_date.strftime("%I:%M")+" "+ i.title +" "+ i.end_date.strftime("%I:%M") +"</li></ul>"
+            #loop through the days of the month
+            for j in range(1,monthrange(y,m)[1]+1): #1-31                           
+                if i.start_date.day == j and j not in eventdict:
+                    eventdict[j] = event
+                elif j not in eventdict:
+                    eventdict[j] = None
+                #add to a day with an event
+                if i.start_date.day == j and eventdict[j] != "" and eventdict[j] is not None and eventdict[j] != event:
+                    eventdict[j] += event
+                #change day from none to event 
+                if i.start_date.day == j and eventdict[j] is None:
+                    eventdict[j] = event
+                if j == monthrange(y,m)[1] and n == counter:
+                    htmlcalendar = GenericCalendar(y,m).formatmonth(y,m, eventdict)
+                elif j == monthrange(y,m)[1] and n != counter:
+                     n+=1
+    return htmlcalendar
 
