@@ -8,35 +8,6 @@ from django.views.generic.detail import DetailView
 
 def results(request, postcode):
     con = Contractor.objects.filter(areacode=postcode).prefetch_related().order_by("lastname")
-    cal = {}
-    
-    for s in con:   
-        eventdict = {}  
-        conevents = s.contractorschedule_set.all().order_by("firstname__lastname") 
-        counter = conevents.count() #2
-        n = 1
-        for i in conevents:
-            y,m = i.start_date.year,i.start_date.month
-            event = "<ul><li>" + i.start_date.strftime("%I:%M")+" "+ i.title +" "+ i.end_date.strftime("%I:%M") +"</li></ul>"
-            #loop through the days of the month
-            for j in range(1,monthrange(y,m)[1]+1): #1-31                           
-                if i.start_date.day == j and j not in eventdict:
-                        eventdict[j] = event
-                elif j not in eventdict:
-                        eventdict[j] = None
-                #add to a day with an event
-                if i.start_date.day == j and eventdict[j] != "" and eventdict[j] is not None and eventdict[j] != event:
-                        eventdict[j] += event
-                #change day from none to event 
-                if i.start_date.day == j and eventdict[j] is None:
-                        eventdict[j] = event
-                if j == monthrange(y,m)[1] and n == counter:
-                        htmlcalendar = GenericCalendar(y,m).formatmonth(y,m, eventdict)
-                elif j == monthrange(y,m)[1] and n != counter:
-                                    n+=1
-        setattr(s, 'htmlcalendar', htmlcalendar)
-        setattr(s, 'contractorschedule', ContractorScheduleForm() )
-
     return render(request, 'results.html', {'con': con})
 
 def get_zip(request):
@@ -103,46 +74,17 @@ def request_event(request):
         requested_event = ContractorScheduleForm(request.POST)
         if requested_event.is_valid():
             requested_event.save()
-            return HttpResponseRedirect('/thanks')
+            return HttpResponseRedirect('schedule/')
         else:
             requested_event = ContractorScheduleForm(request.POST)
-        return render(request, 'results.html', {'requested_event':requested_event})
+        return render(request, 'request_event.html', {'requested_event':requested_event})
     else:
         requested_event = ContractorScheduleForm(request.POST)
-    return render(request, 'results.html', {'requested_event':requested_event})
-
-def contractor_calendar(queryset):
-    for s in queryset:   
-        eventdict = {}  
-        conevents = s.contractorschedule_set.all() 
-        counter = conevents.count() #2
-        n = 1
-        for i in conevents:
-            y,m = i.start_date.year,i.start_date.month
-            event = "<ul><li>" + i.start_date.strftime("%I:%M")+" "+ i.title +" "+ i.end_date.strftime("%I:%M") +"</li></ul>"
-            #loop through the days of the month
-            for j in range(1,monthrange(y,m)[1]+1): #1-31                           
-                if i.start_date.day == j and j not in eventdict:
-                    eventdict[j] = event
-                elif j not in eventdict:
-                    eventdict[j] = None
-                #add to a day with an event
-                if i.start_date.day == j and eventdict[j] != "" and eventdict[j] is not None and eventdict[j] != event:
-                    eventdict[j] += event
-                #change day from none to event 
-                if i.start_date.day == j and eventdict[j] is None:
-                    eventdict[j] = event
-                if j == monthrange(y,m)[1] and n == counter:
-                    htmlcalendar = GenericCalendar(y,m).formatmonth(y,m, eventdict)
-                elif j == monthrange(y,m)[1] and n != counter:
-                     n+=1
-    return htmlcalendar
+    return render(request, 'request_event.html', {'requested_event':requested_event})
 
 def contractor_detail_view(request, id):
     con = Contractor.objects.prefetch_related().filter(pk=id)
     form = ContractorScheduleForm()
     htmlcalendar = contractor_calendar(con)
-    print r"con\n",con,r"\n form\n", form, r"\n htmlcalendar \n", htmlcalendar 
-
     return render(request, 'contractor_detail.html', {'con': con, 'form': form, 'htmlcalendar': htmlcalendar })
 

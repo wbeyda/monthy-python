@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %} contractor {% endblock %}
+{% block title %} {% for i in con %} {{ i.firstname| title }} {{i.lastname| title}} {% endfor %}{% endblock %}
 {% load staticfiles %}
 {% block nav %}
 <div class="header">
@@ -53,13 +53,7 @@
                        {{ htmlcalendar | safe}} 
                     </div>
                     <div class="col-lg-6">
-                        <h1>Schedule an Event</h1>
-                        {{ form.non_field_errors }}
-						<form action="/schedule/" method="post" id="schedule-form">
-                             {% csrf_token %}
-                             {{ form }}
-                            <input id="search_submit"type="submit" value="Submit" />
-                        </form>
+                        <h1><a href="{% url 'schedule' %}">Schedule an Event</a></h1>
                     </div>
                     
                 </div>

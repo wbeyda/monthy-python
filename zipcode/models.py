@@ -2,7 +2,7 @@ import datetime
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-
+from django.core.exceptions import ValidationError
 
 class Contractor(models.Model):
 	areacode = models.PositiveIntegerField(max_length=5)
@@ -31,9 +31,18 @@ class ContractorSchedule(models.Model):
     title = models.CharField(_("title"), max_length=255, blank=True)
     description = models.TextField(_("description"),blank=True)
     location = models.ManyToManyField('Location', verbose_name=_('locations'), blank=True)
+        
 	
     def start_date_before_now(self):
-		return self.start_date >= timezone.now() - datetime.timedelta(days=1)
+        return self.start_date >= timezone.now() - datetime.timedelta(days=1)
+
+    def end_date_before_start_date(self):
+        if self.start_date >= self.end_date:
+            raise ValidationError('this start date must be before the end date')
+	def clean(self):
+		self.start_date_before_now()
+		self.end_date_before_start_date()
+		
 
 class Location(models.Model):
     name = models.CharField(_('Name'), max_length=255)

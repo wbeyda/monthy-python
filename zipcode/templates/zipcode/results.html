@@ -26,12 +26,6 @@
         <h3 id="schedule">MY SKILLS</h3>
         <h4>{{ k.trade }}</h4>
         <h4>{{ k.secondaryTrades }}</h4>
-        
-    </div>
-    <div id="sidebar-ad">
-        <h3>HAVE AN EMERGENCY?</h3>
-        <H5>Call us directly at</H5>
-        <H3>801-933-4663</H3>
     </div>
     <div id="page-content-wrapper">
         <div class="page-content">
@@ -47,15 +41,18 @@
 						<p class="contractor-bio">{{ k.bio |truncatewords:25  }}</p>
 						<a href=" {% url 'contractor' k.id %}"> Read more... </a>
 					</div>
-				</div>
-                                    
-                </div>
+				</div><!--row-->
+            </div><!--row container-->
 {% endfor %}
-			</div>
-		</div>
+		</div><!--page-content-->
+	</div><!--page-content-wrapper-->
+	<div id="sidebar-ad">
+        <h3>HAVE AN EMERGENCY?</h3>
+        <H5>Call us directly at</H5>
+        <H3>801-933-4663</H3>
 	</div>
+</div><!--wrapper-->
 {% endblock %}
-
 {% block extra-javascript %}
 <script type="text/javascript">
 $( document ).ready(function() {

@@ -164,4 +164,13 @@ padding: 0.5em;
 margin-bottom: 1em;}
 
 #schedule-form { width: 100px}
-
+label {
+    /* Other styling.. */
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+}
+input {
+	text-align: left;
+}

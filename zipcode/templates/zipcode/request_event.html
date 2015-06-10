@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Schedule an event{% endblock %}
+{% load staticfiles %}
+{% block nav %}
+<div class="header">
+    <div>
+        <img class="home-header" src="{% static 'zipcode/images/spring_banner2.jpg' %}">
+    </div>
+</div>
+
+
+<nav class="navbar navbar-default">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="value">Value Care</a></li>
+        <li><a class="active" href="careers">Careers</a></li>
+        <li><a href="gallery">Gallery</a></li>   
+      </ul>     
+    </div><!-- /.navbar-collapse -->
+</nav>
+
+<div id="wrapper">
+    <div id="sidebar-wrapper">
+        <h3 id="schedule">SCHEDULE A PROJECT</h3>
+        
+        {% load zipcode_extras %}
+        {% show_search_form %}
+    </div>
+    <div id="sidebar-ad">
+        <h3>HAVE AN EMERGENCY?</h3>
+        <H5>Call us directly at</H5>
+        <H3>801-933-4663</H3>
+
+    </div>
+    <div id="page-content-wrapper">
+        <div class="page-content">
+{% endblock %}
+{% block content %}
+<div class="row">
+	<div class ="col-lg-2"></div>
+	<div class ="col-lg-8">
+		<form id="schedule-form" action="#" enctype="multipart/form-data" method="post">
+			{% csrf_token %}
+			{{ requested_event }}
+			<input type="submit" id="career-submit"value="Submit" />
+		</form>
+	</div>
+	<div class ="col-lg-2"></div>
+</div>
+{% endblock %}
+
+{% block extra-javascript %}
+<script type="text/javascript">
+$( document ).ready(function() {
+
+	var d = $("#id_start_date_1");
+	var e = $("#id_end_date_1");
+	d.each(function(i){
+		$(this).before("<label for='id_start_date_1'>Start Time:</label>");
+	});
+	
+	e.each(function(i){
+		$(this).before("<label for='id_start_date_1'>End Time:</label>");
+	});
+
+});
+</script>
+{% endblock %}
