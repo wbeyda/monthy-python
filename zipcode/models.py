@@ -34,14 +34,15 @@ class ContractorSchedule(models.Model):
         
 	
     def start_date_before_now(self):
-        return self.start_date >= timezone.now() - datetime.timedelta(days=1)
+        if self.start_date != None and self.start_date < timezone.now():
+            raise ValidationError('Start Date cannot be before now')
 
     def end_date_before_start_date(self):
         if self.start_date >= self.end_date:
-            raise ValidationError('this start date must be before the end date')
-	def clean(self):
-		self.start_date_before_now()
-		self.end_date_before_start_date()
+            raise ValidationError('Start date must be before the end date')
+    def clean(self):
+	self.start_date_before_now()
+	self.end_date_before_start_date()
 		
 
 class Location(models.Model):

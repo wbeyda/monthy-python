@@ -45,6 +45,7 @@ def contractor_calendar(queryset):
         conevents = s.contractorschedule_set.all() 
         counter = conevents.count() #2
         n = 1
+        htmlcalendar = {}
         for i in conevents:
             y,m = i.start_date.year,i.start_date.month
             event = "<ul><li>" + i.start_date.strftime("%I:%M")+" "+ i.title +" "+ i.end_date.strftime("%I:%M") +"</li></ul>"
@@ -64,5 +65,5 @@ def contractor_calendar(queryset):
                     htmlcalendar = GenericCalendar(y,m).formatmonth(y,m, eventdict)
                 elif j == monthrange(y,m)[1] and n != counter:
                      n+=1
-    return htmlcalendar
+	return htmlcalendar
 

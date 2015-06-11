@@ -13,20 +13,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CareerResume',
             fields=[
-<<<<<<< HEAD
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-=======
-                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
->>>>>>> 93547c1e8d82258fb9b37ffebc89802a868a45fe
                 ('name', models.CharField(max_length=20)),
                 ('address', models.CharField(max_length=20)),
                 ('email', models.EmailField(max_length=75)),
                 ('phone', models.IntegerField(max_length=10)),
-<<<<<<< HEAD
-                ('resume', models.FileField(upload_to=b'files/%Y/%m/%d')),
-=======
                 ('resume', models.FileField(upload_to='files/%Y/%m/%d')),
->>>>>>> 93547c1e8d82258fb9b37ffebc89802a868a45fe
             ],
             options={
             },
@@ -35,16 +27,6 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Contractor',
             fields=[
-<<<<<<< HEAD
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('areacode', models.PositiveIntegerField(max_length=5)),
-                ('firstname', models.CharField(max_length=20)),
-                ('lastname', models.CharField(max_length=20)),
-                ('trade', models.CharField(max_length=20)),
-                ('secondaryTrades', models.CharField(max_length=200)),
-                ('bio', models.TextField()),
-                ('pic', models.ImageField(upload_to=b'photos/%Y/%m/%d')),
-=======
                 ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
                 ('areacode', models.PositiveIntegerField(max_length=5)),
                 ('firstname', models.CharField(max_length=20)),
@@ -53,7 +35,6 @@ class Migration(migrations.Migration):
                 ('secondaryTrades', models.CharField(max_length=200)),
                 ('bio', models.TextField()),
                 ('pic', models.ImageField(upload_to='photos/%Y/%m/%d')),
->>>>>>> 93547c1e8d82258fb9b37ffebc89802a868a45fe
             ],
             options={
             },
@@ -62,21 +43,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ContractorSchedule',
             fields=[
-<<<<<<< HEAD
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('start_date', models.DateTimeField(verbose_name='start date')),
-                ('end_date', models.DateTimeField(verbose_name='end date')),
-                ('all_day', models.BooleanField(default=False, verbose_name='all day')),
-                ('title', models.CharField(max_length=255, verbose_name='title', blank=True)),
-                ('description', models.TextField(verbose_name='description', blank=True)),
-=======
                 ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
                 ('start_date', models.DateTimeField(verbose_name='start date')),
                 ('end_date', models.DateTimeField(verbose_name='end date')),
                 ('all_day', models.BooleanField(default=False, verbose_name='all day')),
                 ('title', models.CharField(blank=True, max_length=255, verbose_name='title')),
                 ('description', models.TextField(blank=True, verbose_name='description')),
->>>>>>> 93547c1e8d82258fb9b37ffebc89802a868a45fe
                 ('firstname', models.ForeignKey(to='zipcode.Contractor')),
             ],
             options={
@@ -84,7 +56,6 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
-<<<<<<< HEAD
             name='Gallery',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -123,19 +94,6 @@ class Migration(migrations.Migration):
                 ('customer_city', models.CharField(max_length=255, verbose_name='customer city', blank=True)),
                 ('customer_testimonial', models.TextField(max_length=255, verbose_name='customer testimonial', blank=True)),
                 ('customer_date', models.DateTimeField(verbose_name='customer date')),
-=======
-            name='Location',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, primary_key=True, auto_created=True)),
-                ('name', models.CharField(max_length=255, verbose_name='Name')),
-                ('address_line_1', models.CharField(blank=True, max_length=255, verbose_name='Address Line 1')),
-                ('address_line_2', models.CharField(blank=True, max_length=255, verbose_name='Address Line 2')),
-                ('address_line_3', models.CharField(blank=True, max_length=255, verbose_name='Address Line 3')),
-                ('state', models.CharField(blank=True, max_length=63, verbose_name='State / Province / Region')),
-                ('city', models.CharField(blank=True, max_length=63, verbose_name='City / Town')),
-                ('zipcode', models.CharField(blank=True, max_length=31, verbose_name='ZIP / Postal Code')),
-                ('country', models.CharField(blank=True, max_length=127, verbose_name='Country')),
->>>>>>> 93547c1e8d82258fb9b37ffebc89802a868a45fe
             ],
             options={
             },
@@ -144,11 +102,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='contractorschedule',
             name='location',
-<<<<<<< HEAD
             field=models.ManyToManyField(to='zipcode.Location', verbose_name='locations', blank=True),
-=======
-            field=models.ManyToManyField(blank=True, to='zipcode.Location', verbose_name='locations'),
->>>>>>> 93547c1e8d82258fb9b37ffebc89802a868a45fe
             preserve_default=True,
         ),
     ]

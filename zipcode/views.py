@@ -82,9 +82,8 @@ def request_event(request):
         requested_event = ContractorScheduleForm(request.POST)
     return render(request, 'request_event.html', {'requested_event':requested_event})
 
-def contractor_detail_view(request, id):
-    con = Contractor.objects.prefetch_related().filter(pk=id)
-    form = ContractorScheduleForm()
+def contractor_detail_view(request, f,id,l):
+    con = Contractor.objects.filter(id=id).prefetch_related()
     htmlcalendar = contractor_calendar(con)
-    return render(request, 'contractor_detail.html', {'con': con, 'form': form, 'htmlcalendar': htmlcalendar })
+    return render(request, 'contractor_detail.html', {'con': con, 'htmlcalendar': htmlcalendar })
 

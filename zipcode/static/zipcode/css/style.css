@@ -163,14 +163,17 @@ color: white;
 padding: 0.5em;
 margin-bottom: 1em;}
 
-#schedule-form { width: 100px}
-label {
+#schedule-form { width: 300px}
+#schedule-form label {
     /* Other styling.. */
     text-align: right;
     clear: both;
     float:left;
     margin-right:15px;
 }
-input {
+#schedule-form input {
 	text-align: left;
+	margin-top: 1em;
 }
+
+.errorlist li {color:red}

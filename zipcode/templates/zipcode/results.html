@@ -33,13 +33,13 @@
 			<div class="row container">
 				<div class="row">
 					<div class="col-lg-6">
-						<img class="profile-pic" src="../media/{{ k.pic }}">
+						<img class="profile-pic" src="../media/{{k.pic}}">
 						<h2 class="profile-name">{{ k.firstname | capfirst}} {{ k.lastname | capfirst }}, {{ k.trade | capfirst}}</h2>
 					</div>
 					<div class="col-lg-6">
 						<img class="home-header" src="{% static 'zipcode/images/logo.jpg' %}">
 						<p class="contractor-bio">{{ k.bio |truncatewords:25  }}</p>
-						<a href=" {% url 'contractor' k.id %}"> Read more... </a>
+						<a href=" {% url 'contractor' k.firstname k.id k.lastname %}"> Read more... </a>
 					</div>
 				</div><!--row-->
             </div><!--row container-->

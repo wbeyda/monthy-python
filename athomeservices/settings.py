@@ -76,7 +76,8 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-
+STATIC_ROOT = '/home/django/venv/athomeservices/static/'
 STATIC_URL = '/static/'
 MEDIA_ROOT = '/home/django/venv/athomeservices/media/'
 MEDIA_URL = '/media/'
+
