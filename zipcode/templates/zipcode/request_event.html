@@ -51,6 +51,9 @@
 {% endblock %}
 
 {% block extra-javascript %}
+<script src="{% static 'zipcode/js/jquery-timepicker-master/jquery.timepicker.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'zipcode/js/jquery-timepicker-master/jquery.timepicker.css' %}"/>
+
 <script type="text/javascript">
 $( document ).ready(function() {
 
@@ -62,6 +65,13 @@ $( document ).ready(function() {
 	
 	e.each(function(i){
 		$(this).before("<label for='id_start_date_1'>End Time:</label>");
+	});
+	
+	$(function() {
+		$( "#id_start_date_0" ).datepicker();
+		$( "#id_end_date_0" ).datepicker();
+		$( "#id_start_date_1" ).timepicker({step: 15, minTime: '6:00am',show2400: true, timeFormat: 'H:i'})	
+		$( "#id_end_date_1"   ).timepicker({step: 15, minTime: '6:00am',show2400: true, timeFormat: 'H:i'})	
 	});
 
 });

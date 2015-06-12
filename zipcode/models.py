@@ -40,9 +40,13 @@ class ContractorSchedule(models.Model):
     def end_date_before_start_date(self):
         if self.start_date >= self.end_date:
             raise ValidationError('Start date must be before the end date')
+    def is_chunk(self):
+        if self.start_date.day != self.end_date.day:
+            raise ValidationError('Please enter these chunks of days as seperate Schedule Requests')
     def clean(self):
 	self.start_date_before_now()
 	self.end_date_before_start_date()
+        #self.is_chunk()
 		
 
 class Location(models.Model):
