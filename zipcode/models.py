@@ -23,6 +23,15 @@ class CareerResume(models.Model):
 	phone = models.IntegerField(max_length=10)
 	resume = models.FileField(upload_to='files/%Y/%m/%d')
 
+EVENT_COLORS  = [
+        ('eeeeee', _('gray')),
+        ('ff0000', _('red')),
+        ('0000ff', _('blue')),
+        ('00ff00', _('green')),
+        ('000000', _('black')),
+        ('ffffff', _('white')),
+    ]
+
 class ContractorSchedule(models.Model):
     firstname = models.ForeignKey(Contractor)
     start_date = models.DateTimeField(verbose_name=_("start date"))
@@ -31,8 +40,10 @@ class ContractorSchedule(models.Model):
     title = models.CharField(_("title"), max_length=255, blank=True)
     description = models.TextField(_("description"),blank=True)
     location = models.ManyToManyField('Location', verbose_name=_('locations'), blank=True)
+    background_color = models.CharField(
+        _("background color"), max_length=10, choices=EVENT_COLORS, default='eeeeee'
+    )
         
-	
     def start_date_before_now(self):
         if self.start_date != None and self.start_date < timezone.now():
             raise ValidationError('Start Date cannot be before now')
@@ -44,11 +55,10 @@ class ContractorSchedule(models.Model):
         if self.start_date.day != self.end_date.day:
             raise ValidationError('Please enter these chunks of days as seperate Schedule Requests')
     def clean(self):
-	self.start_date_before_now()
-	self.end_date_before_start_date()
-        #self.is_chunk()
+	    self.start_date_before_now()
+	    self.end_date_before_start_date()
+      #self.is_chunk()
 		
-
 class Location(models.Model):
     name = models.CharField(_('Name'), max_length=255)
     address_line_1 = models.CharField(
@@ -74,9 +84,14 @@ class Gallery(models.Model):
     author    = models.CharField(_('author'), max_length=255, blank=True)
     sourceURL = models.URLField(_('source URL'), blank=True)
     picdate   = models.DateTimeField(_("pic date"))
+    contractor = models.ForeignKey(Contractor, unique=True)
 
-class Testimonials(models.Model):
+    def __str__(self):
+        return self.author
+
+class Testimonial(models.Model):
     customer_name        = models.CharField(_('customer name'), max_length=255, blank=True)
     customer_city        = models.CharField(_('customer city'), max_length=255, blank=True)
     customer_testimonial = models.TextField(_('customer testimonial'), max_length=255, blank=True)
     customer_date        = models.DateTimeField(_("customer date"))
+    contractor           = models.ForeignKey(Contractor, unique=True) 

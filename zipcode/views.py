@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse 
 from zipcode.models import * 
 from zipcode.forms import *
 from django.core.mail import send_mail
@@ -87,3 +88,29 @@ def contractor_detail_view(request, f,id,l):
     htmlcalendar = contractor_calendar(con)
     return render(request, 'contractor_detail.html', {'con': con, 'htmlcalendar': htmlcalendar })
 
+def next_month_request(request, id, currentyear, currentmonth):
+    if request.is_ajax():
+        if int(request.GET.get('currentmonth')) == 12:
+            nextyear = int(request.Get.get('currentyear')) + 1
+            queryset = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get('id'))).exclude(start_date__lt=datetime.datetime(nextyear,1,1))  
+        else:     
+            nextmonth = int(request.GET.get('currentmonth')) +1
+            queryset = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get('id'))).exclude(start_date__lt=datetime.datetime(
+                          int(request.GET.get('currentyear')),nextmonth,1)
+                      )  
+        htmlcalendar = next_last_month_contractor_calendar(queryset)
+        return HttpResponse(htmlcalendar) 
+
+def last_month_request(request, id, currentyear, currentmonth):
+    if request.is_ajax():
+        if request.GET.get("currentmonth") == 1:
+            lastyear = int(request.GET.get('currentyear')) -1
+            queryset = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get("id"))).exclude(start_date__gt=datetime.datetime(lastyear,12,31,23,59,59))
+        else:     
+            lastmonth = int(request.GET.get('currentmonth')) -1
+            queryset = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get("id"))).exclude(
+                           start_date__gt=last_day_of_month(
+                               datetime.datetime(int(request.GET.get("currentyear")),lastmonth,1))
+                          )  
+        htmlcalendar = next_last_month_contractor_calendar(queryset)
+        return HttpResponse(htmlcalendar) 

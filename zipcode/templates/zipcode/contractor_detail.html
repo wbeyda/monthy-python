@@ -48,12 +48,18 @@
 				</div>
 
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
                         <h1>{{ i.firstname | capfirst}}'s Calendar</h1>
-                       {{ htmlcalendar | safe}} 
-                    </div>
-                    <div class="col-lg-6">
-                        <h1><a href="{% url 'schedule' %}">Schedule an Event</a></h1>
+                        <a href="{% url 'schedule' %}">Schedule an Event</a>
+                        <div class="btn-group" role="group" aria-label="...">
+                          <button type="button" id="left-click" class="btn btn-default">
+                            <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                          </button>
+                          <button type="button" id="right-click" class="btn btn-default">
+                            <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+                          </button>
+                        </div>
+                        {{ htmlcalendar | safe}} 
                     </div>
                     
                 </div>
@@ -66,18 +72,53 @@
 {% block extra-javascript %}
 <script type="text/javascript">
 $( document ).ready(function() {
+  
+  var monthMapper = [ "January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; 
 
-	console.log("this is loaded");
+  var thismonth    = $(".month th").first().text().split(" ")[0].trim();
+  var currentyear  = $(".month th").first().text().split(" ")[1] ;
+  $.CurrentMonth = new Object();
+  $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;
+  var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %} 
+  var lasturl = String("/"+ contractorID +"/"+ currentyear +"/"+ $.CurrentMonth.m)
+  var nexturl = String("/"+ contractorID +"/"+ $.CurrentMonth.m +"/"+ currentyear)
 
-	var d = $("#id_start_date_1");
-	var e = $("#id_end_date_1");
-	d.each(function(i){
-		$(this).before("<label for='id_start_date_1'>Start Time:</label>");
-	});
-	
-	e.each(function(i){
-		$(this).before("<label for='id_start_date_1'>End Time:</label>");
-	});
+  $('#left-click').click(function() {    
+      $.ajax({
+          url: String("/"+ contractorID +"/"+ currentyear +"/"+ $.CurrentMonth.m),           
+          method: 'GET',
+          data: {
+              currentyear: currentyear, // data you need to pass to your function
+              currentmonth: $.CurrentMonth.m,
+              id: contractorID,
+          },
+          success: function (data) {        
+              if(data != 'None' || data != ""){
+                  $(".month").replaceWith(data);
+                  $.CurrentMonth.m -= 1;
+              }                                      
+          }
+      });
+  });
+
+  $('#right-click').click(function() {    
+      console.log(nexturl);
+      $.ajax({
+          url: String("/"+ contractorID +"/"+ $.CurrentMonth.m +"/"+ currentyear),
+          method: 'GET', // or another (GET), whatever you need
+          data: {
+              currentyear: currentyear, // data you need to pass to your function
+              currentmonth: $.CurrentMonth.m,
+              id: contractorID,
+          },
+          success: function (data) {        
+              if (data != 'None' || data != ""){
+                  $(".month").replaceWith(data);
+                  $.CurrentMonth.m +1;
+              }            
+          }
+      });
+  });
 
 });
 </script>

@@ -1,7 +1,7 @@
 from django.template.loader import get_template
 from django import template
 from zipcode import views
-from zipcode.models import Testimonials
+from zipcode.models import Testimonial
 
 register = template.Library()
 
@@ -24,6 +24,6 @@ def show_contractor_schedule_form():
 register.inclusion_tag('search.html')(show_contractor_schedule_form)
 
 def show_testimonials():
-	return {'testimonials': Testimonials.objects.all() }
+	return {'testimonials': Testimonial.objects.all() }
 
 register.inclusion_tag('testimonials.html')(show_testimonials)

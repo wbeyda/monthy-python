@@ -13,4 +13,6 @@ urlpatterns = patterns('',
    url(r'careers/$', views.get_resume, name="careers"),
    url(r'gallery/$', views.show_gallery, name="gallery"),
    url(r'schedule/$', views.request_event, name="schedule"),
+   url(r'^(?P<id>\d+)\/(?P<currentyear>\d{4})\/(?P<currentmonth>0?[1-9]|1[012])', views.last_month_request , name="last_month_request"),
+   url(r'^(?P<id>\d+)\/(?P<currentmonth>0?[1-9]|1[012])\/(?P<currentyear>\d{4})', views.next_month_request , name="next_month_request"),
 )

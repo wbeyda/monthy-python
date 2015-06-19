@@ -18,7 +18,7 @@ class CareerResumeAdmin(admin.ModelAdmin):
 class ContractorScheduleAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('firstname', 'start_date', 'end_date', 'title', 'description',)
+            'fields': ('firstname', 'start_date', 'end_date', 'title', 'background_color','description',)
         }),
         ('Location', {
             'classes': ('collapse',),
@@ -34,7 +34,7 @@ class ContractorScheduleAdmin(admin.ModelAdmin):
 class GalleryAdmin(admin.ModelAdmin):
     list_display = ('author','picdate','picture','caption','sourceURL',)
 
-class TestimonialsAdmin(admin.ModelAdmin):
+class TestimonialAdmin(admin.ModelAdmin):
     list_display = ('customer_name','customer_date','customer_city','customer_testimonial',)
 
 
@@ -44,4 +44,4 @@ admin.site.register(CareerResume, CareerResumeAdmin)
 admin.site.register(ContractorSchedule, ContractorScheduleAdmin)
 admin.site.register(Location)
 admin.site.register(Gallery, GalleryAdmin)
-admin.site.register(Testimonials, TestimonialsAdmin)
+admin.site.register(Testimonial, TestimonialAdmin)
