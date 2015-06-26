@@ -91,14 +91,13 @@ def contractor_calendar(queryset):
                     htmlcalendar = GenericCalendar(y,m).formatmonth(y,m, eventdict)
                 elif j == monthrange(y,m)[1] and n != counter:
                     n+=1
-    return htmlcalendar
+        return htmlcalendar
 
 def next_last_month_contractor_calendar(queryset):
     counter = queryset.count()
     for i in queryset:   
         eventdict = {} 
         n = 1
-        print (i.start_date, counter)
         htmlcalendar = {}
         y,m = i.start_date.year,i.start_date.month
         event = "<ul><li style=\"background-color:#"+ i.background_color +"\">" +\
@@ -106,6 +105,7 @@ def next_last_month_contractor_calendar(queryset):
         #loop through the days of the month
         if i.start_date.day != i.end_date.day:
                 chunkofdays = range(i.start_date.day, i.end_date.day+1)
+                print(i.start_date)
                 for days in chunkofdays:
                     if days == chunkofdays[-1]:
                         eventend = "<ul><li style=\"background-color:#"+ i.background_color +"\">"  +\

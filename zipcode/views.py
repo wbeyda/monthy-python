@@ -6,6 +6,7 @@ from zipcode.forms import *
 from django.core.mail import send_mail
 from zipcode.calendars import * 
 from django.views.generic.detail import DetailView
+import inspect
 
 def results(request, postcode):
     con = Contractor.objects.filter(areacode=postcode).prefetch_related().order_by("lastname")
@@ -89,6 +90,7 @@ def contractor_detail_view(request, f,id,l):
     return render(request, 'contractor_detail.html', {'con': con, 'htmlcalendar': htmlcalendar })
 
 def next_month_request(request, id, currentyear, currentmonth):
+    print("GET:", request, "next")
     if request.is_ajax():
         if int(request.GET.get('currentmonth')) == 12:
             nextyear = int(request.Get.get('currentyear')) + 1
@@ -99,9 +101,12 @@ def next_month_request(request, id, currentyear, currentmonth):
                           int(request.GET.get('currentyear')),nextmonth,1)
                       )  
         htmlcalendar = next_last_month_contractor_calendar(queryset)
+        for i in queryset: print i.start_date
+        print(htmlcalendar)
         return HttpResponse(htmlcalendar) 
 
 def last_month_request(request, id, currentyear, currentmonth):
+    print("GET:", request, "last:")
     if request.is_ajax():
         if request.GET.get("currentmonth") == 1:
             lastyear = int(request.GET.get('currentyear')) -1
@@ -111,6 +116,9 @@ def last_month_request(request, id, currentyear, currentmonth):
             queryset = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get("id"))).exclude(
                            start_date__gt=last_day_of_month(
                                datetime.datetime(int(request.GET.get("currentyear")),lastmonth,1))
-                          )  
+                          ) 
+         
         htmlcalendar = next_last_month_contractor_calendar(queryset)
+        for i in queryset: print i.start_date
+        print( htmlcalendar)
         return HttpResponse(htmlcalendar) 

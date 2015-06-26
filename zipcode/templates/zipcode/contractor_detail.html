@@ -58,7 +58,7 @@
                           <button type="button" id="right-click" class="btn btn-default">
                             <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
                           </button>
-                        </div>
+                        </div>                      
                         {{ htmlcalendar | safe}} 
                     </div>
                     
@@ -75,46 +75,51 @@ $( document ).ready(function() {
   
   var monthMapper = [ "January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; 
 
-  var thismonth    = $(".month th").first().text().split(" ")[0].trim();
-  var currentyear  = $(".month th").first().text().split(" ")[1] ;
+  //var thismonth    = $(".month th").first().text().split(" ")[0].trim();
+  //var currentyear  = $(".month th").first().text().split(" ")[1] ;
   $.CurrentMonth = new Object();
-  $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;
-  var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %} 
-  var lasturl = String("/"+ contractorID +"/"+ currentyear +"/"+ $.CurrentMonth.m)
-  var nexturl = String("/"+ contractorID +"/"+ $.CurrentMonth.m +"/"+ currentyear)
-
+  //$.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;
+  var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %}; 
+  
   $('#left-click').click(function() {    
+      var thismonth    = $(".month th").first().text().split(" ")[0].trim();
+      var currentyear  = $(".month th").first().text().split(" ")[1] ;
+      $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;            
+      var currentMonthString = $.CurrentMonth.m.toString();
       $.ajax({
-          url: String("/"+ contractorID +"/"+ currentyear +"/"+ $.CurrentMonth.m),           
+          url: String("/"+ contractorID +"/"+ currentyear +"/"+ currentMonthString ),           
           method: 'GET',
           data: {
-              currentyear: currentyear, // data you need to pass to your function
-              currentmonth: $.CurrentMonth.m,
+              currentyear: currentyear, 
+              currentmonth: currentMonthString,
               id: contractorID,
           },
           success: function (data) {        
-              if(data != 'None' || data != ""){
+              if(data != 'None' && data != ""){
                   $(".month").replaceWith(data);
-                  $.CurrentMonth.m -= 1;
+                 // $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;
               }                                      
           }
       });
   });
 
   $('#right-click').click(function() {    
-      console.log(nexturl);
+      var thismonth    = $(".month th").first().text().split(" ")[0].trim();
+      var currentyear  = $(".month th").first().text().split(" ")[1] ;
+      $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;
+      var currentMonthString = $.CurrentMonth.m.toString();
       $.ajax({
-          url: String("/"+ contractorID +"/"+ $.CurrentMonth.m +"/"+ currentyear),
-          method: 'GET', // or another (GET), whatever you need
+          url: String("/"+ contractorID +"/"+ currentMonthString + "/" + currentyear ),
+          method: 'GET', 
           data: {
-              currentyear: currentyear, // data you need to pass to your function
-              currentmonth: $.CurrentMonth.m,
+              currentyear: currentyear,               
+              currentmonth: currentMonthString,
               id: contractorID,
           },
           success: function (data) {        
-              if (data != 'None' || data != ""){
+              if (data != 'None' && data != ""){
                   $(".month").replaceWith(data);
-                  $.CurrentMonth.m +1;
+                 // $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;
               }            
           }
       });
