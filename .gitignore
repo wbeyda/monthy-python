@@ -1,1 +1,3 @@
 *.pyc
+media/photos/*
+zipcode/*.pyc

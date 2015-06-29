@@ -58,6 +58,9 @@
                           <button type="button" id="right-click" class="btn btn-default">
                             <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
                           </button>
+                        </div>
+                        <div>
+                        <span id="nomonth"></span>
                         </div>                      
                         {{ htmlcalendar | safe}} 
                     </div>
@@ -72,13 +75,8 @@
 {% block extra-javascript %}
 <script type="text/javascript">
 $( document ).ready(function() {
-  
-  var monthMapper = [ "January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; 
-
-  //var thismonth    = $(".month th").first().text().split(" ")[0].trim();
-  //var currentyear  = $(".month th").first().text().split(" ")[1] ;
+  var monthMapper = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; 
   $.CurrentMonth = new Object();
-  //$.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;
   var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %}; 
   
   $('#left-click').click(function() {    
@@ -97,8 +95,12 @@ $( document ).ready(function() {
           success: function (data) {        
               if(data != 'None' && data != ""){
                   $(".month").replaceWith(data);
-                 // $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;
-              }                                      
+                  $("#nomonth").text("");
+              }                                   
+          },
+          error: function (jqXHR, error) {
+                var lastmonth = monthMapper.indexOf(thismonth) -1;
+                $("#nomonth").text("No events for "+ monthMapper[lastmonth] +" to display");
           }
       });
   });
@@ -119,8 +121,8 @@ $( document ).ready(function() {
           success: function (data) {        
               if (data != 'None' && data != ""){
                   $(".month").replaceWith(data);
-                 // $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;
-              }            
+                  $("#nomonth").text("");
+              }        
           }
       });
   });
