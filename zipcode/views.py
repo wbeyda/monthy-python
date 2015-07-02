@@ -92,9 +92,29 @@ def next_month_request(request, id, currentyear, currentmonth):
     if request.is_ajax():
         if int(request.GET.get('currentmonth')) == 12:
             nextyear = int(request.GET.get('currentyear')) + 1
-            queryset = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get('id'))).exclude(
+            queryset = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get('id')))
+            for i in queryset: 
+                if i.start_date.month == 12 and i.end_date.month == 1:
+                    print("this chunk goes into the next month","\n")
+                    print("changin start_date to first day of next month","\n")
+                    print(i.start_date,"\n")
+                    h,m =  i.start_date.hour, i.start_date.minute
+                    i.start_date = last_day_of_month(i.start_date) + datetime.timedelta(seconds=1)+ datetime.timedelta(hours=h) + datetime.timedelta(minutes=m)
+                    print("loop:",i.start_date)
+            for f in queryset: print("changed:", f.start_date, f.end_date)
+            queryset = queryset.exclude(
+                                        start_date__lt=last_day_of_month(
+                                            datetime.datetime(int(request.GET.get('currentyear')),
+                                            int(request.GET.get('currentmonth')),1)
+                                        )).exclude(
+                                        start_date__gt=datetime.datetime(nextyear,1,31,23,59,59))
+            # import pdb; pdb.set_trace()
+            for j in queryset: 
+                print("printing queryset:")
+                print( "queryset:", j.start_date, j.end_date )
+            """queryset = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get('id'))).exclude(
                           start_date__lt=datetime.datetime(nextyear,1,1)).exclude(
-                          start_date__gt=datetime.datetime(nextyear,1,31,23,59,59))
+                          start_date__gt=datetime.datetime(nextyear,1,31,23,59,59))"""
             if queryset.exists():
                 htmlcalendar = next_last_month_contractor_calendar(queryset)
             else:
@@ -140,6 +160,5 @@ def last_month_request(request, id, currentyear, currentmonth):
                 htmlcalendar = next_last_month_contractor_calendar(queryset)
             else:
                 htmlcalendar = LocaleHTMLCalendar().formatmonth(cy,lastmonth)  
-        for i in queryset: print("start date:",i.start_date)
         print( htmlcalendar)
         return HttpResponse(htmlcalendar) 

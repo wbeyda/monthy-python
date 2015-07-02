@@ -55,7 +55,7 @@ class ContractorSchedule(models.Model):
         if self.start_date.day != self.end_date.day:
             raise ValidationError('Please enter these chunks of days as seperate Schedule Requests')
     def clean(self):
-	    self.start_date_before_now()
+	    #self.start_date_before_now()
 	    self.end_date_before_start_date()
       #self.is_chunk()
 		

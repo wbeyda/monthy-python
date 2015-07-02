@@ -71,7 +71,6 @@ def contractor_calendar(queryset):
                             eventstart = "<ul><li style=\"background-color:#"+ i.background_color +"\">" +\
                                          i.start_date.strftime("%I:%M")+" "+ i.title + "</li></ul>"
                             eventdict[days] = eventstart
-                        print('this is a chunk', days, i.start_date.day, i.end_date.day)
             for j in range(1,monthrange(y,m)[1]+1): #1-31                           
                 
                 if i.start_date.day == j and j not in eventdict:
@@ -95,6 +94,7 @@ def contractor_calendar(queryset):
 
 def next_last_month_contractor_calendar(queryset):
     counter = queryset.count()
+    print(queryset)
     for i in queryset:   
         eventdict = {} 
         n = 1
@@ -103,9 +103,12 @@ def next_last_month_contractor_calendar(queryset):
         event = "<ul><li style=\"background-color:#"+ i.background_color +"\">" +\
                  i.start_date.strftime("%I:%M")+" "+ i.title +" "+ i.end_date.strftime("%I:%M") +"</li></ul>"
         #loop through the days of the month
+        print(event)
         if i.start_date.day != i.end_date.day:
+                #if i.start_date.month != i.end_date.month:
+                #    i.start_date = last_day_of_month(i.start_date) + datetime.timedelta(seconds=1)
                 chunkofdays = range(i.start_date.day, i.end_date.day+1)
-                print(i.start_date)
+                print("this is a chunk", i.start_date, i.end_date)
                 for days in chunkofdays:
                     if days == chunkofdays[-1]:
                         eventend = "<ul><li style=\"background-color:#"+ i.background_color +"\">"  +\
@@ -116,7 +119,6 @@ def next_last_month_contractor_calendar(queryset):
                                      i.start_date.strftime("%I:%M")+" "+ i.title + "</li></ul>"
                         eventdict[days] = eventstart
         for j in range(1,monthrange(y,m)[1]+1): #1-31                           
-            
             if i.start_date.day == j and j not in eventdict:
                 eventdict[j] = event
             elif j not in eventdict:
@@ -125,7 +127,7 @@ def next_last_month_contractor_calendar(queryset):
             #add to a day with an event
             if i.start_date.day == j and eventdict[j] != "" and eventdict[j] is not None and eventdict[j] != event and i.is_chunk == False:
                 eventdict[j] += event
-            
+                print("adding", i.title, "to ", j)
             #change day from none to event 
             if i.start_date.day == j and eventdict[j] is None:
                 eventdict[j] = event
@@ -134,5 +136,5 @@ def next_last_month_contractor_calendar(queryset):
                 htmlcalendar = GenericCalendar(y,m).formatmonth(y,m, eventdict)
             elif j == monthrange(y,m)[1] and n != counter:
                 n+=1
-        return htmlcalendar
+    return htmlcalendar
 
