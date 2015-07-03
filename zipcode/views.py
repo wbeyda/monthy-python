@@ -92,73 +92,90 @@ def next_month_request(request, id, currentyear, currentmonth):
     if request.is_ajax():
         if int(request.GET.get('currentmonth')) == 12:
             nextyear = int(request.GET.get('currentyear')) + 1
-            queryset = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get('id')))
-            for i in queryset: 
-                if i.start_date.month == 12 and i.end_date.month == 1:
-                    print("this chunk goes into the next month","\n")
-                    print("changin start_date to first day of next month","\n")
-                    print(i.start_date,"\n")
-                    h,m =  i.start_date.hour, i.start_date.minute
+            qs = ContractorSchedule.objects.filter(firstname_id=int(id)).exclude(
+                                                                            start_date__lt=datetime.datetime(
+                                                                                int(currentyear),
+                                                                                int(currentmonth),
+                                                                                1)
+                                                                        ).exclude(
+                                                                        start_date__gt=datetime.datetime(nextyear,1,31,23,59,59))
+            queryset = []
+            for i in qs: 
+                h,m =  i.start_date.hour, i.start_date.minute
+                if i.start_date.month != i.end_date.month:
                     i.start_date = last_day_of_month(i.start_date) + datetime.timedelta(seconds=1)+ datetime.timedelta(hours=h) + datetime.timedelta(minutes=m)
-                    print("loop:",i.start_date)
-            for f in queryset: print("changed:", f.start_date, f.end_date)
-            queryset = queryset.exclude(
-                                        start_date__lt=last_day_of_month(
-                                            datetime.datetime(int(request.GET.get('currentyear')),
-                                            int(request.GET.get('currentmonth')),1)
-                                        )).exclude(
-                                        start_date__gt=datetime.datetime(nextyear,1,31,23,59,59))
-            # import pdb; pdb.set_trace()
-            for j in queryset: 
-                print("printing queryset:")
-                print( "queryset:", j.start_date, j.end_date )
-            """queryset = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get('id'))).exclude(
-                          start_date__lt=datetime.datetime(nextyear,1,1)).exclude(
-                          start_date__gt=datetime.datetime(nextyear,1,31,23,59,59))"""
-            if queryset.exists():
+                    queryset.append(i)
+                else:
+                    queryset.append(i)
+            if queryset != None:
                 htmlcalendar = next_last_month_contractor_calendar(queryset)
+                return HttpResponse(htmlcalendar)
             else:
                 htmlcalendar = LocaleHTMLCalendar().formatmonth(nextyear,1)
+                return HttpResponse(htmlcalendar)
         elif int(request.GET.get('currentmonth')) != 12 :
             cid = int(request.GET.get("id"))     
             nextmonth = int(request.GET.get('currentmonth')) +1
             cy = int(request.GET.get('currentyear'))
             d = datetime.datetime(cy,nextmonth,1) 
-            queryset = ContractorSchedule.objects.filter(firstname_id=cid).exclude(
-                          start_date__lt=first_day_of_month(d)).exclude(
-                          start_date__gt=last_day_of_month(d))  
-            if queryset.exists():
-                    htmlcalendar = next_last_month_contractor_calendar(queryset)
-            else:
+            qs = ContractorSchedule.objects.filter(firstname_id=cid).exclude(
+                          start_date__lt=first_day_of_month(datetime.datetime(cy,int(currentmonth),1))).exclude(
+                          start_date__gt=last_day_of_month(d))
+            queryset = []
+            for i in qs:
+                #import pdb; pdb.set_trace()
+                h,m =  i.start_date.hour, i.start_date.minute
+                if i.start_date.month < i.end_date.month and i.end_date.month == nextmonth:
+                    i.start_date = last_day_of_month(i.start_date) + datetime.timedelta(seconds=1)+ datetime.timedelta(hours=h) + datetime.timedelta(minutes=m)
+                    queryset.append(i)
+                elif i.start_date.month == nextmonth: 
+                    queryset.append(i)
+            if not queryset:
                 htmlcalendar = LocaleHTMLCalendar().formatmonth(cy,nextmonth) 
-                print(htmlcalendar)
+            else:
+                htmlcalendar = next_last_month_contractor_calendar(queryset)
         return HttpResponse(htmlcalendar) 
 
 def last_month_request(request, id, currentyear, currentmonth):
     if request.is_ajax():
         if int(request.GET.get("currentmonth")) == 1:
-            lastyear = int(request.GET.get('currentyear')) -1
-            queryset = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get("id"))).exclude(
+            lastyear = int(currentyear) -1
+            qs = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get("id"))).exclude(
                         start_date__gt=datetime.datetime(lastyear,12,31,23,59,59)).exclude(
-                        start_date__lt=datetime.datetime(lastyear,12,1)  
+                        end_date__lt=datetime.datetime(lastyear,11,1)  
                       )
-            if queryset.exists():
-                htmlcalendar = next_last_month_contractor_calendar(queryset)
-            else:
+            queryset = []
+            for i in qs:
+                h,m = i.start_date.hour, i.start_date.minute
+                if i.end_date.month == 12 and i.start_date.month <= 12:
+                    i.start_date = datetime.datetime(lastyear,12,1) + datetime.timedelta(hours=h) + datetime.timedelta(minutes=m)
+                    queryset.append(i)
+                else:
+                    queryset.append(i)
+            if not queryset:
                 htmlcalendar = LocaleHTMLCalendar().formatmonth(lastyear, 12)
-        elif int(request.GET.get("currentmonth")) != 1:
-            cid = int(request.GET.get("id"))     
-            lastmonth = int(request.GET.get('currentmonth')) -1
-            cy = int(request.GET.get('currentyear'))
-            print("cid: lastmonth: cy:",cid, lastmonth, cy)
-            d = datetime.datetime(cy,lastmonth,1)
-            
-            queryset = ContractorSchedule.objects.filter(firstname_id=cid).exclude(
-                           start_date__gt = last_day_of_month(d)).exclude(
-                           start_date__lt = first_day_of_month(d))
-            if queryset.exists():
-                htmlcalendar = next_last_month_contractor_calendar(queryset)
+                return HttpResponse(htmlcalendar)
             else:
-                htmlcalendar = LocaleHTMLCalendar().formatmonth(cy,lastmonth)  
-        print( htmlcalendar)
-        return HttpResponse(htmlcalendar) 
+                htmlcalendar = next_last_month_contractor_calendar(queryset)
+                return HttpResponse(htmlcalendar)
+        elif int(request.GET.get("currentmonth")) != 1:
+            lastmonth = int(currentmonth) -1
+            cy = int(currentyear)
+            d = datetime.datetime(cy,lastmonth,1)
+            qs = ContractorSchedule.objects.filter(firstname_id=int(id)).exclude(
+                           start_date__gt = last_day_of_month(d)).exclude(
+                           end_date__lt = d)
+            queryset = []
+            import pdb; pdb.set_trace()
+            for i in qs:
+                h,m = i.start_date.hour, i.start_date.minute
+                if i.end_date.month == lastmonth and i.start_date.month < lastmonth: 
+                    i.start_date = last_day_of_month(i.start_date) + datetime.timedelta(seconds=1)+ datetime.timedelta(hours=h) + datetime.timedelta(minutes=m)
+                    queryset.append(i)
+                elif i.start_date.month == lastmonth:
+                    queryset.append(i)
+            if not queryset:
+                htmlcalendar = LocaleHTMLCalendar().formatmonth(cy,lastmonth) 
+            else:
+                htmlcalendar = next_last_month_contractor_calendar(queryset)
+        return HttpResponse(htmlcalendar)
