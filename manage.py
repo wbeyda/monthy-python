@@ -9,4 +9,4 @@ if __name__ == "__main__":
 
     execute_from_command_line(sys.argv)
 
-sys.dont_write_bytecode = True
+#sys.dont_write_bytecode = True

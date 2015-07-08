@@ -45,7 +45,9 @@ class ContractorSchedule(models.Model):
     background_color = models.CharField(
         _("background color"), max_length=10, choices=EVENT_COLORS, default='eeeeee'
     )
-        
+    def __str__(self):
+        return self.title
+    
     def start_date_before_now(self):
         if self.start_date != None and self.start_date < timezone.now():
             raise ValidationError('Start Date cannot be before now')
@@ -95,8 +97,11 @@ class Testimonial(models.Model):
     customer_name        = models.CharField(_('customer name'), max_length=255, blank=True)
     customer_city        = models.CharField(_('customer city'), max_length=255, blank=True)
     customer_testimonial = models.TextField(_('customer testimonial'), max_length=255, blank=True)
-    customer_date        = models.DateTimeField(_("customer date"))
+    customer_date        = models.DateTimeField(_("customer date"), auto_now_add=True)
     contractor           = models.ForeignKey(Contractor, unique=True)
-    job                  = models.ForeignKey(ContractorSchedule)
-    job_pic              = models.FileField(upload_to='testimonial/'+ contractor +'%Y/%m/d')
-    job_pic_url          = models.CharField(_('job_pic_url'), max_length=255, blank=True)
+    job                  = models.ForeignKey(ContractorSchedule, unique=True)
+    job_pic              = models.FileField(upload_to='testimonial/%Y/%m/d/%H%M')
+    job_pic_url          = models.CharField(_('job pic url'), max_length=255, blank=True)
+    hashtags             = models.CharField(_('hashtags'), max_length=255, blank=True)
+    socialtags           = models.CharField(_('socialtags'), max_length=255, blank=True)
+    approved_status      = models.BooleanField(default=False)
