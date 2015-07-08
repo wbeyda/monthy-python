@@ -159,14 +159,14 @@ def last_month_request(request, id, currentyear, currentmonth):
                 htmlcalendar = next_last_month_contractor_calendar(queryset)
                 return HttpResponse(htmlcalendar)
         elif int(request.GET.get("currentmonth")) != 1:
-            lastmonth = int(currentmonth) -1
+            lastmonth = int(request.GET.get("currentmonth")) -1
             cy = int(currentyear)
             d = datetime.datetime(cy,lastmonth,1)
             qs = ContractorSchedule.objects.filter(firstname_id=int(id)).exclude(
                            start_date__gt = last_day_of_month(d)).exclude(
                            end_date__lt = d)
             queryset = []
-            import pdb; pdb.set_trace()
+            
             for i in qs:
                 h,m = i.start_date.hour, i.start_date.minute
                 if i.end_date.month == lastmonth and i.start_date.month < lastmonth: 
@@ -176,6 +176,7 @@ def last_month_request(request, id, currentyear, currentmonth):
                     queryset.append(i)
             if not queryset:
                 htmlcalendar = LocaleHTMLCalendar().formatmonth(cy,lastmonth) 
+                return HttpResponse(htmlcalendar)
             else:
                 htmlcalendar = next_last_month_contractor_calendar(queryset)
-        return HttpResponse(htmlcalendar)
+                return HttpResponse(htmlcalendar)

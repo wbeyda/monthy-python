@@ -25,11 +25,13 @@ class CareerResume(models.Model):
 
 EVENT_COLORS  = [
         ('eeeeee', _('gray')),
-        ('ff0000', _('red')),
-        ('0000ff', _('blue')),
-        ('00ff00', _('green')),
+        ('ef3b70', _('red')),
+        ('2ebad1', _('blue')),
+        ('85d4f5',_('light-blue')),
+        ('57b449', _('green')),
         ('000000', _('black')),
         ('ffffff', _('white')),
+        ('fcda09', _('yellow')),
     ]
 
 class ContractorSchedule(models.Model):
@@ -94,4 +96,7 @@ class Testimonial(models.Model):
     customer_city        = models.CharField(_('customer city'), max_length=255, blank=True)
     customer_testimonial = models.TextField(_('customer testimonial'), max_length=255, blank=True)
     customer_date        = models.DateTimeField(_("customer date"))
-    contractor           = models.ForeignKey(Contractor, unique=True) 
+    contractor           = models.ForeignKey(Contractor, unique=True)
+    job                  = models.ForeignKey(ContractorSchedule)
+    job_pic              = models.FileField(upload_to='testimonial/'+ contractor +'%Y/%m/d')
+    job_pic_url          = models.CharField(_('job_pic_url'), max_length=255, blank=True)
