@@ -94,11 +94,11 @@ class Gallery(models.Model):
         return self.author
 
 class Testimonial(models.Model):
-    customer_name        = models.CharField(_('customer name'), max_length=255, blank=True)
-    customer_city        = models.CharField(_('customer city'), max_length=255, blank=True)
-    customer_testimonial = models.TextField(_('customer testimonial'), max_length=255, blank=True)
+    customer_name        = models.CharField(_('customer name'), max_length=255)
+    customer_city        = models.CharField(_('customer city'), max_length=255)
+    customer_testimonial = models.TextField(_('customer testimonial'))
     customer_date        = models.DateTimeField(_("customer date"), auto_now_add=True)
-    contractor           = models.ForeignKey(Contractor, unique=True)
+    contractor           = models.ForeignKey(Contractor)
     job                  = models.ForeignKey(ContractorSchedule, unique=True)
     job_pic              = models.FileField(upload_to='testimonial/%Y/%m/d/%H%M')
     job_pic_url          = models.CharField(_('job pic url'), max_length=255, blank=True)

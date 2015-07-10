@@ -4,6 +4,16 @@
     </div>
     {% for i in testimonials %}
     {% if forloop.first %}<div class="row"> {% endif%}
+        <div>
+            <img src="{{i.job_pic}}" alt="job pic" height="200" width="200">
+            <a href="{{i.job_pic_url}}"></a>
+        </div>
+        <div>
+            <span class="hashtags">{{i.hashtags}}</span>
+        </div>
+        <div>
+            <span class="socialtags">{{socialtags}}</span>
+        </div>
         <div class="col-lg-6 testimonials">
             <p>{{ i.customer_testimonial }}
             <BR><BR>-{{ i.customer_name }} from {{ i.customer_city }} on {{ i.customer_date }}</p>

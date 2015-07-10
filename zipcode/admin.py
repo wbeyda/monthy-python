@@ -35,7 +35,9 @@ class GalleryAdmin(admin.ModelAdmin):
     list_display = ('author','picdate','picture','caption','sourceURL',)
 
 class TestimonialAdmin(admin.ModelAdmin):
-    list_display = ('customer_name','customer_date','customer_city','customer_testimonial',)
+    list_display = ('approved_status','contractor','customer_name','customer_date','customer_city','customer_testimonial','job','job_pic','job_pic_url','hashtags','socialtags',)
+    list_filter = ['customer_date','job']
+    search_fields = ['job']
 
 
 

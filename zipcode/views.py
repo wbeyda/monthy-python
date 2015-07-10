@@ -41,6 +41,14 @@ def get_contact(request):
             contactform = ContactForm()
     return render(request, 'contact.html', {'contactform': contactform})
 
+def get_testimonial(request, id):
+    if request.method == 'POST':
+        testimonial_form = TestimonialForm(request.POST)
+        
+
+    return HttpResponseRedirect('/thanks')
+        
+
 def validate_file_extension(value):
     import os
     ext = os.path.splitext(value.name)[1]
@@ -85,8 +93,10 @@ def request_event(request):
 
 def contractor_detail_view(request, f,id,l):
     con = Contractor.objects.filter(id=id).prefetch_related()
+    testimonials = Testimonial.objects.filter(contractor_id=id).prefetch_related().exclude(approved_status=False)
     htmlcalendar = contractor_calendar(con)
-    return render(request, 'contractor_detail.html', {'con': con, 'htmlcalendar': htmlcalendar })
+    testimonial_form = TestimonialForm()
+    return render(request, 'contractor_detail.html', {'con': con, 'htmlcalendar': htmlcalendar, 'testimonials': testimonials, 'testimonial_form': testimonial_form})
 
 def next_month_request(request, id, currentyear, currentmonth):
     if request.is_ajax():
@@ -107,7 +117,7 @@ def next_month_request(request, id, currentyear, currentmonth):
                     queryset.append(i)
                 else:
                     queryset.append(i)
-            if queryset != None:
+            if queryset:
                 htmlcalendar = next_last_month_contractor_calendar(queryset)
                 return HttpResponse(htmlcalendar)
             else:

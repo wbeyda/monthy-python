@@ -23,7 +23,7 @@ def show_contractor_schedule_form():
 
 register.inclusion_tag('search.html')(show_contractor_schedule_form)
 
-def show_testimonials():
-	return {'testimonials': Testimonial.objects.all() }
+def show_testimonials(id):
+	return {'testimonials': Testimonial.objects.filter(id=id) }
 
 register.inclusion_tag('testimonials.html')(show_testimonials)

@@ -25,3 +25,8 @@ class ContractorScheduleForm(forms.ModelForm):
 		class Meta:
                         model = ContractorSchedule
                         fields = ['firstname', 'start_date','end_date', 'all_day', 'title', 'description', 'location', 'background_color']
+
+class TestimonialForm(forms.ModelForm):
+    class Meta:
+        model = Testimonial
+        fields = ['customer_name','customer_city','customer_testimonial','contractor','job','job_pic','job_pic_url','hashtags','socialtags']
