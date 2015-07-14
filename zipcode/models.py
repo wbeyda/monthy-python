@@ -105,3 +105,12 @@ class Testimonial(models.Model):
     hashtags             = models.CharField(_('hashtags'), max_length=255, blank=True)
     socialtags           = models.CharField(_('socialtags'), max_length=255, blank=True)
     approved_status      = models.BooleanField(default=False)
+    best_of              = models.BooleanField(default=False)
+
+
+    def image_tag(self):
+        return u'<img src=' + self.job_pic.url +'/>'
+    image_tag.short_description = 'Image'
+    image_tag.allow_tags = True   
+       
+    

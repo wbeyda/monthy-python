@@ -41,13 +41,19 @@ def get_contact(request):
             contactform = ContactForm()
     return render(request, 'contact.html', {'contactform': contactform})
 
-def get_testimonial(request, id):
+def post_testimonial(request, id):
     if request.method == 'POST':
-        testimonial_form = TestimonialForm(request.POST)
-        
-
-    return HttpResponseRedirect('/thanks')
-        
+        testimonial_form = TestimonialForm(request.POST,request.FILES)
+        if testimonial_form.is_valid():
+            newform = testimonial_form.save(commit=False)
+            newform.contractor_id = id
+            newform.approved_status = False
+            newform.save()
+            print("this posted")
+            return HttpResponseRedirect('/thanks/')
+        else:
+            testimonial_form = TestimonialForm()
+            return HttpResponse('error')
 
 def validate_file_extension(value):
     import os
@@ -95,7 +101,23 @@ def contractor_detail_view(request, f,id,l):
     con = Contractor.objects.filter(id=id).prefetch_related()
     testimonials = Testimonial.objects.filter(contractor_id=id).prefetch_related().exclude(approved_status=False)
     htmlcalendar = contractor_calendar(con)
-    testimonial_form = TestimonialForm()
+    from django.forms.models import inlineformset_factory
+    '''testform = inlineformset_factory(ContractorSchedule,
+                                    Testimonial,
+                                    form=TestimonialForm,
+                                    fk_name='job',fields=(
+                                                            'customer_name',
+                                                            'customer_city',
+                                                            'customer_testimonial',
+                                                            'job',
+                                                            'job_pic',
+                                                            'job_pic_url',
+                                                            'hashtags',
+                                                            'socialtags'))
+    '''
+    conschedule = ContractorSchedule.objects.filter(firstname_id=id)
+    #testimonial_form = testform(instance=conschedule)
+    testimonial_form = testimonialform_factory(conschedule)
     return render(request, 'contractor_detail.html', {'con': con, 'htmlcalendar': htmlcalendar, 'testimonials': testimonials, 'testimonial_form': testimonial_form})
 
 def next_month_request(request, id, currentyear, currentmonth):

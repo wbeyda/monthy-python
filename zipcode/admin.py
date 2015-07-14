@@ -2,8 +2,8 @@ from django.contrib.admin import AdminSite
 from django.contrib import admin
 from zipcode.models import *
 from django.utils.translation import ugettext_lazy
-AdminSite.site_header = "AHS Admin"
-AdminSite.site_title = ugettext_lazy('AHS Site Admin')
+AdminSite.site_header = "At Home Services Admin"
+AdminSite.site_title = ugettext_lazy('At Home Services Site Admin')
 
 class ContractorAdmin(admin.ModelAdmin):
 	list_display = ('firstname', 'lastname','areacode', 'trade', 'secondaryTrades' ,'bio', 'pic')
@@ -35,10 +35,36 @@ class GalleryAdmin(admin.ModelAdmin):
     list_display = ('author','picdate','picture','caption','sourceURL',)
 
 class TestimonialAdmin(admin.ModelAdmin):
-    list_display = ('approved_status','contractor','customer_name','customer_date','customer_city','customer_testimonial','job','job_pic','job_pic_url','hashtags','socialtags',)
+    list_display = ('approved_status',
+                    'contractor',
+                    'customer_name',
+                    'customer_date',
+                    'customer_city',
+                    'customer_testimonial',
+                    'job',
+                    'image_tag',
+                    'job_pic_url',
+                    'hashtags',
+                    'socialtags',
+                    'best_of',)
+
+    '''if User.is_staff:
+        has_change_permission(best_of) = True
+    else:
+        has_change_permission(best_of) = False'''
     list_filter = ['customer_date','job']
     search_fields = ['job']
-
+    readonly_fields = ('image_tag',)
+    def mark_as_approved(self, request, queryset):
+          rows_updated = queryset.update(approved_status = True)
+          if rows_updated == 1:
+              message_bit = "1 Testimonial was approved"
+          else:
+              message_bit = "%s Testimonials were approved" % rows_updated
+          
+          self.message_user(request, "%s successfully marked as approved." % message_bit)
+    
+    actions = [mark_as_approved]
 
 
 admin.site.register(Contractor, ContractorAdmin)

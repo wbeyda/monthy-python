@@ -123,11 +123,11 @@
         </div>
     {% endfor %}
     <div>
-		<form id="schedule-form" action="testimonial_submit" enctype="multipart/form-data" method="post">
-			{% csrf_token %}
-			{{ testimonial_form }}
-			<input type="submit" id="testimonial-submit"value="Submit" />
-		</form>
+      <form id="schedule-form" action="/testimonial_post/{% for i in con %}{{i.id}}{% endfor %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {{ testimonial_form }}
+        <input type="submit" id="testimonial-submit"value="Submit" />
+      </form>
     </div>
 
 </div>

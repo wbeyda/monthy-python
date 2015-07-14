@@ -29,4 +29,15 @@ class ContractorScheduleForm(forms.ModelForm):
 class TestimonialForm(forms.ModelForm):
     class Meta:
         model = Testimonial
-        fields = ['customer_name','customer_city','customer_testimonial','contractor','job','job_pic','job_pic_url','hashtags','socialtags']
+        fields = ['customer_name','customer_city','customer_testimonial','job','job_pic','job_pic_url','hashtags','socialtags']
+
+def testimonialform_factory(qs):
+
+    class TestimonialForm(forms.ModelForm):
+        job = forms.ModelMultipleChoiceField(queryset=qs)
+        class Meta:
+            model = Testimonial
+            fields =     ['customer_name','customer_city','customer_testimonial','job','job_pic','job_pic_url','hashtags','socialtags']
+            exclude = ['best_of']    
+    return TestimonialForm
+

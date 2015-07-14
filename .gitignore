@@ -1,5 +1,6 @@
 *.pyc
 media/photos/*
+media/testimonial/*
 zipcode/*.pyc
 db.sqlite3
 zipcode/migrations/*
