@@ -1,4 +1,4 @@
 .gallery { position: relative; overflow: auto; }
 .gallery li { list-style: none; }
 .gallery ul li { float: left; }
-.gallery { width: }
+.gallery-pic {max-height: 25em;}

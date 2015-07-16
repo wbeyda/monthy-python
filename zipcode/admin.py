@@ -26,8 +26,8 @@ class ContractorScheduleAdmin(admin.ModelAdmin):
         }),
     )
 
-    list_display = ('firstname','title', 'start_date', 'end_date',)
-    list_filter = ['start_date']
+    list_display = ('id','firstname','title', 'start_date', 'end_date',)
+    list_filter = ['id']
     search_fields = ['title']
     date_hierarchy = 'start_date'
 
@@ -55,6 +55,12 @@ class TestimonialAdmin(admin.ModelAdmin):
     list_filter = ['customer_date','job']
     search_fields = ['job']
     readonly_fields = ('image_tag',)
+    
+    field_options = {
+                    'fields': ('image_tag'),
+                    'classes': ('extrapretty'),
+                    }
+
     def mark_as_approved(self, request, queryset):
           rows_updated = queryset.update(approved_status = True)
           if rows_updated == 1:

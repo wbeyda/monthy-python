@@ -33,7 +33,6 @@ EVENT_COLORS  = [
         ('ffffff', _('white')),
         ('fcda09', _('yellow')),
     ]
-
 class ContractorSchedule(models.Model):
     firstname = models.ForeignKey(Contractor)
     start_date = models.DateTimeField(verbose_name=_("start date"))
@@ -45,6 +44,20 @@ class ContractorSchedule(models.Model):
     background_color = models.CharField(
         _("background color"), max_length=10, choices=EVENT_COLORS, default='eeeeee'
     )
+    def dispatch_number(self):
+        return self.pk.zfill(5)
+
+    '''
+    def add_zeros(self):
+        dn = self.pk
+        self.dispatch_number = dn
+        return self.dispatch_number.zfill(5)
+    
+    def save(self, *args, **kwargs):
+        self.add_zeros()
+        super(ContractorSchedule,self).save(*args, **kwargs)
+       ''' 
+     
     def __str__(self):
         return self.title
     
@@ -83,12 +96,15 @@ class Location(models.Model):
         return self.name
 
 class Gallery(models.Model):
-    picture   = models.FileField(upload_to='gallery/%Y/%m/%d')
-    caption   = models.CharField(_('caption'), max_length=255, blank=True)
-    author    = models.CharField(_('author'), max_length=255, blank=True)
-    sourceURL = models.URLField(_('source URL'), blank=True)
-    picdate   = models.DateTimeField(_("pic date"))
-    contractor = models.ForeignKey(Contractor, unique=True)
+    picture     = models.FileField(upload_to='gallery/%Y/%m/%d', blank=True)
+    caption     = models.CharField(_('caption'), max_length=255, blank=True)
+    author      = models.CharField(_('author'), max_length=255, blank=True)
+    sourceURL   = models.URLField(_('source URL'), blank=True)
+    picdate     = models.DateTimeField(_("pic date"), blank=True)
+    contractor  = models.ForeignKey(Contractor)
+    job         = models.ForeignKey(ContractorSchedule, default=00000)
+    testimonial = models.ForeignKey('Testimonial', blank=True, default=None)
+
 
     def __str__(self):
         return self.author
@@ -109,7 +125,7 @@ class Testimonial(models.Model):
 
 
     def image_tag(self):
-        return u'<img src=' + self.job_pic.url +'/>'
+        return u'<img class="admin_img_preview" style="max-height:20em;" src=' + self.job_pic.url +'/>'
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True   
        

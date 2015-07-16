@@ -36,38 +36,47 @@
 			<div class="row container">
 				<div class="row">
 					<div class="col-lg-2"></div>
-                    <div class="col-lg-10 gallery">  
+                    <div class="col-lg-12 gallery">  
                         <ul>
                         {% for i in gallery %}
-                            <li><img class="gallery-pic"src="../media/{{i.picture}}"></li>
+                            <li><img class="gallery-pic" src="/media/{{i.picture}}"></br>
                             <h2>{{i.caption}}</h2>
-                            <h2>{{i.author}}</h2>
+                            <h5>Author: {{i.author}}</h5>
                             {% if i.sourceURL %}
                                 <h2>{{i.sourceURL}}</h2>
                             {%endif%}
-                            <h2>{{i.picdate}}</h2>
+                            <h6>Date: {{i.picdate}}</h6>
+                            <a href="#" class="unslider-arrow prev"><span class="glyphicon glyphicon-chevron-left"></span>Previous slide</a>
+                            <a href="#" class="unslider-arrow next"><span class="glyphicon glyphicon-chevron-right"></span>Next slide</a>
+                            </li>
                         {% endfor %}
                         </ul>
-                        <a href="#" class="unslider-arrow prev">Previous slide</a>
-                        <a href="#" class="unslider-arrow next">Next slide</a>
                     </div>    
-                    <div class="col-lg-2"></div>
 				</div>
 			</div>
 		</div>
 	</div>
 {% endblock %}
 {% block extra-javascript %}
-<script src="{% static 'zipcode/js/unslider/src/unslider.min.js' %}"></script>
+<script src="{% static 'zipcode/js/unslider.js' %}"></script>
 <script type="text/javascript">
-    var unslider = $('.gallery').unslider();
+$(document).ready(function(){
+    $('.gallery').unslider({
+        speed: 2000,               //  The speed to animate each slide (in milliseconds)
+        delay: 3000,              //  The delay between slide animations (in milliseconds)
+        complete: function() {},  //  A function that gets called after every slide animation
+        keys: true,               //  Enable keyboard (left, right) arrow shortcuts
+        dots: true,               //  Display dot navigation
+        fluid: false              //  Support responsive design. May break non-responsive designs
+    });
     
-    $('.unslider-arrow').click(function() {
+   $('.unslider-arrow').click(function() {
         var fn = this.className.split(' ')[1];
         
         //  Either do unslider.data('unslider').next() or .prev() depending on the className
-        unslider.data('unslider')[fn]();
-    });
+        $('.gallery').unslider().data('unslider')[fn]();
+    }); 
 
+});
 </script>
 {% endblock %}
