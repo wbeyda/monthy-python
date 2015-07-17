@@ -1,4 +1,10 @@
 {% extends "base.html" %}
+
+{%block extra-meta%} 
+<meta name="keywords" content="at home services, contractors, finished jobs">
+<meta name="description" content="">
+{% endblock%}
+
 {% load staticfiles %}
 {% block extra-css %}
     <link rel="stylesheet" type="text/css" href="{% static 'zipcode/css/gallery.css' %}">
@@ -43,14 +49,16 @@
                             {% if i.sourceURL %}
                                 <a href="{{i.sourceURL}}">view source...</a></br>
                             {%endif%}
-                            <p>{{i.caption}}</p>
+                            <p class="description">{{i.caption}}</p>
                             <h3>Author: {{i.author}}</h3>
                             
                             {% if i.hashtags %}
-                                <a href=""class="hashtags">{{ i.hashtags }}</a>
+                                <span>Hashtags:</span>
+                                <a href=""class="hashtags">{{ i.hashtags }}</a></br>
                             {% endif %}
                             {% if i.socialtags %} 
-                                <a href="" class="socialtags">{{ i.socialtags }}</a>
+                               <span>Socialtags:</span>
+                               <a href="" class="socialtags">{{ i.socialtags }}</a></br>
                             {% endif  %}
                             <h5>Date: {{i.picdate}}</h5>
                             <a href="#" class="unslider-arrow prev"><span class="glyphicon glyphicon-chevron-left"></span>Previous slide</a>
@@ -83,6 +91,26 @@ $(document).ready(function(){
         //  Either do unslider.data('unslider').next() or .prev() depending on the className
         $('.gallery').unslider().data('unslider')[fn]();
     }); 
+
+   $.Htags = [];
+   $.Stags = [];
+   var hashtags = $('.hashtags').text().split(', ');
+   var socialtags = $('.socialtags').text().split(', ');
+
+   $.each(hashtags, function (i,v) {
+        $.Htags.push('<a href="' + v + '" class="hashtags">' + v + '</a>');
+    })
+    $.each(socialtags, function (i,v) {
+        $.Stags.push('<a href="' + v + '" class="socialtags">' + v + '</a>');
+    });    
+
+    $('.hashtags').replaceWith($.Htags.join(', '));
+    $('.socialtags').replaceWith($.Stags.join(', '));
+    var ht = $('.hashtags').text().split('#');
+    var st = $('.socialtags').text().split('@');
+    $('[name="keywords"]').attr('content', function(i,oldval){return oldval + ht + st});
+    var descrip = $('.description').text();
+    $('[name="description"]').attr('content', function(i,oldval){return oldval + descrip });
 
 });
 </script>

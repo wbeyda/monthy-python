@@ -71,10 +71,12 @@ class ContractorSchedule(models.Model):
     def is_chunk(self):
         if self.start_date.day != self.end_date.day:
             raise ValidationError('Please enter these chunks of days as seperate Schedule Requests')
+    
     def clean(self):
-	    #self.start_date_before_now()
-	    self.end_date_before_start_date()
-      #self.is_chunk()
+	self.start_date_before_now()
+        self.end_date_before_start_date()
+        #self.is_chunk()
+        self.dispatch_number
 		
 class Location(models.Model):
     name = models.CharField(_('Name'), max_length=255)
@@ -144,10 +146,18 @@ class Gallery(models.Model):
         return self.hashtags
 
     def socialtags_from_testimonials(self):
-        if self.testimonial != None and self.socialtags == u'':
-            self.hashtags = self.testimonial.socialtags
+        if self.testimonial is not None and self.socialtags == u'':
+            self.socialtags = self.testimonial.socialtags
         return self.socialtags
 
+    def contractor_from_testimonials(self):
+        if self.testimonial is not None:
+            try:
+               self.contractor 
+            except Contractor.DoesNotExist:
+                self.contractor = self.testimonial.contractor
+                return self.contractor
+ 
     def clean(self):
         self.picture_is_job_pic() 
         self.caption_is_customer_testimonial()
@@ -156,6 +166,8 @@ class Gallery(models.Model):
         self.picdate_is_customer_date()
         self.hashtags_from_testimonials()
         self.socialtags_from_testimonials()
+        self.contractor_from_testimonials() 
+
   
 class Testimonial(models.Model):
     customer_name        = models.CharField(_('customer name'), max_length=255)

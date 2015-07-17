@@ -32,7 +32,7 @@ class ContractorScheduleAdmin(admin.ModelAdmin):
     date_hierarchy = 'start_date'
 
 class GalleryAdmin(admin.ModelAdmin):
-    list_display = ('author','picdate','picture','caption','sourceURL','contractor','job','testimonial')
+    list_display = ('author','picdate','picture','caption','sourceURL','contractor','job','testimonial','hashtags','socialtags')
 
 class TestimonialAdmin(admin.ModelAdmin):
     list_display = ('approved_status',
