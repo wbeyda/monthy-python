@@ -96,19 +96,67 @@ class Location(models.Model):
         return self.name
 
 class Gallery(models.Model):
-    picture     = models.FileField(upload_to='gallery/%Y/%m/%d', blank=True)
-    caption     = models.CharField(_('caption'), max_length=255, blank=True)
-    author      = models.CharField(_('author'), max_length=255, blank=True)
-    sourceURL   = models.URLField(_('source URL'), blank=True)
-    picdate     = models.DateTimeField(_("pic date"), blank=True)
+    picture     = models.FileField(upload_to='gallery/%Y/%m/%d', blank=True, help_text="select your own or select a Testimonial with a pic")
+    caption     = models.CharField(_('caption'),max_length=3000, blank=True, help_text="write your own or select a Customers Testimonial")
+    author      = models.CharField(_('author'), max_length=255, blank=True,  help_text="Who is the pic Author? or select a Testimonial")
+    sourceURL   = models.URLField(_('source URL'), blank=True,               help_text="paste the URL or let me get it from a Testimonial")
+    picdate     = models.DateTimeField(_("pic date"), blank=True,            help_text="select the date for this job or just select a Testimonial" )
     contractor  = models.ForeignKey(Contractor)
     job         = models.ForeignKey(ContractorSchedule, default=00000)
+    hashtags    = models.CharField(_('hashtags'), max_length=255, blank=True, default=None)
+    socialtags  = models.CharField(_('socialtags'), max_length=255, blank=True, default=None)
     testimonial = models.ForeignKey('Testimonial', blank=True, default=None)
 
-
     def __str__(self):
+        if self.author is not None:
+            return self.author
+        else:
+            return self.testimonial.customer_name 
+
+    def picture_is_job_pic(self):
+        if self.testimonial != None and not self.picture:
+            self.picture = self.testimonial.job_pic
+        return self.picture
+ 
+    def caption_is_customer_testimonial(self):
+        if self.testimonial != None and self.caption == u'':
+            self.caption = self.testimonial.customer_testimonial
+        return self.caption
+
+    def author_is_customer_name(self):
+        if self.testimonial != None and self.author == u'':
+            self.author = self.testimonial.customer_name
         return self.author
 
+    def sourceurl_is_job_pic_url(self):
+        if self.testimonial != None and self.sourceURL == u'':
+            self.sourceURL = self.testimonial.job_pic_url
+        return self.sourceURL  
+
+    def picdate_is_customer_date(self):
+        if self.testimonial != None and self.picdate == None:
+            self.picdate = self.testimonial.customer_date
+        return self.picdate
+
+    def hashtags_from_testimonials(self):
+        if self.testimonial != None and self.hashtags == u'':
+            self.hashtags = self.testimonial.hashtags
+        return self.hashtags
+
+    def socialtags_from_testimonials(self):
+        if self.testimonial != None and self.socialtags == u'':
+            self.hashtags = self.testimonial.socialtags
+        return self.socialtags
+
+    def clean(self):
+        self.picture_is_job_pic() 
+        self.caption_is_customer_testimonial()
+        self.author_is_customer_name() 
+        self.sourceurl_is_job_pic_url() 
+        self.picdate_is_customer_date()
+        self.hashtags_from_testimonials()
+        self.socialtags_from_testimonials()
+  
 class Testimonial(models.Model):
     customer_name        = models.CharField(_('customer name'), max_length=255)
     customer_city        = models.CharField(_('customer city'), max_length=255)
@@ -123,6 +171,8 @@ class Testimonial(models.Model):
     approved_status      = models.BooleanField(default=False)
     best_of              = models.BooleanField(default=False)
 
+    def __unicode__(self):
+        return self.customer_name 
 
     def image_tag(self):
         return u'<img class="admin_img_preview" style="max-height:20em;" src=' + self.job_pic.url +'/>'

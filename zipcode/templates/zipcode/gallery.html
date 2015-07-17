@@ -40,12 +40,19 @@
                         <ul>
                         {% for i in gallery %}
                             <li><img class="gallery-pic" src="/media/{{i.picture}}"></br>
-                            <h2>{{i.caption}}</h2>
-                            <h5>Author: {{i.author}}</h5>
                             {% if i.sourceURL %}
-                                <h2>{{i.sourceURL}}</h2>
+                                <a href="{{i.sourceURL}}">view source...</a></br>
                             {%endif%}
-                            <h6>Date: {{i.picdate}}</h6>
+                            <p>{{i.caption}}</p>
+                            <h3>Author: {{i.author}}</h3>
+                            
+                            {% if i.hashtags %}
+                                <a href=""class="hashtags">{{ i.hashtags }}</a>
+                            {% endif %}
+                            {% if i.socialtags %} 
+                                <a href="" class="socialtags">{{ i.socialtags }}</a>
+                            {% endif  %}
+                            <h5>Date: {{i.picdate}}</h5>
                             <a href="#" class="unslider-arrow prev"><span class="glyphicon glyphicon-chevron-left"></span>Previous slide</a>
                             <a href="#" class="unslider-arrow next"><span class="glyphicon glyphicon-chevron-right"></span>Next slide</a>
                             </li>

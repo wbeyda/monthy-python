@@ -45,6 +45,7 @@ def post_testimonial(request, id):
     if request.method == 'POST':
         testimonial_form = TestimonialForm(request.POST,request.FILES)
         if testimonial_form.is_valid():
+            import pdb; pdb.set_trace()
             newform = testimonial_form.save(commit=False)
             newform.contractor_id = id
             newform.approved_status = False
@@ -81,7 +82,7 @@ def get_resume(request):
     return render(request, 'careers.html', {'careerform':careerform})
 
 def show_gallery(request):
-    gallery = Gallery.objects.all()
+    gallery = Gallery.objects.all().prefetch_related()
     return render(request, 'gallery.html', {'gallery':gallery})
 
 def request_event(request):
