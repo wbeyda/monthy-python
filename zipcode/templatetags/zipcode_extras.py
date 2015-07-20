@@ -2,6 +2,8 @@ from django.template.loader import get_template
 from django import template
 from zipcode import views
 from zipcode.models import Testimonial
+from django.template.defaultfilters import stringfilter
+import re
 
 register = template.Library()
 
@@ -27,3 +29,10 @@ def show_testimonials(id):
 	return {'testimonials': Testimonial.objects.filter(id=id) }
 
 register.inclusion_tag('testimonials.html')(show_testimonials)
+
+
+@register.filter
+@stringfilter
+def remove_hashtags(hashtags):
+    p = re.compile('(#[A-Za-z0-9]+)(?:, *)?')
+    return re.sub('#(?:, *)?','',hashtags)
