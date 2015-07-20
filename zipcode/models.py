@@ -77,6 +77,15 @@ class ContractorSchedule(models.Model):
         self.end_date_before_start_date()
         #self.is_chunk()
         self.dispatch_number
+
+class Availability(models.Model):
+    contractor              = models.ForeignKey(Contractor)
+    evenings                = models.BooleanField(default=False)
+    weekends                = models.BooleanField(default=False)
+    prefered_starting_hours = models.DateTimeField(verbose_name = _("Prefered starting hours"))
+    prefered_ending_hours   = models.DateTimeField(verbose_name = _("Prefered ending hours"))
+    anytime                 = models.BooleanField(default=False)
+
 		
 class Location(models.Model):
     name = models.CharField(_('Name'), max_length=255)
