@@ -28,7 +28,7 @@ a,p,h1,h2,h3,h4,h5,h6,ul,li,input,select,textarea {font-family: 'Open Sans', san
 
 .container {  float: none; margin: 0 auto;font-family: arial;}
 
-.repair-boxes {width: 10em; margin: 2em 2em 2em 0;}
+.repair-boxes {width: 10em; margin: auto; float: right;}
 .monthly {color: #2ebad1; font-size: 4em; float: none; margin: 1em 0; text-align: center;}
 
 #gdoor {width: 100%;margin-bottom: 0;}
@@ -71,7 +71,7 @@ width: 37em;
 
 #sidebar-wrapper {
 margin-top: 2em;
-margin-right: -12em;
+margin-right: -15em;
 right: 18em;
 width: 16em;
 background: #ef3b70;
@@ -87,7 +87,7 @@ text-align: center;
 
 #sidebar-ad {
 margin-top: 25em;
-margin-right: -12em;
+margin-right: -15em;
 right: 18em;
 width: 16em;
 background: #ef3b70;
@@ -179,3 +179,5 @@ margin-bottom: 1em;}
 .errorlist li {color:red}
 
 img.admin_img_preview {max-height: 20em;}
+
+.row { margin-right: 0; margin-left: 0;}

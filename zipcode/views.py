@@ -100,26 +100,18 @@ def request_event(request):
 
 def contractor_detail_view(request, f,id,l):
     con = Contractor.objects.filter(id=id).prefetch_related()
+    avail = Availability.objects.filter(contractor_id=id).prefetch_related()
     testimonials = Testimonial.objects.filter(contractor_id=id).prefetch_related().exclude(approved_status=False)
     htmlcalendar = contractor_calendar(con)
     from django.forms.models import inlineformset_factory
-    '''testform = inlineformset_factory(ContractorSchedule,
-                                    Testimonial,
-                                    form=TestimonialForm,
-                                    fk_name='job',fields=(
-                                                            'customer_name',
-                                                            'customer_city',
-                                                            'customer_testimonial',
-                                                            'job',
-                                                            'job_pic',
-                                                            'job_pic_url',
-                                                            'hashtags',
-                                                            'socialtags'))
-    '''
     conschedule = ContractorSchedule.objects.filter(firstname_id=id)
-    #testimonial_form = testform(instance=conschedule)
     testimonial_form = testimonialform_factory(conschedule)
-    return render(request, 'contractor_detail.html', {'con': con, 'htmlcalendar': htmlcalendar, 'testimonials': testimonials, 'testimonial_form': testimonial_form})
+    return render(request, 'contractor_detail.html', {'con': con, 
+                                                      'htmlcalendar': htmlcalendar, 
+                                                      'testimonials': testimonials, 
+                                                      'testimonial_form': testimonial_form,
+                                                      'availability': avail
+                                                      })
 
 def next_month_request(request, id, currentyear, currentmonth):
     if request.is_ajax():

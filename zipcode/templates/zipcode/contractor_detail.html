@@ -70,7 +70,33 @@
                         </div>                      
                         {{ htmlcalendar | safe}} 
                     </div>
-                    
+                   <div>
+                      <span>This contractor prefers to work between {% for i in availability %} {{i.prefered_starting_hours }} and {{ i.prefered_ending_hours}}
+                        </span>
+                  </div> 
+                   <div>
+                        <span>This contractor will  {% if i.evenings == True %} work evenings 
+                                                        {% else %} NOT work evenings
+                                                        {%endif %}
+                        </span>
+                  </div>
+                   <div>
+                        <span>This contractor will {% if i.weekends == True %} work weekends
+                                                   {% else %}NOT work weekends 
+                                                   {% endif  %}
+                      </span>
+                  </div>
+                  <div>
+                      <span>This contractor will {% if i.anytime == True%} work ANYTIME
+                                                 {% else%} NOT work ANYTIME
+                                                  {% endif %}
+                      </span>
+                  </div>
+                  <div>
+                      <span>This contractor prefers to work in these zipcodes {{ i.prefered_zipcodes}} 
+                                              {% endfor %}        
+                      </span>
+                  </div> 
                 </div>
 			</div>
 		</div>

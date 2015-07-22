@@ -1,0 +1,18 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Warren Beyda -- Full stack developer -- wbeyda@gmail.com
+    Trevor Green -- Designer -- myhamstrings@gmail.com
+
+# THANKS
+
+    Chris Miller for giving us $
+    DigitalOcean for being the best host
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3
+    jQuery, Modernizr, Bootstrap3
+    Django, Python, Nginx, Gunicorn

@@ -5,11 +5,16 @@ from django.utils.translation import ugettext_lazy
 AdminSite.site_header = "At Home Services Admin"
 AdminSite.site_title = ugettext_lazy('At Home Services Site Admin')
 
-class ContractorAdmin(admin.ModelAdmin):
-	list_display = ('firstname', 'lastname','areacode', 'trade', 'secondaryTrades' ,'bio', 'pic')
-	fields = ('firstname', 'lastname', 'areacode', 'trade', 'secondaryTrades' ,'bio', 'pic')
-	prepopulated_fields = {"firstname": ("firstname",  'lastname',)}
+class AvailabilityInline(admin.TabularInline):
+    model = Availability
 
+
+class ContractorAdmin(admin.ModelAdmin):
+    inlines = [AvailabilityInline,]
+    list_display = ('firstname', 'lastname','areacode', 'trade', 'secondaryTrades' ,'bio', 'pic',)
+    fields = ('firstname', 'lastname', 'areacode', 'trade', 'secondaryTrades' ,'bio', 'pic',)
+    prepopulated_fields = {"firstname": ("firstname",  'lastname',)}
+    
 class CareerResumeAdmin(admin.ModelAdmin):
     list_display = ('name','address','email','phone','resume')
     fields = ('name','address','email','phone','resume')
@@ -73,6 +78,7 @@ class TestimonialAdmin(admin.ModelAdmin):
     actions = [mark_as_approved]
 
 
+#admin.site.register(Availability, AvailabilityInline)
 admin.site.register(Contractor, ContractorAdmin)
 admin.site.register(CareerResume, CareerResumeAdmin)
 admin.site.register(ContractorSchedule, ContractorScheduleAdmin)

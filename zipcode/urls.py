@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 
 
 urlpatterns = patterns('',
+   url(r'^robots\.txt$', TemplateView.as_view(template_name='zipcode/robots.txt'), name="robots"),
    url(r'^$', TemplateView.as_view(template_name="zipcode/home.html"), name="home"),
    url(r'^search/$', views.get_zip,),
    url(r'^search/(?P<postcode>\d{5})$', views.results, name='results'),

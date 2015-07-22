@@ -5,3 +5,5 @@ media/gallery/*
 zipcode/*.pyc
 db.sqlite3
 zipcode/migrations/*
+robots.txt
+static/*

@@ -13,8 +13,8 @@ class Contractor(models.Model):
 	bio = models.TextField()
 	pic = models.ImageField(upload_to = 'photos/%Y/%m/%d')
 	
-	def __str__(self):
-		return self.firstname
+	def __unicode__(self):
+		return self.firstname + ' ' + self.lastname
 
 class CareerResume(models.Model):
 	name = models.CharField(max_length=20)
@@ -78,13 +78,20 @@ class ContractorSchedule(models.Model):
         #self.is_chunk()
         self.dispatch_number
 
+HOURS = ['Midnight','12:15AM','12:30AM,12:45AM']
+
 class Availability(models.Model):
     contractor              = models.ForeignKey(Contractor)
     evenings                = models.BooleanField(default=False)
     weekends                = models.BooleanField(default=False)
-    prefered_starting_hours = models.DateTimeField(verbose_name = _("Prefered starting hours"))
-    prefered_ending_hours   = models.DateTimeField(verbose_name = _("Prefered ending hours"))
+    prefered_starting_hours = models.TimeField(verbose_name = _("Prefered starting time"))
+    prefered_ending_hours   = models.TimeField(verbose_name = _("Prefered ending time"))
     anytime                 = models.BooleanField(default=False)
+    prefered_zipcodes       = models.CommaSeparatedIntegerField(max_length=255)
+
+    def __unicode__(self):
+        contractor_name = self.contractor.firstname +' ' + self.contractor.lastname
+        return contractor_name
 
 		
 class Location(models.Model):

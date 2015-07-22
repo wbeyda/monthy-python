@@ -34,6 +34,7 @@ INSTALLED_APPS = (
     'zipcode',
     'debug_toolbar',
     'django_extensions',
+    'compressor',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -82,4 +83,8 @@ STATIC_ROOT = '/home/django/venv/athomeservices/static/'
 STATIC_URL = '/static/'
 MEDIA_ROOT = '/home/django/venv/athomeservices/media/'
 MEDIA_URL = '/media/'
+
+COMPRESS_PRECOMPILERS = (('text/less', 'lessc {infile} {outfile}'),)
+
+
 
