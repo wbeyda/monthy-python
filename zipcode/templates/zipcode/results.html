@@ -4,7 +4,11 @@
 {% block nav %}
 <div class="header">
     <div>
-        <img class="home-header" src="{% static 'zipcode/images/spring_banner2.jpg' %}">
+        {% if time_image == 'day'%}
+            <img class="home-header" src="{% static 'zipcode/images/headers/SLCDay1920.jpg' %}">
+        {% elif  time_image == 'night'%}
+            <img class="home-header" src="{% static 'zipcode/images/headers/SLCNight1920.jpg' %}">
+        {% endif %}
     </div>
 </div>
 
@@ -46,11 +50,11 @@
 {% endfor %}
 		</div><!--page-content-->
 	</div><!--page-content-wrapper-->
-	<div id="sidebar-ad">
+	<!--<div id="sidebar-ad">
         <h3>HAVE AN EMERGENCY?</h3>
         <H5>Call us directly at</H5>
         <H3>801-933-4663</H3>
-	</div>
+	</div>-->
 </div><!--wrapper-->
 {% endblock %}
 {% block extra-javascript %}

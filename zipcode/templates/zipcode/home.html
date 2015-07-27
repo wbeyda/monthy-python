@@ -4,7 +4,11 @@
 {% block nav %}
 <div class="header">
     <div>
-        <img class="home-header" src="{% static 'zipcode/images/spring_banner2.jpg' %}">
+        {% if time_image == 'day'%}
+            <img class="home-header" src="{% static 'zipcode/images/headers/SLCDay1920.jpg' %}">
+        {% elif  time_image == 'night'%}
+            <img class="home-header" src="{% static 'zipcode/images/headers/SLCNight1920.jpg' %}">
+        {% endif %}
     </div>
 </div>
 
@@ -144,6 +148,33 @@
             <h1 id="phone">801-933-4663</h1>
         </div>
     </div>
-</div>   
+</div>
+
+<div class="row container">
+    <div class="row">
+        <h1 class="monthly">Testimonials</h1>    
+    </div>
+    {% for i in testimonials %}
+    {% if forloop.first  %}
+        <div class="row">
+            <div class="col-md-6 home-testimonials">
+                <span class="test_customer_name"><mark>{{ i.customer_name|title }}</mark></span><span> from</span>
+                <span class="test_customer_city"><mark>{{ i.customer_city | title}}</mark></span><span> had this to say about </span>
+                <span class="test_contractor"><mark>{{ i.contractor| title }}'s</mark> job: </span></br></br>
+                <p class="test_testimonial"><blockquote>{{ i.customer_testimonial }}<BR><BR><footer>{{ i.customer_name|title}} 
+                from <cite title="{{i.customer_city}}">{{ i.customer_city| title }}</cite></footer></blockquote></p>
+            </div>
+    {% else %}
+            <div class="col-md-6 home-testimonials">
+                <span class="test_customer_name"><mark>{{ i.customer_name|title }}</mark></span><span> from</span>
+                <span class="test_customer_city"><mark>{{ i.customer_city | title}}</mark></span><span> had this to say about </span>
+                <span class="test_contractor"><mark>{{ i.contractor| title }}'s</mark> job: </span></br></br>
+                <p class="test_testimonial"><blockquote>{{ i.customer_testimonial }}<BR><BR><footer>{{ i.customer_name|title}} 
+                from <cite title="{{i.customer_city}}">{{ i.customer_city| title }}</cite></footer></blockquote></p>
+            </div>
+    {% endif %}
+        {% endfor %}
+  </div>
+</div> 
 {% endblock  %}
 

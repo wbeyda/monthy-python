@@ -4,7 +4,11 @@
 {% block nav %}
 <div class="header">
     <div>
-        <img class="home-header" src="{% static 'zipcode/images/spring_banner2.jpg' %}">
+        {% if time_image == 'day'%}
+            <img class="home-header" src="{% static 'zipcode/images/headers/SLCDay1920.jpg' %}">
+        {% elif  time_image == 'night'%}
+            <img class="home-header" src="{% static 'zipcode/images/headers/SLCNight1920.jpg' %}">
+        {% endif %}
     </div>
 </div>
 

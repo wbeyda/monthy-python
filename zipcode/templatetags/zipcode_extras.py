@@ -1,6 +1,7 @@
 from django.template.loader import get_template
 from django import template
 from zipcode import views
+from zipcode import forms 
 from zipcode.models import Testimonial
 from django.template.defaultfilters import stringfilter
 import re
@@ -8,7 +9,7 @@ import re
 register = template.Library()
 
 def show_contact_form():
-	contactform = views.ContactForm
+	contactform = forms.ContactForm(auto_id='contact_%s')
 	return {'contactform': contactform}
 
 register.inclusion_tag('contact.html')(show_contact_form)

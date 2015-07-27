@@ -59,7 +59,7 @@ def contractor_calendar(queryset):
             n = 1
             for i in conevents:
                 y,m = i.start_date.year,i.start_date.month
-                event = "<ul><li style=\"background-color:#"+ i.background_color +"\">" +\
+                event = "<ul class=\"calendar-event\"><li style=\"background-color:#"+ i.background_color +"\">" +\
                          i.start_date.strftime("%I:%M")+" "+ i.title +" "+ i.end_date.strftime("%I:%M") +"</li></ul>"
                 #loop through the days of the month
                 if i.start_date.day != i.end_date.day or i.start_date.month != i.end_date.month:
@@ -69,11 +69,11 @@ def contractor_calendar(queryset):
                         chunkofdays = range(i.start_date.day, i.end_date.day+1)
                     for days in chunkofdays:
                         if days == chunkofdays[-1]:
-                            eventend = "<ul><li style=\"background-color:#"+ i.background_color +"\">"  +\
+                            eventend = "<ul class=\"calendar-event\"><li style=\"background-color:#"+ i.background_color +"\">"  +\
                                          i.start_date.strftime("%I:%M")+" "+ i.title +" "+ i.end_date.strftime("%I:%M") +"</li></ul>"
                             eventdict[days] += eventend 
                         else: 
-                            eventstart = "<ul><li style=\"background-color:#"+ i.background_color +"\">" +\
+                            eventstart = "<ul class=\"calendar-event\"><li style=\"background-color:#"+ i.background_color +"\">" +\
                                          i.start_date.strftime("%I:%M")+" "+ i.title + "</li></ul>"
                             eventdict[days] += eventstart
                 for j in range(1,monthrange(y,m)[1]+1): #1-31                           
@@ -107,7 +107,7 @@ def next_last_month_contractor_calendar(queryset):
     n = 1
     for i in queryset:   
         y,m = i.start_date.year,i.start_date.month
-        event = "<ul><li style=\"background-color:#"+ i.background_color +"\">" +\
+        event = "<ul class=\"calendar-event\" ><li style=\"background-color:#"+ i.background_color +"\">" +\
                  i.start_date.strftime("%I:%M")+" "+ i.title +" "+ i.end_date.strftime("%I:%M") +"</li></ul>"
         #loop through the days of the month
         if i.start_date.day != i.end_date.day or i.start_date.month != i.start_date.month:
@@ -118,11 +118,11 @@ def next_last_month_contractor_calendar(queryset):
                 print("this is a chunk", i.start_date, i.end_date)
                 for days in chunkofdays:
                     if days == chunkofdays[-1]:
-                        eventend = "<ul><li style=\"background-color:#"+ i.background_color +"\">"  +\
+                        eventend = "<ul class=\"calendar-event\" ><li style=\"background-color:#"+ i.background_color +"\">"  +\
                                      i.start_date.strftime("%I:%M")+" "+ i.title +" "+ i.end_date.strftime("%I:%M") +"</li></ul>"
                         eventdict[days] += eventend
                     else: 
-                        eventstart = "<ul><li style=\"background-color:#"+ i.background_color +"\">" +\
+                        eventstart = "<ul class=\"calendar-event\" ><li style=\"background-color:#"+ i.background_color +"\">" +\
                                      i.start_date.strftime("%I:%M")+" "+ i.title + "</li></ul>"
                         eventdict[days] += eventstart
         for j in range(1,monthrange(y,m)[1]+1): #1-31                           

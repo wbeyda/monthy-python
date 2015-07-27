@@ -7,9 +7,28 @@ from django.core.mail import send_mail
 from zipcode.calendars import * 
 from django.views.generic.detail import DetailView
 
+
+def day_or_night():
+    if datetime.datetime.now().time().hour < 17:
+        time_image = 'day'
+        print(time_image)
+    else:
+        time_image = 'night'
+        print(time_image)
+    return time_image
+
+
+def home(request):
+    time_image = day_or_night()
+    testimonials = Testimonial.objects.filter(best_of=True)
+    return render(request, 'home.html', {'time_image': time_image, 'testimonials': testimonials})
+
+
 def results(request, postcode):
     con = Contractor.objects.filter(areacode=postcode).prefetch_related().order_by("lastname")
-    return render(request, 'results.html', {'con': con})
+    time_image = day_or_night()
+    return render(request, 'results.html', {'con': con, 'time_image': time_image})
+
 
 def get_zip(request):
     if request.method == 'POST':
@@ -38,8 +57,9 @@ def get_contact(request):
             )                               
             return HttpResponseRedirect('/thanks/')
     else:
-            contactform = ContactForm()
+            contactform = ContactForm(auto_id="contact_%s")
     return render(request, 'contact.html', {'contactform': contactform})
+
 
 def post_testimonial(request, id):
     if request.method == 'POST':
@@ -56,6 +76,7 @@ def post_testimonial(request, id):
             testimonial_form = TestimonialForm()
             return HttpResponse('error')
 
+
 def validate_file_extension(value):
     import os
     ext = os.path.splitext(value.name)[1]
@@ -63,10 +84,12 @@ def validate_file_extension(value):
     if not ext in valid_extensions:
         raise ValidationError(u'File not supported!')
 
+
 def handle_uploaded_file(f):
     with open(f, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
+
 
 def get_resume(request):
     if request.method == 'POST':
@@ -79,11 +102,15 @@ def get_resume(request):
         return render(request, 'careers.html', {'careerform':careerform})
     else:
         careerform = CareerForm()
-    return render(request, 'careers.html', {'careerform':careerform})
+    time_image = day_or_night 
+    return render(request, 'careers.html', {'careerform':careerform, 'time_image': time_image})
+
 
 def show_gallery(request):
     gallery = Gallery.objects.all().prefetch_related()
-    return render(request, 'gallery.html', {'gallery':gallery})
+    time_image = day_or_night() 
+    return render(request, 'gallery.html', {'gallery':gallery,'time_image': time_image})
+
 
 def request_event(request):
     if request.method == "POST":
@@ -96,7 +123,9 @@ def request_event(request):
         return render(request, 'request_event.html', {'requested_event':requested_event})
     else:
         requested_event = ContractorScheduleForm(request.POST)
-    return render(request, 'request_event.html', {'requested_event':requested_event})
+    time_image = day_or_night()
+    return render(request, 'request_event.html', {'requested_event':requested_event,'time_image': time_image})
+
 
 def contractor_detail_view(request, f,id,l):
     con = Contractor.objects.filter(id=id).prefetch_related()
@@ -106,11 +135,13 @@ def contractor_detail_view(request, f,id,l):
     from django.forms.models import inlineformset_factory
     conschedule = ContractorSchedule.objects.filter(firstname_id=id)
     testimonial_form = testimonialform_factory(conschedule)
+    time_image = day_or_night()
     return render(request, 'contractor_detail.html', {'con': con, 
                                                       'htmlcalendar': htmlcalendar, 
                                                       'testimonials': testimonials, 
                                                       'testimonial_form': testimonial_form,
-                                                      'availability': avail
+                                                      'availability': avail,
+                                                      'time_image': time_image
                                                       })
 
 def next_month_request(request, id, currentyear, currentmonth):
