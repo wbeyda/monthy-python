@@ -32,8 +32,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'zipcode',
-    'debug_toolbar',
-    'django_extensions',
+    #'debug_toolbar',
+    #'django_extensions','
     'compressor',
 )
 

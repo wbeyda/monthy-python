@@ -327,6 +327,123 @@ div.row.container {
     }
 }
 */
+@media (min-width: 480px) {
+  .navbar-iphone5 {
+    display: none;
+  }
+  .navbar-iphone5 {
+    background-color: #2ebad1;
+  }
+}
+@media (max-width: 320px) {
+  .navbar {
+    display: none;
+  }
+  .navbar-default {
+    background-color: #2ebad1 !important;
+    border-color: #2ebad1;
+  }
+  .navbar-iphone5 {
+    background-color: #2ebad1 !important;
+  }
+  .navbar-iphone5 ul li {
+    list-style-type: none;
+  }
+  .navbar-iphone5 ul li a {
+    color: black;
+    float: right;
+    font-weight: bold;
+    margin-right: 9em;
+    width: 1em;
+    margin-top: -1em;
+  }
+  .iphone5-header {
+    color: white;
+    margin-left: 5em;
+    position: relative;
+    top: -2em;
+  }
+  .glyphicon-menu-hamburger {
+    color: white;
+    font-size: 1.4em;
+  }
+  .glyphicon-search {
+    color: white;
+    margin-left: 1em;
+    float: right;
+    font-size: 1.4em;
+  }
+  .container-fluid {
+    position: relative;
+    top: 1.2em;
+    right: 1em;
+  }
+  .search-icon {
+    position: relative;
+    right: -1.3em;
+    top: -4.2em;
+  }
+  ul#iphone5 {
+    width: 21em;
+    top: 0em;
+    height: 40em;
+  }
+  .repair-boxes-iphone5 {
+    max-height: 4em;
+    display: inline-block;
+    margin-left: 4em;
+    margin-bottom: 3em;
+    margin-top: -2em;
+  }
+  .iphone5-home-header {
+    height: 6.28em;
+    margin-bottom: 1em;
+    position: relative;
+    bottom: 2.1em;
+  }
+  #iphone5-sidebar-ad {
+    width: 16em;
+    color: white;
+    background: #ef3b70;
+    height: 9em;
+    box-shadow: 1px 3px 3px #777;
+    text-align: center;
+    margin-left: 2em;
+    margin-right: 1em;
+    position: relative;
+    top: -2em;
+  }
+  #havenanemergency {
+    padding-top: 1.5em;
+  }
+  #call {
+    padding-top: -1em;
+  }
+  #iphone5-phonenumber {
+    font-weight: 700;
+  }
+  .open > .container-fluid {
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 1;
+    display: block;
+    opacity: 0;
+    -moz-transition: all 1000ms ease;
+    -webkit-transition: all 1000ms ease;
+    -o-transition: all 1000ms ease;
+    -ms-transition: all 1000ms ease;
+    transition: all 1000ms ease;
+  }
+  .dropdown .dropdown-menu {
+    display: block;
+    opacity: 0;
+    -moz-transition: all 1000ms ease;
+    -webkit-transition: all 1000ms ease;
+    -o-transition: all 1000ms ease;
+    -ms-transition: all 1000ms ease;
+    transition: all 1000ms ease;
+  }
+}
 @media (max-width: 863px) and (min-width: 768px) {
   .navbar-default .navbar-nav > li > a {
     font-size: large;
@@ -377,8 +494,11 @@ div.row.container {
 /*@media (min-width: @screen-lg-min) { }/*
 
 /* Smartphones (portrait and landscape) ----------- */
-@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
-  /* Styles */
+@media (min-device-width: 320px) and (max-device-width: 480px) {
+  img.home-header {
+    visibility: hidden;
+    display: none;
+  }
 }
 /* Smartphones (landscape) ----------- */
 @media only screen and (min-width: 321px) {
