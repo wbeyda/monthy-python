@@ -8,6 +8,7 @@ a,p,h1,h2,h3,h4,h5,h6,ul,li,input,select,textarea {font-family: 'Open Sans', san
 	height: 6em !important;
   font-weight: bold;
 }
+@blue: #2ebad1;
 
 .navbar-default .navbar-nav>li>a {
 	color: #fff !important;
@@ -220,6 +221,7 @@ div.row.container { margin-left: 13em !important;}
   }
   .navbar-iphone5 {
     background-color: #2ebad1 !important;
+    height: 6em;
   }
   .navbar-iphone5 ul li {
     list-style-type: none;
@@ -250,7 +252,7 @@ div.row.container { margin-left: 13em !important;}
   }
   .container-fluid {
     position: relative;
-    top: 1.2em;
+    top: 2.2em;
     right: 1em;
   }
   .search-icon {
@@ -260,8 +262,8 @@ div.row.container { margin-left: 13em !important;}
   }
   ul#iphone5 {
     width: 21em;
-    top: 0em;
-    height: 40em;
+    top: -1em;
+    height: 37em;
   }
   .repair-boxes-iphone5 {
     max-height: 4em;
@@ -297,26 +299,87 @@ div.row.container { margin-left: 13em !important;}
   #iphone5-phonenumber {
     font-weight: 700;
   }
-  .open > .container-fluid {
-    -webkit-transform: scale(1, 1);
-    transform: scale(1, 1);  
-    opacity:1;
-    display: block;
-    opacity: 0;
-    -moz-transition:    all 1000ms ease;
-    -webkit-transition: all 1000ms ease;
-    -o-transition:      all 1000ms ease;
-    -ms-transition:     all 1000ms ease;
-    transition:         all 1000ms ease;
-  }  
-  .dropdown .dropdown-menu{
-    display: block;
-    opacity: 0;
-    -moz-transition:    all 1000ms ease;
-    -webkit-transition: all 1000ms ease;
-    -o-transition:      all 1000ms ease;
-    -ms-transition:     all 1000ms ease;
-    transition:         all 1000ms ease;
+  .dropdown .dropdown-menu {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+  }
+  #search-dropdown {
+    position: relative;
+    top:  -4.7em;
+    left: 18em;  
+  }
+  div#seach-dropdown.btn-group {
+    position: relative;
+    top: -4.7em;
+    left: 18em;
+  }
+  a.btn.dropdown-toggle.ui-link {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+  .btn.active, .btn:active {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+  .btn-group.open .dropdown-toggle {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+  ul#iphone-nav-search-box {
+    position: relative;
+    top: 1.392em;
+    left: -18em;
+    width: 23em;
+    margin-bottom: -4em;
+    height: 3em;
+  }
+  #iphone-nav-search-box {
+    zoom: 1;
+  }
+  input#id_zipsearch {
+    height: 2.9em;
+    position: relative;
+    top: -0.4em;
+    width: 73.75%;
+  }
+  #search_submit {
+    color: #fff;
+    background-color: lighten( @blue,  15%);
+    position: relative;
+    right: 0em;
+    height: 2.9em;
+    margin: 0;
+    width: 6em;
+    top: -0.4em;
+    float: right;
+  }
+  ul#iphone-nav-search-box {
+    position: relative;
+    top: 1.392em;
+    left: -18em;
+    width: 23em;
+    margin-bottom: -4em;
+    height: 3em;
+  }
+  #search-box label {
+    margin-left: 1em;
+    top: -0.4em;
+    position: relative;
+  }
+  input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    padding-left: 1em;
+  }
+  input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    padding-left: 1em;
+  }
+  input::-moz-placeholder { /* Mozilla Firefox 19+ */
+    padding-left: 1em;
+  }
+  input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    padding-left: 1em;
   }
 }
 

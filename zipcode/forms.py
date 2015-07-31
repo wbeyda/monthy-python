@@ -9,7 +9,7 @@ class CareerForm(forms.ModelForm):
         fields = ['name', 'address', 'email', 'phone', 'resume']
 
 class ZipForm(forms.Form):
-    zipsearch = forms.CharField(label='Enter your zipcode below to find the neighborhood hero in your area.', max_length=5)
+    zipsearch = forms.CharField(label='Zipcode', max_length=5)
 
 class ContactForm(forms.Form):
     name = forms.CharField(label='Name', max_length=50)

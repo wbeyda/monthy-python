@@ -2,36 +2,35 @@
 {% block title %}About{% endblock %}
 {% load staticfiles %}
 {% block nav %}
-<div id="sb-site">
-<nav class="navbar-default navbar-iphone5 navbar-fixed-top role="navigation"">
-  <div class="container-fluid">
+<nav class="navbar-default navbar-iphone5 navbar-fixed-top" role="navigation" >
+  <div class="container-fluid" id="slider">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
       <span class="glyphicon glyphicon-menu-hamburger"></span>
     </a>
-    <ul role="menu" class="dropdown-menu sb-slidebar sb-left" id="iphone5">
+    <ul role="menu" class="dropdown-menu sb-slidebar sb-left" id="iphone5" data-role="panel" id="left-panel" data-theme="b">
       <li>
           <div>
             {% if time_image == 'day'%}
-                <img class="iphone5-home-header sb-left" src="{% static 'zipcode/images/headers/SLCDay1920.jpg' %}">
+                <img class="iphone5-home-header sb-left" alt="Salt Lake City Day" src="{% static 'zipcode/images/headers/SLCDay1920.jpg' %}">
             {% elif  time_image == 'night'%}
-                <img class="iphone5-home-header sb-left" src="{% static 'zipcode/images/headers/SLCNight1920.jpg' %}">
+                <img class="iphone5-home-header sb-left" alt="Salt Lake City Night" src="{% static 'zipcode/images/headers/SLCNight1920.jpg' %}">
             {% endif %}
           </div>
       </li>
       <li class="sb-left">
-          <img class="repair-boxes-iphone5 img-circle" src="{% static 'zipcode/images/AC.jpg' %}">
+          <img class="repair-boxes-iphone5 img-circle" alt="air conditioner picture" src="{% static 'zipcode/images/AC.jpg' %}">
           <a class="active" href="/">Home</a>
       </li>
       <li class="sb-left">
-          <img class="repair-boxes-iphone5 img-circle" src="{% static 'zipcode/images/sink.jpg' %}">
+          <img class="repair-boxes-iphone5 img-circle" alt="sink picture" src="{% static 'zipcode/images/sink.jpg' %}">
           <a href="value">Value Care</a>
       </li>
       <li class="sb-left">
-          <img class="repair-boxes-iphone5 img-circle" src="{% static 'zipcode/images/Linear-Garage-Door-Opener.jpg' %}">
+          <img class="repair-boxes-iphone5 img-circle" alt="garage door picture" src="{% static 'zipcode/images/Linear-Garage-Door-Opener.jpg' %}">
           <a href="careers">Careers</a>
       </li>
       <li class="sb-left">
-          <img class="repair-boxes-iphone5 img-circle" src="{% static 'zipcode/images/hardwood_may13.jpg' %}">
+          <img class="repair-boxes-iphone5 img-circle" alt="hardwood picture" src="{% static 'zipcode/images/hardwood_may13.jpg' %}">
           <a href="gallery">Gallery</a>
       </li>
       <li class="sb-left">
@@ -44,16 +43,26 @@
     
     </ul>
       <div class="iphone5-header"><h4>HOME REPAIR HEROS</h4></div>
-      <div class="search-icon"><span class="glyphicon glyphicon-search"></span></div>
+      <div class="btn-group" id="seach-dropdown" class="search-icon" data-role="panel" id="right-panel" data-display="push" data-position="right" data-theme="b">
+  
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+          <span class="glyphicon glyphicon-search"></span>
+        </a>
+        <ul class="dropdown-menu" id="iphone-nav-search-box">
+          <li id="search-box">{% load zipcode_extras %}{% show_search_form %}</li>
+        </ul>
+      </div>
   </div>
 </nav>
+<div id="screen"></div>
+<div id="box"></div>
 
 <div class="header">
     <div>
         {% if time_image == 'day'%}
-            <img class="home-header" src="{% static 'zipcode/images/headers/SLCDay1920.jpg' %}">
+            <img class="home-header" alt="Salt Lake City Day" src="{% static 'zipcode/images/headers/SLCDay1920.jpg' %}">
         {% elif  time_image == 'night'%}
-            <img class="home-header" src="{% static 'zipcode/images/headers/SLCNight1920.jpg' %}">
+            <img class="home-header" alt="Salt Lake City Night" src="{% static 'zipcode/images/headers/SLCNight1920.jpg' %}">
         {% endif %}
     </div>
 </div>
@@ -89,16 +98,16 @@
 <div class="row container">
     <div id="repair-boxes" class="row">
         <div class="col-lg-3">
-            <img class="repair-boxes img-circle" src="{% static 'zipcode/images/AC.jpg' %}">
+            <img class="repair-boxes img-circle" alt="air conditioner picture" src="{% static 'zipcode/images/AC.jpg' %}">
         </div>
         <div class="col-lg-3">
-            <img class="repair-boxes img-circle" src="{% static 'zipcode/images/sink.jpg' %}">
+            <img class="repair-boxes img-circle" alt="sink picture" src="{% static 'zipcode/images/sink.jpg' %}">
         </div>
         <div class="col-lg-3"> 
-            <img class="repair-boxes img-circle" src="{% static 'zipcode/images/Linear-Garage-Door-Opener.jpg' %}">
+            <img class="repair-boxes img-circle" alt="garage door picture" src="{% static 'zipcode/images/Linear-Garage-Door-Opener.jpg' %}">
         </div>
         <div class="col-lg-3">
-            <img class="repair-boxes img-circle" src="{% static 'zipcode/images/hardwood_may13.jpg' %}">
+            <img class="repair-boxes img-circle" alt="hardwood floor picture" src="{% static 'zipcode/images/hardwood_may13.jpg' %}">
         </div>
     </div>
     <div class="row">
@@ -108,14 +117,14 @@
         
     </div>
     <div class="row">
-        <div class="col-md-12"><img id="gdoor" src="{% static 'zipcode/images/gdoor.jpg' %}"></div>
+        <div class="col-md-12"><img id="gdoor" alt="garage door picture" src="{% static 'zipcode/images/gdoor.jpg' %}"></div>
     </div>
     <div class="row">       
         <div class="col-md-12"><h2 class="all-gdoors">All Garage Door Repairs 10% Off*</h2></div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <h3 id="heading3">The At Home Difference</h3>
+            <h3 class="heading3" >The At Home Difference</h3>
             <p class="athomeserv">At Home Services is unique in the home repair industry.
             We help local technicians build their businesses, allowing
             them to focus on the most important thing: satisfaction
@@ -137,8 +146,8 @@
             </p>
         </div>
         <div class="col-md-6">
-            <h3 id="heading3">Our Neighborhood Heroes</h3>
-            <img id="smiles" src="{% static 'zipcode/images/smiles.jpg' %}">
+            <h3 class="heading3" >Our Neighborhood Heroes</h3>
+            <img id="smiles" alt="man smiling" src="{% static 'zipcode/images/smiles.jpg' %}">
         </div>
     </div>
 </div>
@@ -148,7 +157,7 @@
         <div class="row">
             <div class="col-md-6">
                 <h3 id="heading4">Printable Brochures</h3>
-                <img id="printable"src="{% static 'zipcode/images/printable.jpg' %}">
+                <img id="printable" alt="prinatable brochure picture" src="{% static 'zipcode/images/printable.jpg' %}">
             </div>
             <div class="col-md-6">
                 <h3 id="heading4">What Our Heros Do</h3>
@@ -228,11 +237,73 @@
     $(document).ready(function() {
         if (window.screen.availWidth <= 320) {
             $("head").append('<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">'); 
-            $.slidebars();
-            console.log('ipone5'); 
-            $('.dropdown').on('show.bs.dropdown', function () {
-                $(this).children('.dropdown-menu').fadeIn(1000);
+
+            $(function(){
+                var pop=function(){
+                    $('#screen').css({"background-color":"#333","display":"block","opacity":0.7,"width":$(document).width(),"height":$(document).height()});
+                    $('#box')
+                            .css({"display":"block"})
+                            .click(function(){
+                                              $(this).css("display","none");
+                                              $('#screen').css("display","none")
+                        });
+                    }
+                $('.glyphicon-menu-hamburger').click(pop);
+                
+                $(window).resize(function(){
+                    $('#box').css("display")=='block'?pop.call($('#button')):"";
+                });
             });
+
+            $('.glyphicon-menu-hamburger').click( function() {
+                var effect = 'slide';
+                var options = { direction: 'left' };
+                $('#iphone5').toggle(effect, options,100);
+                if ($('#iphone-nav-search-box').css('display') != 'none' ) {
+                    $('#iphone-nav-search-box').css('display', 'none');
+                }
+            });
+            
+            $('.iphone5-home-header').click( function() {
+                var effect = 'slide';
+                var options = { direction: 'left' };
+                $('#iphone5').toggle(effect, options,300);
+                $('#screen').css('display', 'none');
+            });
+            
+            $('.glyphicon-search').click( function() {
+                var effect = 'slide';
+                var options = { direction: 'left' };
+                //$('#iphone-nav-search-box').toggle(effect, options,1000);
+                $('#iphone-nav-search-box').slideToggle(100);
+                if ( $('#iphone5').css('display') != 'none' ) {
+                    $('#iphone5').toggle(effect, options, 50);
+                }
+                if ( $('#iphone-nav-search-box').css('display') == 'none'  ) {
+                    $('#screen').css('display', 'none');
+                } else if( $('#iphone-nav-search-box').css('display') == 'block' ){
+                    $('#screen').css({"background-color":"#333","display":"block","opacity":0.7,"width":$(document).width(),"height":$(document).height()});
+                } else {
+                    $('#screen').css('display', 'none');
+                }                    
+            });
+            
+            $('#search-box label').remove();
+            $('#id_zipsearch').attr("placeholder", "Zipcode")
+            $( document ).on( "pagecreate", "#slider", function() {
+                $( document ).on( "swipeleft swiperight", "#slider", function( e ) {
+                // We check if there is no open panel on the page because otherwise
+                // a swipe to close the left panel would also open the right panel (and v.v.).
+                // We do this by checking the data that the framework stores on the page element (panel: open).
+                    if ( $( ".ui-page-active" ).jqmData( "panel" ) !== "open" ) {
+                        if ( e.type === "swipeleft" ) {
+                            $( "#right-panel" ).panel( "open" );
+                        } else if ( e.type === "swiperight" ) {
+                        $( "#left-panel" ).panel( "open" );
+                        }
+                    }
+                });
+            }); 
         }
     });
 }) (jQuery);
