@@ -334,8 +334,139 @@ div.row.container {
   .navbar-iphone5 {
     background-color: #2ebad1;
   }
+  .hero-logo-mobile {
+    display: none;
+  }
 }
 @media (max-width: 320px) {
+  #page-content-wrapper {
+    margin-left: -12em;
+  }
+  .row.hidden-sm.hero-logo-mobile {
+    position: relative;
+    margin-top: 8em;
+  }
+  .monthly {
+    color: #2ebad1;
+    font-size: 1.4em;
+    float: none;
+    margin: 1em 0 2em 1em;
+    text-align: center;
+    width: 11em;
+    font-weight: 700;
+  }
+  .row.monthly-specials {
+    margin-bottom: -1.5em;
+  }
+  #gdoor {
+    width: 19em;
+    margin-bottom: 0;
+  }
+  .all-gdoors {
+    height: 2em;
+    text-align: center;
+    background-color: #777;
+    color: white;
+    font-size: 1em;
+    padding: 0.5em;
+    margin-top: -0.1em;
+    margin-bottom: 1em;
+    width: 19em;
+  }
+  .heading3 {
+    color: #2ebad1;
+    font-size: 1.5em;
+    text-align: center;
+    font-weight: bold;
+    /* margin: 1em; */
+    width: 12em;
+    position: relative;
+    left: -0.5em;
+  }
+  .athomeserv {
+    text-align: justify;
+    line-height: 1.5em;
+    font-size: 1em;
+    width: 19em;
+  }
+  #smiles {
+    width: 19em;
+  }
+  .blue-container {
+    background-color: #2ebad1;
+    color: white;
+    margin-left: 12em;
+    width: 23em;
+    margin-top: 2em;
+  }
+  .blue1 {
+    position: relative;
+    left: -12em;
+  }
+  #heading4 {
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    width: 10em;
+    height: 1em;
+  }
+  #someofour {
+    text-align: justify;
+    line-height: 1.5em;
+    font-size: 1em;
+    width: 19em;
+  }
+  .service-links {
+    width: 18em;
+  }
+  #phone {
+    width: 7em;
+    font-size: 3em;
+  }
+  .col-md-6.col-sm-12.col-xs-12.home-testimonials {
+    width: 20em;
+  }
+  #contact-submit {
+    margin-left: 0;
+    background-color: #ef3b70 !important;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+  i.fa.fa-facebook-official.fa-5x {
+    float: left;
+    margin-right: 0.1em;
+    margin-left: 0.4em;
+  }
+  i.fa.fa-twitter-square.fa-5x {
+    float: left;
+    margin-left: 0.1em;
+  }
+  i.fa.fa-instagram.fa-5x {
+    float: left;
+    margin-left: 0.1em;
+  }
+  i.fa.fa-google-plus-square.fa-5x {
+    float: left;
+    margin-left: 0.1em;
+  }
+  input#contact_name,
+  input#contact_address,
+  input#contact_email,
+  textarea#contact_problem {
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    outline: none;
+    border: 1px solid #DDDDDD;
+  }
+  input[type=text]:focus,
+  input[type=email]:focus,
+  textarea:focus {
+    box-shadow: 0 0 5px #ffffff;
+  }
   .navbar {
     display: none;
   }

@@ -55,7 +55,6 @@
   </div>
 </nav>
 <div id="screen"></div>
-<div id="box"></div>
 
 <div class="header">
     <div>
@@ -79,13 +78,13 @@
 </nav>
 
 <div id="wrapper">
-    <div id="sidebar-wrapper">
+    <div id="sidebar-wrapper" class="hidden-xs">
         <h3 id="schedule">SCHEDULE A PROJECT</h3>
         
         {% load zipcode_extras %}
         {% show_search_form %}
     </div>
-    <div id="sidebar-ad">
+    <div id="sidebar-ad" class="hidden-xs">
         <h3>HAVE AN EMERGENCY?</h3>
         <H5>Call us directly at</H5>
         <H3>801-933-4663</H3>
@@ -96,7 +95,7 @@
 {% endblock %}
 {% block content %}
 <div class="row container">
-    <div id="repair-boxes" class="row">
+    <div id="repair-boxes" class="row hidden-xs">
         <div class="col-lg-3">
             <img class="repair-boxes img-circle" alt="air conditioner picture" src="{% static 'zipcode/images/AC.jpg' %}">
         </div>
@@ -110,20 +109,26 @@
             <img class="repair-boxes img-circle" alt="hardwood floor picture" src="{% static 'zipcode/images/hardwood_may13.jpg' %}">
         </div>
     </div>
-    <div class="row">
+
+    <div class="row hidden-sm hero-logo-mobile" >
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8"> <img id="hero-logo" src="{% static 'zipcode/images/logo.jpg'%}" alt="at home hero logo"></div>
+      <div class="col-sm-2"></div>
+    </div>
+    <div class="row monthly-specials">
         <div class="col-md-2"></div>
         <div class="col-md-8"><h1 class="monthly">Our Monthly Specials</h1></div>
-        <div class="col-md-2"></div>
-        
+        <div class="col-md-2"></div>    
     </div>
+
     <div class="row">
-        <div class="col-md-12"><img id="gdoor" alt="garage door picture" src="{% static 'zipcode/images/gdoor.jpg' %}"></div>
+        <div class="col-md-12 col-sm-12 col-xs-12"><img id="gdoor" alt="garage door picture" src="{% static 'zipcode/images/gdoor.jpg' %}"></div>
     </div>
     <div class="row">       
-        <div class="col-md-12"><h2 class="all-gdoors">All Garage Door Repairs 10% Off*</h2></div>
+        <div class="col-md-12 col-sm-12 col-xs-12"><h2 class="all-gdoors">All Garage Door Repairs 10% Off*</h2></div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-12 col-xs-12">
             <h3 class="heading3" >The At Home Difference</h3>
             <p class="athomeserv">At Home Services is unique in the home repair industry.
             We help local technicians build their businesses, allowing
@@ -145,7 +150,7 @@
             projects will all be worked out between your Hero and you.
             </p>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-12 col-xs-12">
             <h3 class="heading3" >Our Neighborhood Heroes</h3>
             <img id="smiles" alt="man smiling" src="{% static 'zipcode/images/smiles.jpg' %}">
         </div>
@@ -153,13 +158,13 @@
 </div>
 
 <div class="blue-container">
-    <div class="row container">
+    <div class="row container blue1">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 col-sm-12 col-xs-12">
                 <h3 id="heading4">Printable Brochures</h3>
                 <img id="printable" alt="prinatable brochure picture" src="{% static 'zipcode/images/printable.jpg' %}">
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 col-sm-12 col-xs-12">
                 <h3 id="heading4">What Our Heros Do</h3>
                 <p id="someofour">Some of our Heroes have specialties another
                 Hero might not. We want to make sure we
@@ -173,25 +178,25 @@
         </div>
         
         <div class="row service-row">
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-sm-12 col-xs-12 col-md-12">
                 <p class="service-links"><a href="air-conditioning">AIR CONDITIONING</a></p>
                 <p class="service-links"><a href="furnace-boiler">FURNACE & BOILER</a></p>
                 <p class="service-links"><a href="electrical-systems">ELECTRICAL SYSTEMS</a></p>
                 <p class="service-links"><a href="outlets-switches">OUTLETS & SWITCHES</a></p>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-sm-12 col-xs-12 col-md-12">
                 <p class="service-links"><a href="interior-lighting">INTERIOR LIGHTING</a></p>
                 <p class="service-links"><a href="home-appliances">HOME APPLIANCES</a></p>
                 <p class="service-links"><a href="home-remodeling">HOME REMODELING</a></p>
                 <p class="service-links"><a href="deck-installation">DECK INSTALLATION</a></p>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-sm-12 col-xs-12 col-md-12">
                 <p class="service-links"><a href="door-hanging">DOOR HANGING</a></p>
                 <p class="service-links"><a href="plumbing-lines">PLUMBING LINES</a></p>
                 <p class="service-links"><a href="plumbing-fixtures">PLUMBING FIXTURES</a></p>
                 <p class="service-links"><a href="trim-installation">TRIM INSTALLATION</a></p>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-3 col-sm-12 col-xs-12 col-md-12">
                 <p class="service-links"><a href="window-hanging">WINDOW HANGING</a></p>
                 <p class="service-links"><a href="window-sealing">WINDOW SEALING</a></p>
                 <p class="service-links"><a href="interior-painting">INTERIOR PAINTING</a></p>
@@ -211,7 +216,7 @@
     {% for i in testimonials %}
     {% if forloop.first  %}
         <div class="row">
-            <div class="col-md-6 home-testimonials">
+            <div class="col-md-6 col-sm-12 col-xs-12 home-testimonials">
                 <span class="test_customer_name"><mark>{{ i.customer_name|title }}</mark></span><span> from</span>
                 <span class="test_customer_city"><mark>{{ i.customer_city | title}}</mark></span><span> had this to say about </span>
                 <span class="test_contractor"><mark>{{ i.contractor| title }}'s</mark> job: </span></br></br>
@@ -219,7 +224,7 @@
                 from <cite title="{{i.customer_city}}">{{ i.customer_city| title }}</cite></footer></blockquote></p>
             </div>
     {% else %}
-            <div class="col-md-6 home-testimonials">
+            <div class="col-md-6 col-sm-12 col-xs-12  home-testimonials">
                 <span class="test_customer_name"><mark>{{ i.customer_name|title }}</mark></span><span> from</span>
                 <span class="test_customer_city"><mark>{{ i.customer_city | title}}</mark></span><span> had this to say about </span>
                 <span class="test_contractor"><mark>{{ i.contractor| title }}'s</mark> job: </span></br></br>
@@ -241,12 +246,6 @@
             $(function(){
                 var pop=function(){
                     $('#screen').css({"background-color":"#333","display":"block","opacity":0.7,"width":$(document).width(),"height":$(document).height()});
-                    $('#box')
-                            .css({"display":"block"})
-                            .click(function(){
-                                              $(this).css("display","none");
-                                              $('#screen').css("display","none")
-                        });
                     }
                 $('.glyphicon-menu-hamburger').click(pop);
                 
@@ -279,15 +278,12 @@
                 if ( $('#iphone5').css('display') != 'none' ) {
                     $('#iphone5').toggle(effect, options, 50);
                 }
-                if ( $('#iphone-nav-search-box').css('display') == 'none'  ) {
+                if ( $('#screen').css('display') != 'none') {
                     $('#screen').css('display', 'none');
-                } else if( $('#iphone-nav-search-box').css('display') == 'block' ){
-                    $('#screen').css({"background-color":"#333","display":"block","opacity":0.7,"width":$(document).width(),"height":$(document).height()});
                 } else {
-                    $('#screen').css('display', 'none');
+                    $('#screen').css({"z-index":1001,"background-color":"#333","display":"block","position": "absolute","opacity":0.7,"width":$(document).width(),"height":$(document).height()});
                 }                    
             });
-            
             $('#search-box label').remove();
             $('#id_zipsearch').attr("placeholder", "Zipcode")
             $( document ).on( "pagecreate", "#slider", function() {
