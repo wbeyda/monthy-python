@@ -84,7 +84,7 @@
         {% load zipcode_extras %}
         {% show_search_form %}
     </div>
-    <div id="sidebar-ad" class="hidden-xs">
+    <div id="sidebar-ad" class="hidden-xs hidden-sm">
         <h3>HAVE AN EMERGENCY?</h3>
         <H5>Call us directly at</H5>
         <H3>801-933-4663</H3>
@@ -236,72 +236,3 @@
   </div>
 </div> 
 {% endblock  %}
-{% block extra-javascript %}
-<script>
-(function($) {
-    $(document).ready(function() {
-        if (window.screen.availWidth <= 320) {
-            $("head").append('<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">'); 
-
-            $(function(){
-                var pop=function(){
-                    $('#screen').css({"background-color":"#333","display":"block","opacity":0.7,"width":$(document).width(),"height":$(document).height()});
-                    }
-                $('.glyphicon-menu-hamburger').click(pop);
-                
-                $(window).resize(function(){
-                    $('#box').css("display")=='block'?pop.call($('#button')):"";
-                });
-            });
-
-            $('.glyphicon-menu-hamburger').click( function() {
-                var effect = 'slide';
-                var options = { direction: 'left' };
-                $('#iphone5').toggle(effect, options,100);
-                if ($('#iphone-nav-search-box').css('display') != 'none' ) {
-                    $('#iphone-nav-search-box').css('display', 'none');
-                }
-            });
-            
-            $('.iphone5-home-header').click( function() {
-                var effect = 'slide';
-                var options = { direction: 'left' };
-                $('#iphone5').toggle(effect, options,300);
-                $('#screen').css('display', 'none');
-            });
-            
-            $('.glyphicon-search').click( function() {
-                var effect = 'slide';
-                var options = { direction: 'left' };
-                //$('#iphone-nav-search-box').toggle(effect, options,1000);
-                $('#iphone-nav-search-box').slideToggle(100);
-                if ( $('#iphone5').css('display') != 'none' ) {
-                    $('#iphone5').toggle(effect, options, 50);
-                }
-                if ( $('#screen').css('display') != 'none') {
-                    $('#screen').css('display', 'none');
-                } else {
-                    $('#screen').css({"z-index":1001,"background-color":"#333","display":"block","position": "absolute","opacity":0.7,"width":$(document).width(),"height":$(document).height()});
-                }                    
-            });
-            $('#search-box label').remove();
-            $('#id_zipsearch').attr("placeholder", "Zipcode")
-            $( document ).on( "pagecreate", "#slider", function() {
-                $( document ).on( "swipeleft swiperight", "#slider", function( e ) {
-                // We check if there is no open panel on the page because otherwise
-                // a swipe to close the left panel would also open the right panel (and v.v.).
-                // We do this by checking the data that the framework stores on the page element (panel: open).
-                    if ( $( ".ui-page-active" ).jqmData( "panel" ) !== "open" ) {
-                        if ( e.type === "swipeleft" ) {
-                            $( "#right-panel" ).panel( "open" );
-                        } else if ( e.type === "swiperight" ) {
-                        $( "#left-panel" ).panel( "open" );
-                        }
-                    }
-                });
-            }); 
-        }
-    });
-}) (jQuery);
-</script>
-{% endblock %}

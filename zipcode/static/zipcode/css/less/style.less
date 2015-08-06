@@ -72,6 +72,9 @@ form#career-form input#career-submit:hover {
 
 .navbar .navbar-collapse {text-align: center;}
 
+ul.nav.navbar-nav {
+  margin-left: -3em;
+}
 #page-content-wrapper {
   width: 100%;
   left: 12em;
@@ -233,6 +236,41 @@ form#career-form input {
   width: 100%;
 }
 
+input#contact_name, input#contact_address, input#contact_email, textarea#contact_problem {
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  -o-transition: all 0.30s ease-in-out;
+  outline: none;
+  border: 1px solid #DDDDDD; 
+}
+input[type=text]:focus, input[type=email]:focus, textarea:focus {
+  box-shadow: 0 0 5px rgba(255, 255, 255, 1);
+  -web-kit-box-shadow: 0 0 5px rgba(255, 255, 255, 1);
+  -webkit-appearance: none;
+}
+input#id_name, input#id_address, input#id_email, input#id_phone {
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  -o-transition: all 0.30s ease-in-out;
+  outline: none;
+  border: 1px solid #DDDDDD; 
+}
+form#career-form input[type=text]:focus, form#career-form input[type=email]:focus, form#career-form input#id_phone:focus {
+  -webkit-appearance: none;
+  box-shadow: 0 0 5px lighten(@blue, 20%);
+  -web-kit-box-shadow: 0 0 5px lighten(@blue, 20%);
+}
+.gallery-pic {
+  margin: 2em;
+}
+p.description {
+ padding: 2em; 
+}
+.gallery-container {
+  height: 49.5em;
+}
 /*@media (max-width:767px) {
 
     #wrapper {
@@ -392,16 +430,9 @@ form#career-form input {
     float: left;
     margin-left: 0.1em;
   }
-  input#contact_name, input#contact_address, input#contact_email, textarea#contact_problem {
-    -webkit-transition: all 0.30s ease-in-out;
-    -moz-transition: all 0.30s ease-in-out;
-    -ms-transition: all 0.30s ease-in-out;
-    -o-transition: all 0.30s ease-in-out;
-    outline: none;
-    border: 1px solid #DDDDDD; 
-  }
-  input[type=text]:focus, input[type=email]:focus, textarea:focus {
-    box-shadow: 0 0 5px rgba(255, 255, 255, 1);
+  
+  form#career-form {
+    width: 18em;
   }
   .navbar {
     display: none;
@@ -573,8 +604,29 @@ form#career-form input {
   input:-ms-input-placeholder { /* Internet Explorer 10-11 */
     padding-left: 1em;
   }
-}
+  .col-xs-12 {
+    width: 21em;
+    padding: 0em;
+    padding-right: 2.2em;
+  }
+  .row.container.first-row-content-mobile {
+    position: relative;
+    margin-top: 6em;
+  }
+  .gallery-pic {
+    max-height: 12em;
+    margin-left: 0em;
+  }
 
+}
+@media (min-width: 768px) {
+  .navbar-nav>li {
+    float: left;
+    /* width: 28em; */
+    margin-left: 2em;
+    margin-right: -6em;
+  }
+}
 
 @media (max-width: 863px) and (min-width: 768px) {
     .navbar-default .navbar-nav > li > a {

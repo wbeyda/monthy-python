@@ -8,6 +8,61 @@
 {% block title %} {% for i in con %} {{ i.firstname| title }} {{i.lastname| title}} {% endfor %}{% endblock %}
 {% load staticfiles %}
 {% block nav %}
+<nav class="navbar-default navbar-iphone5 navbar-fixed-top" role="navigation" >
+  <div class="container-fluid" id="slider">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+      <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </a>
+    <ul role="menu" class="dropdown-menu sb-slidebar sb-left" id="iphone5" data-role="panel" id="left-panel" data-theme="b">
+      <li>
+          <div>
+            {% if time_image == 'day'%}
+                <img class="iphone5-home-header sb-left" alt="Salt Lake City Day" src="{% static 'zipcode/images/headers/SLCDay1920.jpg' %}">
+            {% elif  time_image == 'night'%}
+                <img class="iphone5-home-header sb-left" alt="Salt Lake City Night" src="{% static 'zipcode/images/headers/SLCNight1920.jpg' %}">
+            {% endif %}
+          </div>
+      </li>
+      <li class="sb-left">
+          <img class="repair-boxes-iphone5 img-circle" alt="air conditioner picture" src="{% static 'zipcode/images/AC.jpg' %}">
+          <a href="/">Home</a>
+      </li>
+      <li class="sb-left">
+          <img class="repair-boxes-iphone5 img-circle" alt="sink picture" src="{% static 'zipcode/images/sink.jpg' %}">
+          <a href="{% static 'zipcode/images/ValueCareBrochure.pdf' %}">Value Care</a>
+      </li>
+      <li class="sb-left">
+          <img class="repair-boxes-iphone5 img-circle" alt="garage door picture" src="{% static 'zipcode/images/Linear-Garage-Door-Opener.jpg' %}">
+          <a class="active" href="careers">Careers</a>
+      </li>
+      <li class="sb-left">
+          <img class="repair-boxes-iphone5 img-circle" alt="hardwood picture" src="{% static 'zipcode/images/hardwood_may13.jpg' %}">
+          <a href="gallery">Gallery</a>
+      </li>
+      <li class="sb-left">
+        <div id="iphone5-sidebar-ad">
+          <h5 id="havenanemergency">HAVE AN EMERGENCY?</h5>
+          <h5 id="call">Call</h5>
+          <h3 id="iphone5-phonenumber">801-933-4663</h3>
+        </div>
+      </li>
+    
+    </ul>
+      <div class="iphone5-header"><h4>HOME REPAIR HEROS</h4></div>
+      <div class="btn-group" id="seach-dropdown" class="search-icon" data-role="panel" id="right-panel" data-display="push" data-position="right" data-theme="b">
+  
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+          <span class="glyphicon glyphicon-search"></span>
+        </a>
+        <ul class="dropdown-menu" id="iphone-nav-search-box">
+          <li id="search-box">{% load zipcode_extras %}{% show_search_form %}</li>
+        </ul>
+      </div>
+  </div>
+</nav>
+<div id="screen"></div>
+
+
 <div class="header">
     <div>
         {% if time_image == 'day'%}
