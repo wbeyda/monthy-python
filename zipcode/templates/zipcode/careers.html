@@ -6,6 +6,60 @@
 {% endblock %}
 {% load staticfiles %}
 {% block nav %}
+<nav class="navbar-default navbar-iphone5 navbar-fixed-top" role="navigation" >
+  <div class="container-fluid" id="slider">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+      <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </a>
+    <ul role="menu" class="dropdown-menu sb-slidebar sb-left" id="iphone5" data-role="panel" id="left-panel" data-theme="b">
+      <li>
+          <div>
+            {% if time_image == 'day'%}
+                <img class="iphone5-home-header sb-left" alt="Salt Lake City Day" src="{% static 'zipcode/images/headers/SLCDay1920.jpg' %}">
+            {% elif  time_image == 'night'%}
+                <img class="iphone5-home-header sb-left" alt="Salt Lake City Night" src="{% static 'zipcode/images/headers/SLCNight1920.jpg' %}">
+            {% endif %}
+          </div>
+      </li>
+      <li class="sb-left">
+          <img class="repair-boxes-iphone5 img-circle" alt="air conditioner picture" src="{% static 'zipcode/images/AC.jpg' %}">
+          <a href="/">Home</a>
+      </li>
+      <li class="sb-left">
+          <img class="repair-boxes-iphone5 img-circle" alt="sink picture" src="{% static 'zipcode/images/sink.jpg' %}">
+          <a href="{% static 'zipcode/images/ValueCareBrochure.pdf' %}">Value Care</a>
+      </li>
+      <li class="sb-left">
+          <img class="repair-boxes-iphone5 img-circle" alt="garage door picture" src="{% static 'zipcode/images/Linear-Garage-Door-Opener.jpg' %}">
+          <a class="active" href="careers">Careers</a>
+      </li>
+      <li class="sb-left">
+          <img class="repair-boxes-iphone5 img-circle" alt="hardwood picture" src="{% static 'zipcode/images/hardwood_may13.jpg' %}">
+          <a href="gallery">Gallery</a>
+      </li>
+      <li class="sb-left">
+        <div id="iphone5-sidebar-ad">
+          <h5 id="havenanemergency">HAVE AN EMERGENCY?</h5>
+          <h5 id="call">Call</h5>
+          <h3 id="iphone5-phonenumber">801-933-4663</h3>
+        </div>
+      </li>
+    
+    </ul>
+      <div class="iphone5-header"><h4>HOME REPAIR HEROS</h4></div>
+      <div class="btn-group" id="seach-dropdown" class="search-icon" data-role="panel" id="right-panel" data-display="push" data-position="right" data-theme="b">
+  
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+          <span class="glyphicon glyphicon-search"></span>
+        </a>
+        <ul class="dropdown-menu" id="iphone-nav-search-box">
+          <li id="search-box">{% load zipcode_extras %}{% show_search_form %}</li>
+        </ul>
+      </div>
+  </div>
+</nav>
+<div id="screen"></div>
+
 <div class="header">
     <div>
         {% if time_image == 'day'%}
@@ -29,13 +83,13 @@
 </nav>
 
 <div id="wrapper">
-    <div id="sidebar-wrapper">
+    <div id="sidebar-wrapper" class="hidden-xs hidden-sm">
         <h3 id="schedule">SCHEDULE A PROJECT</h3>
         
         {% load zipcode_extras %}
         {% show_search_form %}
     </div>
-    <div id="sidebar-ad">
+    <div id="sidebar-ad" class="hidden-xs hidden-sm">
         <h3>HAVE AN EMERGENCY?</h3>
         <H5>Call us directly at</H5>
         <H3>801-933-4663</H3>
@@ -46,11 +100,119 @@
 {% endblock %}
 {% block content %}
 
-<form id="career-form" action="/careers/" enctype="multipart/form-data" method="post">
-    {% csrf_token %}
-    {{ careerform }}
-    <input type="submit" id="career-submit"value="Submit" />
-</form>
+<div class="row container">
+    <div id="repair-boxes" class="row hidden-xs">
+        <div class="col-lg-3">
+            <img class="repair-boxes img-circle" alt="air conditioner picture" src="{% static 'zipcode/images/AC.jpg' %}">
+        </div>
+        <div class="col-lg-3">
+            <img class="repair-boxes img-circle" alt="sink picture" src="{% static 'zipcode/images/sink.jpg' %}">
+        </div>
+        <div class="col-lg-3"> 
+            <img class="repair-boxes img-circle" alt="garage door picture" src="{% static 'zipcode/images/Linear-Garage-Door-Opener.jpg' %}">
+        </div>
+        <div class="col-lg-3">
+            <img class="repair-boxes img-circle" alt="hardwood floor picture" src="{% static 'zipcode/images/hardwood_may13.jpg' %}">
+        </div>
+    </div>
+</div>
+<div class="row container">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <h1 id="becomeahome">Become A Home Hero! </h1>
+  </div>
+</div>
 
+<div class="row container">
+  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+    <img src="{% static 'zipcode/images/ZipcodeMap.jpg' %}" alt="map of salt lake">
+  </div>
+  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+    <p>At Home Services isn’t your average home
+repair company. We don’t hire 9-5 employees
+to turn a wrench, we contract with skilled
+business owners, giving them valuable tools
+and marketing know-how, allowing them to
+focus on growing their business and creating
+life-long customers. As an At Home Hero,
+you’ll work in your own area, have first choice
+of jobs within set zip codes, and get to control
+your own schedule. You can take all the time
+off in the world for that vacation you planned,
+or take as much work as you can handle. It’s
+your business and your earning power. We’ll
+be there to support you. 
+    </p>
+  </div>
+</div>
+
+<div class="blue-container">
+  <div class="row container blue1">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <p> 
+  Hi, my name is Chris Miller.<br><br>
+I’m the owner of At Home Services, and your personal resource in building your business.
+I’ve been a home repair techinician my whole career, and I know how difficult it can be to
+balance turning a wrench, scheduling, and marketing all at once.<br><br>
+
+It seems there have always been two ways to operate a home repair business: stay small
+and take whatever jobs come your way due to a lack of ressources and marketing know-
+how, or get hired by a large company that makes you clock in everyday and writes your
+paycheck<br><br>
+I think there should be a third way, which is why I created At Home Services. Instead of
+hiring technicians like Whipple or Action Plumbing, I want to give guys just like me a chance
+to grow their own business, while remaining in control of their schedules and income.<br><br>
+
+As a franchisee of At Home Services, you’ll have tools at your disposal the average repairman
+in the KSL Classifieds doesn’t, with a mobile app connected to a database that allows you to
+invoice, send emails, enter customers, and see an overview of your progress any time you
+like. Our office, called the Guardianship, is staffed by talented dispatchers and marketers,
+all working to support you in your professional endeavors. We have myriad strategies and
+marketing techniques to make your own work benefit you.  </p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row container">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <h1 id="becomeahome">Get Started!</h1>
+    {% load webdesign %}
+    {% lorem 3 p %}
+  </div>
+</div>
+
+
+<div class="row container">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="career-form-show-hide">
+      <p><a class="btn btn-primary career-form-button">Click Here to Fill Out The Form</a>
+        <div class="rippple-wrapper"></div>
+      </p>    
+    </div>
+    <form id="career-form" action="/careers/" enctype="multipart/form-data" method="post">
+      {% csrf_token %}
+      {% for form in careerform %}
+        
+           <div class="form-group"> {{ form.label_tag }} {{ form }} </div>
+        
+      {% endfor %}
+      <input type="submit" id="career-submit" class="btn btn-default" value="Submit" />
+    </form>
+  </div>
+</div>
 {% endblock %}
+{% block extra-javascript%}
+<script>
+$(document).ready(function(){
+  $('#career-form').hide();
+  
+  $('.career-form-show-hide').click(function(){
+    $('#career-form').toggle("slow", function(){
+      console.log('asdfa');
+    });
+  });
 
+});
+
+</script>
+{% endblock %}

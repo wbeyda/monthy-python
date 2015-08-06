@@ -23,7 +23,7 @@
       </li>
       <li class="sb-left">
           <img class="repair-boxes-iphone5 img-circle" alt="sink picture" src="{% static 'zipcode/images/sink.jpg' %}">
-          <a href="value">Value Care</a>
+          <a href="{% static 'zipcode/images/ValueCareBrochure.pdf' %}">Value Care</a>
       </li>
       <li class="sb-left">
           <img class="repair-boxes-iphone5 img-circle" alt="garage door picture" src="{% static 'zipcode/images/Linear-Garage-Door-Opener.jpg' %}">
@@ -70,7 +70,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li><a class="active" href="/">Home</a></li>
-        <li><a href="value">Value Care</a></li>
+        <li><a href="{% static 'zipcode/images/ValueCareBrochure.pdf' %}">Value Care</a></li>
         <li><a href="careers">Careers</a></li>
         <li><a href="gallery">Gallery</a></li>   
       </ul>     
@@ -127,7 +127,7 @@
     <div class="row">       
         <div class="col-md-12 col-sm-12 col-xs-12"><h2 class="all-gdoors">All Garage Door Repairs 10% Off*</h2></div>
     </div>
-    <div class="row">
+    <div class="row ahs-difference">
         <div class="col-md-6 col-sm-12 col-xs-12">
             <h3 class="heading3" >The At Home Difference</h3>
             <p class="athomeserv">At Home Services is unique in the home repair industry.
@@ -162,7 +162,7 @@
         <div class="row">
             <div class="col-md-6 col-sm-12 col-xs-12">
                 <h3 id="heading4">Printable Brochures</h3>
-                <img id="printable" alt="prinatable brochure picture" src="{% static 'zipcode/images/printable.jpg' %}">
+                <a href="{% static 'zipcode/images/ValueCareBrochure.pdf' %}" ><img id="printable" alt="prinatable brochure picture" src="{% static 'zipcode/images/printable.jpg' %}"></a>
             </div>
             <div class="col-md-6 col-sm-12 col-xs-12">
                 <h3 id="heading4">What Our Heros Do</h3>

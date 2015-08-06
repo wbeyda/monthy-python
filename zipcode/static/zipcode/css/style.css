@@ -27,6 +27,50 @@ textarea {
   height: 6em !important;
   font-weight: bold;
 }
+.ripple-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.btn-primary {
+  color: #fff;
+  background-color: #ef3b70;
+  border-color: #cd1148;
+}
+.btn-primary:hover {
+  color: #fff;
+  background-color: #ff2b69;
+  border-color: #ff2b69;
+}
+.carrer-form-button {
+  background-color: #e41350;
+}
+form#career-form {
+  background-color: #eee;
+  border-radius: 0.3em;
+  padding: 2em;
+}
+form#career-form input#id_address {
+  margin: 0em;
+}
+form#career-form input#career-submit {
+  background-color: #ef3b70;
+  color: #fff;
+  border-radius: #cd1148 !important;
+  border-color: #cd1148;
+}
+form#career-form input#career-submit:hover {
+  background-color: #ff2b69;
+  color: #fff;
+  border-radius: #dd0041;
+  border-color: #dd0041;
+}
 .navbar-default .navbar-nav > li > a {
   color: #fff !important;
 }
@@ -37,6 +81,11 @@ textarea {
 }
 .navbar .navbar-collapse {
   text-align: center;
+}
+#page-content-wrapper {
+  width: 100%;
+  left: 12em;
+  position: relative;
 }
 .container {
   float: none;
@@ -61,6 +110,10 @@ div#repair-boxes {
 #gdoor {
   width: 100%;
   margin-bottom: 0;
+  margin-top: 0.6em;
+}
+.ahs-difference {
+  margin-bottom: 5em;
 }
 .all-gdoors {
   height: 2em;
@@ -125,6 +178,8 @@ div#repair-boxes {
   background-color: #2ebad1;
   color: white;
   width: 115.7%;
+  position: relative;
+  right: 12em;
 }
 .blue-container2 {
   background-color: #2ebad1;
@@ -296,6 +351,9 @@ div.row.container {
 #right-click {
   margin: 1em;
 }
+form#career-form input {
+  width: 100%;
+}
 /*@media (max-width:767px) {
 
     #wrapper {
@@ -340,7 +398,7 @@ div.row.container {
 }
 @media (max-width: 320px) {
   #page-content-wrapper {
-    margin-left: -12em;
+    margin-left: -24em;
   }
   .row.hidden-sm.hero-logo-mobile {
     position: relative;
@@ -392,11 +450,14 @@ div.row.container {
   #smiles {
     width: 19em;
   }
+  .ahs-difference {
+    margin-bottom: 2em;
+  }
   .blue-container {
     background-color: #2ebad1;
     color: white;
-    margin-left: 12em;
-    width: 23em;
+    margin-left: 24em;
+    width: 24em;
     margin-top: 2em;
   }
   .blue1 {
@@ -411,6 +472,9 @@ div.row.container {
     margin-bottom: 1.5em;
     width: 10em;
     height: 1em;
+  }
+  #printable {
+    width: 19em;
   }
   #someofour {
     text-align: justify;
@@ -477,6 +541,7 @@ div.row.container {
   .navbar-iphone5 {
     background-color: #2ebad1 !important;
     height: 6em;
+    border-bottom: solid 1px #fff;
   }
   .navbar-iphone5 ul li {
     list-style-type: none;
@@ -723,6 +788,12 @@ div.row.container {
   /* Styles */
 }
 /* Large screens ----------- */
+@media only screen and (min-width: 1824px) {
+  .row.container.blue1 {
+    position: relative;
+    left: 11em;
+  }
+}
 /* iPhone 4 - 5s ----------- */
 /*
 @media

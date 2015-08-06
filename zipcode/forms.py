@@ -7,6 +7,7 @@ class CareerForm(forms.ModelForm):
     class Meta:
         model = CareerResume
         fields = ['name', 'address', 'email', 'phone', 'resume']
+        labels = {'name': 'Name', 'address': 'Address', 'email': 'E-Mail', 'phone': 'Phone Number', 'resume': 'Resume'}
 
 class ZipForm(forms.Form):
     zipsearch = forms.CharField(label='Zipcode', max_length=5)
