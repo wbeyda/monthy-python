@@ -25,6 +25,7 @@ class CareerResume(models.Model):
 
 EVENT_COLORS  = [
         ('eeeeee', _('gray')),
+        ('777777', _('dark-gray')),
         ('ef3b70', _('red')),
         ('2ebad1', _('blue')),
         ('85d4f5',_('light-blue')),
@@ -206,5 +207,17 @@ class Testimonial(models.Model):
         return u'<img class="admin_img_preview" style="max-height:20em;" src=' + self.job_pic.url +'/>'
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True   
-       
-    
+
+TEXT_COLORS = [
+        ('000000', _('black')),
+        ('ffffff', _('white')),
+    ]
+class MonthlySpecial(models.Model):
+    special_pic        = models.FileField(upload_to='specials/%Y/%m/%d', blank=True, help_text="please make sure all images are the same width")
+    special_text       = models.CharField( _('Special Text'), max_length=255)
+    special_color      = models.CharField(choices=EVENT_COLORS, max_length=7)
+    special_text_color = models.CharField(choices=TEXT_COLORS, max_length=7, default="000000")
+    special_active     = models.BooleanField(_('Is Special Active?'), default=True)
+
+    def __unicode__(self):
+        return self.special_text

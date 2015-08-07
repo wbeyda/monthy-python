@@ -27,6 +27,13 @@ textarea {
   height: 6em !important;
   font-weight: bold;
 }
+.skills-wrapper {
+  background-color: #777;
+  color: #fff;
+  padding: 2em;
+  position: relative;
+  float: right;
+}
 .ripple-wrapper {
   position: absolute;
   top: 0;
@@ -51,6 +58,12 @@ textarea {
 .carrer-form-button {
   background-color: #e41350;
 }
+a.btn.btn-primary.career-form-button {
+  width: 38.5em;
+}
+h1#becomeahome {
+  color: #2ebad1;
+}
 form#career-form {
   background-color: #eee;
   border-radius: 0.3em;
@@ -70,6 +83,26 @@ form#career-form input#career-submit:hover {
   color: #fff;
   border-radius: #dd0041;
   border-color: #dd0041;
+}
+h1#becomeahome {
+  color: #2ebad1;
+  text-align: center;
+  margin: 3em 0 2em 0;
+}
+.mapandtext {
+  position: relative;
+  margin-bottom: 3em;
+}
+.zipcodemappic {
+  margin: 0 9em 3em 0;
+}
+.athomeservicesisnt p {
+  text-align: justify;
+  line-height: 2.5em;
+  margin-bottom: 3em;
+}
+.getstartedparagraph p {
+  text-align: justify;
 }
 .navbar-default .navbar-nav > li > a {
   color: #fff !important;
@@ -289,7 +322,6 @@ textarea {
   border: none;
 }
 .profile-pic {
-  margin: 1em;
   max-height: 12em;
 }
 .profile-name {
@@ -401,6 +433,11 @@ p.description {
 }
 .gallery-container {
   height: 49.5em;
+}
+.chrismiller {
+  padding: 2em;
+  text-align: justify;
+  text-indent: 1em;
 }
 /*@media (max-width:767px) {
 

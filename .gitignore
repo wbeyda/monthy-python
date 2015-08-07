@@ -2,6 +2,7 @@
 media/photos/*
 media/testimonial/*
 media/gallery/*
+mdeia/specials/*
 zipcode/*.pyc
 db.sqlite3
 zipcode/migrations/*

@@ -34,7 +34,7 @@ INSTALLED_APPS = (
     'django.contrib.webdesign',
     'zipcode',
     #'debug_toolbar',
-    #'django_extensions','
+    'django_extensions',
     'compressor',
 )
 

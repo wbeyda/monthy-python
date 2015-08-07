@@ -77,7 +77,12 @@ class TestimonialAdmin(admin.ModelAdmin):
     
     actions = [mark_as_approved]
 
+class MonthlySpecialAdmin(admin.ModelAdmin):
+    list_display = ('special_pic','special_text','special_color','special_active')
 
+
+
+admin.site.register(MonthlySpecial, MonthlySpecialAdmin)
 #admin.site.register(Availability, AvailabilityInline)
 admin.site.register(Contractor, ContractorAdmin)
 admin.site.register(CareerResume, CareerResumeAdmin)

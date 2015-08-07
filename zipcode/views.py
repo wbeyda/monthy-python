@@ -21,7 +21,8 @@ def day_or_night():
 def home(request):
     time_image = day_or_night()
     testimonials = Testimonial.objects.filter(best_of=True)
-    return render(request, 'home.html', {'time_image': time_image, 'testimonials': testimonials})
+    monthly_specials = MonthlySpecial.objects.filter(special_active=True)
+    return render(request, 'home.html', {'time_image': time_image, 'testimonials': testimonials, 'monthly_specials': monthly_specials})
 
 
 def results(request, postcode):
@@ -136,12 +137,14 @@ def contractor_detail_view(request, f,id,l):
     conschedule = ContractorSchedule.objects.filter(firstname_id=id)
     testimonial_form = testimonialform_factory(conschedule)
     time_image = day_or_night()
+    monthly_specials = MonthlySpecial.objects.filter(special_active=True)
     return render(request, 'contractor_detail.html', {'con': con, 
                                                       'htmlcalendar': htmlcalendar, 
                                                       'testimonials': testimonials, 
                                                       'testimonial_form': testimonial_form,
                                                       'availability': avail,
-                                                      'time_image': time_image
+                                                      'time_image': time_image,
+                                                      'monthly_special': monthly_specials
                                                       })
 
 def next_month_request(request, id, currentyear, currentmonth):
@@ -236,3 +239,4 @@ def last_month_request(request, id, currentyear, currentmonth):
             else:
                 htmlcalendar = next_last_month_contractor_calendar(queryset)
                 return HttpResponse(htmlcalendar)
+
