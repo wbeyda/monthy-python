@@ -3,6 +3,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
+from django.utils.text import Truncator
 
 class Contractor(models.Model):
 	areacode = models.PositiveIntegerField(max_length=5)
@@ -213,11 +215,26 @@ TEXT_COLORS = [
         ('ffffff', _('white')),
     ]
 class MonthlySpecial(models.Model):
-    special_pic        = models.FileField(upload_to='specials/%Y/%m/%d', blank=True, help_text="please make sure all images are the same width")
-    special_text       = models.CharField( _('Special Text'), max_length=255)
-    special_color      = models.CharField(choices=EVENT_COLORS, max_length=7)
-    special_text_color = models.CharField(choices=TEXT_COLORS, max_length=7, default="000000")
-    special_active     = models.BooleanField(_('Is Special Active?'), default=True)
+    special_pic          = models.FileField(upload_to='specials/%Y/%m/%d', blank=True, help_text="please make sure all images are the same width")
+    special_text         = models.CharField( _('Special Text'), max_length=255)
+    special_color        = models.CharField(choices=EVENT_COLORS, max_length=7)
+    special_text_color   = models.CharField(choices=TEXT_COLORS, max_length=7, default="000000")
+    special_active       = models.BooleanField(_('Is Special Active?'), default=True)
+    special_pic_alt_text = models.CharField(_('Special Pic Alt Text'), default='monthly special picture', max_length=255)
+    special_url          = models.CharField(_('Special URL'), default= "", max_length=255, blank=True)
 
     def __unicode__(self):
         return self.special_text
+    
+    def slugify_text(self):
+        if self.special_url == u'':
+            shorter_text = Truncator(self.special_text).words(10)
+            self.special_url = slugify(shorter_text)
+        return self.special_url
+
+    def clean(self):
+        self.slugify_text()
+
+
+
+

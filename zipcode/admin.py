@@ -79,6 +79,7 @@ class TestimonialAdmin(admin.ModelAdmin):
 
 class MonthlySpecialAdmin(admin.ModelAdmin):
     list_display = ('special_pic','special_text','special_color','special_active')
+    exclude = ('special_url',)
 
 
 
