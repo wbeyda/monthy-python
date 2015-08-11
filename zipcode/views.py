@@ -24,10 +24,10 @@ def home(request):
     monthly_specials = MonthlySpecial.objects.filter(special_active=True)
     return render(request, 'home.html', {'time_image': time_image, 'testimonials': testimonials, 'monthly_specials': monthly_specials})
 
-def monthly_special_detail(request, special):
-    monthly_special = MonthlySpecial.objects.get(id = special)
-    return render(request, 'monthly_special_detail.html', {'monthly_special': monthly_special})
-
+def monthly_special_detail(request, id, special):
+    time_image = day_or_night()
+    monthly_special = MonthlySpecial.objects.get(id = id)
+    return render(request, 'monthly_special_detail.html', {'monthly_special': monthly_special, 'time_image': time_image})
 
 def results(request, postcode):
     con = Contractor.objects.filter(areacode=postcode).prefetch_related().order_by("lastname")

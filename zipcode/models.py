@@ -217,6 +217,7 @@ TEXT_COLORS = [
 class MonthlySpecial(models.Model):
     special_pic          = models.FileField(upload_to='specials/%Y/%m/%d', blank=True, help_text="please make sure all images are the same width")
     special_text         = models.CharField( _('Special Text'), max_length=255)
+    special_details      = models.TextField( _('Special Details'), default="",)
     special_color        = models.CharField(choices=EVENT_COLORS, max_length=7)
     special_text_color   = models.CharField(choices=TEXT_COLORS, max_length=7, default="000000")
     special_active       = models.BooleanField(_('Is Special Active?'), default=True)

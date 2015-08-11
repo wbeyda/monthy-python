@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block extra-meta %}
+{% load zipcode_extras %}
+<meta name="keywords" content="at home services, monthly specials,{{ monthly_special.special_text }}">
+<meta name="description" content="{{ monthly_special.special_details}}">
+{% endblock %}
+
+{% block title %}{{ monthly_special.special_text }}{% endblock %}
+{% load staticfiles %}
+{% block nav %}
+
+<div class="header">
+    <div>
+        {% if time_image == 'day'%}
+            <img class="home-header" src="{% static 'zipcode/images/headers/SLCDay1920.jpg' %}">
+        {% elif  time_image == 'night'%}
+            <img class="home-header" src="{% static 'zipcode/images/headers/SLCNight1920.jpg' %}">
+        {% endif %}
+    </div>
+</div>
+
+<nav class="navbar navbar-default">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="value">Value Care</a></li>
+        <li><a href="careers">Careers</a></li>
+        <li><a href="gallery">Gallery</a></li>   
+      </ul>     
+    </div><!-- /.navbar-collapse -->
+</nav>
+{% endblock %}
+{% block content %}
+<div class="row container">
+    <div id="repair-boxes" class="row hidden-xs">
+        <div class="col-lg-3">
+            <img class="repair-boxes img-circle" alt="air conditioner picture" src="{% static 'zipcode/images/AC.jpg' %}">
+        </div>
+        <div class="col-lg-3">
+            <img class="repair-boxes img-circle" alt="sink picture" src="{% static 'zipcode/images/sink.jpg' %}">
+        </div>
+        <div class="col-lg-3"> 
+            <img class="repair-boxes img-circle" alt="garage door picture" src="{% static 'zipcode/images/Linear-Garage-Door-Opener.jpg' %}">
+        </div>
+        <div class="col-lg-3">
+            <img class="repair-boxes img-circle" alt="hardwood floor picture" src="{% static 'zipcode/images/hardwood_may13.jpg' %}">
+        </div>
+    </div>
+
+    <div class="row monthly-specials-h1">
+        <div class="col-lg-2 col-md-2 hidden-sm hidden-xs"></div>
+        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12"><h1 class="monthly">Our Monthly Specials</h1></div>
+        <div class="col-lg-2 col-md-2 hidden-sm hidden-xs"></div>    
+    </div>
+
+  <div class="row monthly-specials-image">
+    <div class="col-lg-2 col-md-2 hidden-sm hidden-xs"></div>
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+      <img src="/media/{{ monthly_special.special_pic}}" alt="{{ monthly_special.special_pic }}" >
+      <h2 style="background-color:#{{ monthly_special.special_color }}; color:#{{ monthly_special.special_text_color}}">{{ monthly_special.special_text }}</h2>
+    </div>
+    <div class="col-lg-2 col-md-2 hidden-sm hidden-xs"></div>
+  </div>
+
+  <div class="row monthly-specials-details">
+    <div class="col-lg-2 col-md-2 hidden-sm hidden-xs"></div>
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+      <p>{{ monthly_special.special_details }}<p>
+    </div>
+    <div class="col-lg-2 col-md-2 hidden-sm hidden-xs"></div>
+  </div>
+</div>
+
+{% endblock %}
+{% block extra-javascript %}
+<script>
+$( document ).ready(function() {
+    $('.blue-container').css({'width':'100%', 'right': '0em', 'margin-left': '0em'});
+});
+
+</script>
+{% endblock %}
+
