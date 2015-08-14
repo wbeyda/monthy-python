@@ -1,7 +1,32 @@
+@blue: #2ebad1;
+@pink: #ef3b70;
+@yellow: #F9D907;
+@green: #57B249;
+@grey: #555;
+
+.BoxShadowHelper(@level: 1){
+    & when (@level = 1) {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    }
+    & when (@level = 2) {
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    }
+    & when (@level = 3) {
+        box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    }
+    & when (@level = 4) {
+        box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    }
+    & when (@level = 5) {
+        box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+    }
+}
+
 .contractor-calendar-buttons {
   margin-left: 0.7em;
   margin-bottom: 0.2em;
 }
+
 button.left-click {
   height: 0.95em;
   width: 1.25em;
@@ -11,13 +36,13 @@ button.left-click {
   -webkit-transition: all 250ms;
   -moz-transition: all 250ms;
   transition: all 250ms;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-}
-button.left-click:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-  -webkit-transform: translateY(-3px);
-  -moz-transform: translateY(-3px);
-  transform: translateY(-3px);
+  .BoxShadowHelper(4);
+    &:hover {
+      .BoxShadowHelper(3);
+      -webkit-transform: translateY(-3px);
+      -moz-transform: translateY(-3px);
+      transform: translateY(-3px);
+  }
 }
 button.right-click {
   height: 0.95em;
@@ -28,17 +53,18 @@ button.right-click {
   -webkit-transition: all 250ms;
   -moz-transition: all 250ms;
   transition: all 250ms;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  .BoxShadowHelper(4);
+    &:hover {
+      .BoxShadowHelper(3);
+      -webkit-transform: translateY(-3px);
+      -moz-transform: translateY(-3px);
+      transform: translateY(-3px);
+  }
 }
-button.right-click:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-  -webkit-transform: translateY(-3px);
-  -moz-transform: translateY(-3px);
-  transform: translateY(-3px);
-}
+
 .event-popup {
-  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
-  width: 24em;
+  .BoxShadowHelper(5);
+  width:  24em;
   height: 52em;
   position: relative;
   top: -55em;
@@ -91,17 +117,17 @@ button.right-click:hover {
   right: 4.22em;
 }
 span.glyphicon.glyphicon-triangle-left {
-  color: #555555 !important;
+  color: @grey !important;
   font-size: 0.5em;
-  transform: scale(2, 1);
+  transform: scale(2,1);
   position: relative;
   top: -0.8em;
   margin-left: 0.2em;
 }
 span.glyphicon.glyphicon-triangle-right {
-  color: #555555 !important;
+  color: @grey !important;
   font-size: 0.5em;
-  transform: scale(2, 1);
+  transform: scale(2,1);
   position: relative;
   top: -0.8em;
   margin-left: 0.2em;
@@ -149,130 +175,134 @@ span.appointents {
   right: -2em;
   margin-left: -2.5em;
 }
+
 table.month {
-  position: relative;
-  text-decoration: none !important;
-  color: black !important;
-  table-layout: fixed;
-  width: 100%;
-  max-width: 800px;
-  margin: auto;
+    position: relative;
+    text-decoration: none !important;
+    color: black !important;
+    table-layout: fixed;
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
 }
 /* Mini Calendar Styles */
 .calendar-mini {
-  max-width: 480px;
+    max-width: 480px;
 }
 .calendar-mini td {
-  padding-bottom: 0px;
-  height: inherit;
-  background: #fff;
+    padding-bottom: 0px;
+    height: inherit;
+    background: #fff;
 }
 .calendar-mini .td-inner {
-  position: relative;
-  overflow: visible;
-  margin-bottom: 32px;
+    position: relative;
+    overflow: visible;
+    margin-bottom: 32px;
 }
 .calendar-mini > table > tbody > tr > td > a {
-  position: relative;
-  bottom: 16px;
+    position: relative;
+    bottom: 16px;
 }
 .calendar-mini .calendar-event {
-  position: absolute;
-  margin: 0px;
-  width: auto;
-  top: 15px;
-  left: 16px;
-  border-radius: 20px;
-  padding: 9px;
+    position: absolute;
+    margin: 0px;
+    width: auto;
+    top: 15px;
+    left: 16px;
+    border-radius: 20px;
+    padding: 9px;
 }
 /* End Mini Calendar Styles */
+
 #event-calendar {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 table.month > tr {
-  background: #fff;
-  height: 20px;
+    background: #fff;
+    height: 20px;
 }
 table.month tr {
-  background: #fff;
+    background: #fff;
 }
 table.month th {
-  text-align: left;
-  font-size: 2em;
-  font-weight: 100;
+    text-align: left;
+    font-size: 2em;
+    font-weight: 100;
 }
 th.month {
-  padding: 5px;
-  background: #ccc;
-  color: white;
+    padding: 5px;
+    background: #ccc;
+    color: white;
 }
 table.month td:nth-child(odd) {
-  background-color: #f2fbfc;
+  background-color: lighten(@blue, 47%);
 }
+
 td.noday:nth-child(odd) {
-  background: #c0eaf1 !important;
+  background: lighten(@blue, 35%)!important;
 }
 td.noday:nth-child(even) {
-  background: #d5f1f6 !important;
+  background: lighten(@blue, 40%)!important;
 }
-.month-arrow-left,
-.month-arrow-right {
-  border: 1px solid #eee;
-  background: #fff;
+.month-arrow-left, .month-arrow-right {
+    border: 1px solid #eee;
+    background: #fff;
 }
 .td-inner {
-  overflow: auto;
-  margin-bottom: 40px;
-  position: relative;
+    overflow: auto;
+    margin-bottom: 40px;
+    position: relative;
 }
 .td-inner > a {
-  color: #000;
-  text-decoration: underline;
+    color: #000;
+    text-decoration: underline;
 }
 table.month td {
-  text-align: left;
-  overflow: hidden;
-  vertical-align: top;
-  background-color: #fff;
-  height: 7em;
-  max-height: 7em;
+    text-align: left;
+    overflow: hidden;
+    vertical-align: top;
+    background-color: #fff;
+    height: 7em;
+    max-height: 7em;
 }
 .calendar-event {
-  width: 100px;
-  margin-left: 3px;
-  margin: 5px;
-  font-size: 0.8em;
-  background: #eee;
-  padding: 3px;
-  cursor: pointer;
+    width: 100px;
+    margin-left: 3px;
+    margin: 5px;
+    font-size: 0.8em;
+    background: #eee;
+    padding: 3px;
+    cursor: pointer;
 }
 .calendar-today {
-  background: #acf !important;
+    background: #acf !important;
 }
 .event-anch {
-  text-decoration: none !important;
+    text-decoration: none !important;
 }
+
 .calendar-list {
-  padding: 0px;
-  max-width: 450px;
+    padding: 0px;
+    max-width: 450px;
 }
+
 .month-event-title {
-  display: inline;
+    display: inline;
 }
 .month-event {
-  border: 1px solid black;
-  list-style-type: none;
-  margin: 5px;
+    border: 1px solid black;
+    list-style-type: none;
+    margin: 5px;
 }
 .date-widget {
-  display: inline-block;
-  text-align: center;
-  padding-left: 15px;
-  padding-right: 15px;
-  margin: 5px;
-  border: 1px solid black;
-  border-radius: 5px;
+    display: inline-block;
+    text-align: center;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
 }
 .popover-title {
-  font-weight: bold;
+    font-weight: bold;
 }

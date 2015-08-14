@@ -57,52 +57,110 @@
 						<p class="contractor-bio">{{ i.bio }}</p>
 					</div>
 				</div>
+        <div class="row">
+          <div class="span12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <hr>
+          </div>
+        </div>
+      
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <h2 class="monthly">{{ i.firstname | capfirst }}'s Monthly Special</h2>
+          </div>
+        </div>
 
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="contractor-calendar-name">{{ i.firstname | capfirst}}'s Calendar</h1>
-                        <a href="{% url 'schedule' %}">Schedule an Event</a>
-                        <div class="btn-group contractor-calendar-buttons" role="group" aria-label="...">
-                          <button type="button" id="left-click" class="btn btn-default">
-                            <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
-                          </button>
-                          <button type="button" id="right-click" class="btn btn-default">
-                            <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
-                          </button>
-                        </div>
-                        <div>
-                        <span id="nomonth"></span>
-                        </div>                      
-                        {{ htmlcalendar | safe}} 
-                    </div>
-                   <div>
-                      <span>This contractor prefers to work between {% for i in availability %} {{i.prefered_starting_hours }} and {{ i.prefered_ending_hours}}
-                        </span>
-                  </div> 
-                   <div>
-                        <span>This contractor will  {% if i.evenings == True %} work evenings 
-                                                        {% else %} NOT work evenings
-                                                        {%endif %}
-                        </span>
+        <div class="row gallery-contractor-detail ">
+              <ul class="monthly-specials-list">
+              {% for i in monthly_specials %}
+                <li>
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">    
+                    <a href="{{ i.id }}/monthly-specials/{{ i.special_url }}">
+                      <img class="monthly-specials-img" alt="{{i.special_pic_alt_text}}" src="/media/{{ i.special_pic }}">  
+                    </a>
+                    <h2 class="monthly-specials-text" style="background-color:#{{ i.special_color}}; color: #{{ i.special_text_color}}">{{ i.special_text }}</h2>
                   </div>
-                   <div>
-                        <span>This contractor will {% if i.weekends == True %} work weekends
+                </li>
+              {% endfor %}
+              </ul>
+            </div>
+            
+            <div class="row">
+              <div class="col-lg-12">
+                <h1 class="contractor-calendar-name monthly">{{ i.firstname | capfirst}}'s Calendar</h1>
+                <a href="{% url 'schedule' %}">Schedule an Event</a>
+                  <!--<div class="btn-group contractor-calendar-buttons" role="group" aria-label="...">
+                    <button type="button" id="left-click" class="btn btn-default">
+                      <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" id="right-click" class="btn btn-default">
+                      <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+                    </button>
+                  </div>-->
+                  <div>
+                    <span id="nomonth"></span>
+                  </div>                      
+                    {{ htmlcalendar | safe}} 
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-lg-2 col-md-2 hidden-sm hidden-xs"></div>
+              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 calendar-legend">
+                 <span class="unavilable-square "></span><h2>Unavailable</h2>
+                 <span class="available-square "></span><h2>Available</h2>
+                 <span class="appointents">*Appointments are scheduled in a 2 hour minimum block.</span>
+              </div>
+              <div class="col-lg-2 col-md-2 hidden-sm hidden-xs"></div>
+            </div>
+                   
+           <div class="row event-popup">
+              <div class="col-lg-4 col-md-4 hidden-sm hidden-xs"></div>
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="event-day-header"><h2>Wednesday 22nd</h2></div>
+                <div class="col-time"><h3>9AM</h3></div><div class="availablity-block"></div>
+                <div class="col-time-spacer"></div><div class="availablity-block"></div>
+                <div class="col-time"><h3>11AM</h3></div><div class="availablity-block"></div>
+                <div class="col-time-spacer"></div><div class="availablity-block"></div>
+                <div class="col-time"><h3>1PM</h3></div><div class="availablity-block"></div>
+                <div class="col-time-spacer"></div><div class="availablity-block"></div>
+                <div class="col-time"><h3>3PM</h3></div><div class="availablity-block"></div>
+                <div class="col-time-spacer"></div><div class="availablity-block"></div>
+                <div class="col-time"><h3>5PM</h3></div><div class="availablity-block"></div>
+                <div class="col-time-spacer"></div><div class="availablity-block"></div>
+              </div>
+              <div class="col-lg-4 col-md-4 hidden-sm hidden-xs"></div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                    <span>This contractor prefers to work between {% for i in availability %} {{i.prefered_starting_hours }} and {{ i.prefered_ending_hours}}
+                    </span>
+                <div>
+                  <span>This contractor will  {% if i.evenings == True %} work evenings 
+                                                    {% else %} NOT work evenings
+                                                    {%endif %}
+                  </span>
+                </div>
+                <div>
+                  <span>This contractor will {% if i.weekends == True %} work weekends
                                                    {% else %}NOT work weekends 
                                                    {% endif  %}
-                      </span>
-                  </div>
-                  <div>
-                      <span>This contractor will {% if i.anytime == True%} work ANYTIME
+                  </span>
+                </div>
+                <div>
+                  <span>This contractor will {% if i.anytime == True%} work ANYTIME
                                                  {% else%} NOT work ANYTIME
                                                   {% endif %}
-                      </span>
-                  </div>
-                  <div>
-                      <span>This contractor prefers to work in these zipcodes {{ i.prefered_zipcodes}} 
-                                              {% endfor %}        
-                      </span>
-                  </div> 
+                  </span>
                 </div>
+                <div>
+                  <span>This contractor prefers to work in these zipcodes {{ i.prefered_zipcodes}} 
+                                              {% endfor %}        
+                  </span>
+                </div> 
+              </div>
+            </div>
+              
 			</div>
 		</div>
 	</div>
@@ -171,15 +229,40 @@
 {% endblock %}
 
 {% block extra-javascript %}
+<script src="{% static 'zipcode/js/unslider.js' %}"></script>
 <script type="text/javascript">
 $( document ).ready(function() {
+  
+    $(function() {
+       $('.gallery-contractor-detail').unslider({
+          speed: 2000,               //  The speed to animate each slide (in milliseconds)
+         delay: 3000,              //  The delay between slide animations (in milliseconds)
+         complete: function() {},  //  A function that gets called after every slide animation
+         keys: true,               //  Enable keyboard (left, right) arrow shortcuts
+        // dots: true,               //  Display dot navigation
+         fluid: false              //  Support responsive design. May break non-responsive designs
+      });
+    }); 
+
+      var oldhead = $('.month th').first();
+      $(oldhead).attr('colspan', '5');
+      $(oldhead).before('<th colspan="2" class="month"><div class="btn-group contractor-calendar-buttons" role="group" aria-label="..."><button type="button" class="left-click" class="btn btn-default"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button><button type="button" class="right-click" class="btn btn-default">                          <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button></div></th>');
+
+
+  function getNewHeader() {
+      var oldhead = $('.month th:eq(0)');
+      $(oldhead).attr('colspan', '5');
+      $(oldhead).before('<th colspan="2" class="month"><div class="btn-group contractor-calendar-buttons" role="group" aria-label="..."><button type="button" class="left-click" class="btn btn-default"><span class="glyphicon glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button><button type="button" class="right-click" class="btn btn-default">                          <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button></div></th>');
+
+  }
+  
   var monthMapper = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; 
   $.CurrentMonth = new Object();
   var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %}; 
   
-  $('#left-click').click(function() {    
-      var thismonth    = $(".month th").first().text().split(" ")[0].trim();
-      var currentyear  = $(".month th").first().text().split(" ")[1] ;
+  $('body').on("click", ".left-click", function() {    
+      var thismonth    = $(".month th:eq(1)").text().split(" ")[0].trim();
+      var currentyear  = $(".month th:eq(1)").text().split(" ")[1] ;
       $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;            
       var currentMonthString = $.CurrentMonth.m.toString();
       $.ajax({
@@ -194,6 +277,7 @@ $( document ).ready(function() {
               if(data != 'None' && data != ""){
                   $(".month").replaceWith(data);
                   $("#nomonth").text("");
+                  getNewHeader();
               }                                   
           },
           error: function (jqXHR, error) {
@@ -203,9 +287,9 @@ $( document ).ready(function() {
       });
   });
 
-  $('#right-click').click(function() {    
-      var thismonth    = $(".month th").first().text().split(" ")[0].trim();
-      var currentyear  = $(".month th").first().text().split(" ")[1] ;
+  $('body').on("click", ".right-click", function() {    
+      var thismonth    = $(".month th:eq(1)").text().split(" ")[0].trim();
+      var currentyear  = $(".month th:eq(1)").text().split(" ")[1] ;
       $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;
       var currentMonthString = $.CurrentMonth.m.toString();
       $.ajax({
@@ -220,6 +304,7 @@ $( document ).ready(function() {
               if (data != 'None' && data != ""){
                   $(".month").replaceWith(data);
                   $("#nomonth").text("");
+                  getNewHeader();
               }        
           }
       });
@@ -245,7 +330,57 @@ $( document ).ready(function() {
     var descrip = $('.description').text();
     $('[name="description"]').attr('content', function(i,oldval){return oldval + descrip });
 */
- 
+  function deselect(e) {
+    $('.pop').slideFadeToggle(function() {
+      e.removeClass('selected');
+    });    
+  }
+  
+  var dayMapper = {'mon': 'Monday', 'tue': 'Tuesday', 'wed': 'Wednesday', 'thu': 'Thursday', 'fri':'Friday', 'sat':'Saturday', 'sun':'Sunday'};
+  
+  function ordinal_suffix_of(i) {
+    var j = i % 10,
+        k = i % 100;
+    if (j == 1 && k != 11) {
+        return i + "st";
+    }
+    if (j == 2 && k != 12) {
+        return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+        return i + "rd";
+    }
+    return i + "th";
+  }
+  
+  $(function() {
+    $('body').on("click", "td", function(){
+      console.log( $(this).html() );
+      var calEvent = $(this).html().split(' ');
+      var valEventList = calEvent.shift();
+      if ($('.event-popup').hasClass('selected')) {
+          $('.event-popup').fadeToggle().removeClass('selected');
+      } else {
+        $('.event-popup').fadeToggle().addClass('selected');
+      }
+      
+      var weekday = $(this).attr('class');
+      
+      var m = $(this).text();
+      var mo = ordinal_suffix_of(m);
+      var monthdate = mo.trim();      
+
+      $.each(dayMapper, function(k,v){    
+          if ( k  == weekday) {
+            console.log('the day is ', v , 'and the weekday is', weekday );
+            $('.event-day-header h2').text(v + ' the ' +  monthdate);
+          } else {
+            console.log('this is the k, v', k, v ); 
+          }
+      });
+    });
+    return false;
+  }); 
 
 });
 </script>

@@ -8,6 +8,8 @@ a,p,h1,h2,h3,h4,h5,h6,ul,li,input,select,textarea {font-family: 'Open Sans', san
 	height: 6em !important;
   font-weight: bold;
 }
+
+
 @blue: #2ebad1;
 @pink: #ef3b70;
 @yellow: #F9D907;
@@ -21,10 +23,6 @@ a,p,h1,h2,h3,h4,h5,h6,ul,li,input,select,textarea {font-family: 'Open Sans', san
   float: right;
    
 }
-.myskills {
-
-}
-
 .ripple-wrapper {
   position: absolute;
   top: 0;
@@ -178,7 +176,7 @@ div#repair-boxes { margin-top: 2em;}
   margin-right: -15em;
   right: 18em;
   width: 16em;
-  background: @pink;
+  background: grey;
   position: absolute;
   height: 21em;
   z-index: 1000;
@@ -194,7 +192,7 @@ div#repair-boxes { margin-top: 2em;}
   margin-right: -15em;
   right: 18em;
   width: 16em;
-  background: @pink;
+  background: grey;
   position: absolute;
   height: 21em;
   overflow-y: auto;
@@ -233,7 +231,7 @@ textarea:focus, input:focus {
 mark {background-color: #DEE !important;}
 input, select, textarea{ color: #000; border: none;}
 
-.profile-pic { max-height: 12em;}
+.profile-pic { max-height: 28em;}
 .profile-name{height: 2em;
 text-align: center;
 background-color: #777;
@@ -266,7 +264,7 @@ div.row.container { margin-left: 13em !important;}
 #contact-submit {margin-left: 20.3em; background-color: @pink !important;}
 #contact-form {width: 18em; margin-left: 2em;}
 
-.contractor-calendar-buttons {margin-left: 27em;}
+.contractor-calendar-buttons {margin-left: 0em;}
 #left-click {margin: 1em;}
 #right-click {margin: 1em;}
 
@@ -312,6 +310,16 @@ p.description {
 .gallery-container-home {
   height: 10em;
 }
+.gallery-contractor-detail {
+  position: relative;
+  overflow: auto;
+}
+.row.gallery-contractor-detail li {
+  list-style: none;
+}
+.row.gallery-contractor-detail ul li {
+  float: left;
+}
 .monthly-specials-list {
   list-style: none;
 }
@@ -335,6 +343,7 @@ p.description {
     padding: 0.5em;
     margin-bottom: 1em;
     margin-top: 0em;
+
 }
 .chrismiller {
   padding: 2em;
@@ -410,9 +419,6 @@ p.description {
     right: 13em;
     top: 6em;
   }
-  .monthly-specials-image {
-    
-  }
   .row.monthly-specials-image {
     position: relative;
     right: 12em;
@@ -447,7 +453,7 @@ p.description {
     font-size: 1em;
     padding: 0.5em;
     margin-bottom: 1em;
-    width: 19em;
+    width: 18.8em;
   }
   .heading3 {
     color: @blue;
@@ -469,7 +475,7 @@ p.description {
     width: 19em;
   }
   .ahs-difference {
-    margin-bottom: 2em;
+     margin-bottom: 2em;
   }
   .blue-container {
     background-color: @blue;
@@ -530,7 +536,6 @@ p.description {
     float: left;
     margin-left: 0.1em;
   }
-  
   form#career-form {
     width: 18em;
   }
@@ -723,6 +728,15 @@ p.description {
   .gallery-container {
     height: 0em;  
   }
+  .gallery {
+    max-height: 17em;
+    min-height: 17em;
+    height: 15em;
+    width: 310px;
+  }
+  .gallery ul {
+    height: 230px;
+  }
 }
 @media (min-width: 768px) {
   .navbar-nav>li {
@@ -887,4 +901,144 @@ only screen and (-webkit-device-pixel-ratio: 3) {
   //You've spent way too much on a phone
 }
 */
-
+.item {
+  z-index: 1;
+  position: relative;
+  display: block;
+  width: 200px;
+  text-align: center;
+  margin: 20px;
+  padding: 10px 20px;
+  background-color: #fff;
+  border: 1px solid #eee;
+  -moz-transition: -moz-transform 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s, margin-top 0.8s cubic-bezier(0.95, 0.05, 0.795, 0.035) 0.61s, margin-left 0.7s cubic-bezier(0.95, 0.05, 0.795, 0.035) 0.51s;
+  -o-transition: -o-transform 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s, margin-top 0.8s cubic-bezier(0.95, 0.05, 0.795, 0.035) 0.61s, margin-left 0.7s cubic-bezier(0.95, 0.05, 0.795, 0.035) 0.51s;
+  -webkit-transition: -webkit-transform 0.7s cubic-bezier(0.19, 1, 0.22, 1), margin-top 0.8s cubic-bezier(0.95, 0.05, 0.795, 0.035), margin-left 0.7s cubic-bezier(0.95, 0.05, 0.795, 0.035);
+  -webkit-transition-delay: 0.01s, 0.61s, 0.51s;
+  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s, margin-top 0.8s cubic-bezier(0.95, 0.05, 0.795, 0.035) 0.61s, margin-left 0.7s cubic-bezier(0.95, 0.05, 0.795, 0.035) 0.51s;
+}
+.item:before, .item:after {
+  z-index: -1;
+  position: absolute;
+  display: block;
+  content: ' ';
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  margin: 0;
+  padding: 0;
+}
+.item:before, .item:after {
+  -moz-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+  -o-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+  -webkit-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  -webkit-transition-delay: 0.01s;
+  transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+}
+.item:before {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=16);
+  opacity: 0.16;
+  -moz-box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px black, 0px 10px 10px transparent, 0px 14px 14px transparent, 0px 19px 19px transparent;
+  -webkit-box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px black, 0px 10px 10px transparent, 0px 14px 14px transparent, 0px 19px 19px transparent;
+  box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px black, 0px 10px 10px transparent, 0px 14px 14px transparent, 0px 19px 19px transparent;
+}
+.item:after {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=23);
+  opacity: 0.23;
+  -moz-box-shadow: 0px 1px 1px transparent, 0px 3px 3px black, 0px 6px 3px transparent, 0px 10px 5px transparent, 0px 15px 6px transparent;
+  -webkit-box-shadow: 0px 1px 1px transparent, 0px 3px 3px black, 0px 6px 3px transparent, 0px 10px 5px transparent, 0px 15px 6px transparent;
+  box-shadow: 0px 1px 1px transparent, 0px 3px 3px black, 0px 6px 3px transparent, 0px 10px 5px transparent, 0px 15px 6px transparent;
+}
+.item:hover:before, .item:hover:after, .item.hovered:before, .item.hovered:after {
+  -moz-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+  -o-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+  -webkit-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  -webkit-transition-delay: 0.01s;
+  transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+}
+.item:hover:before, .item.hovered:before {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=12);
+  opacity: 0.12;
+  -moz-box-shadow: 0px 1px 1.5px black, 0px 3px 3px transparent, 0px 10px 10px transparent, 0px 14px 14px transparent, 0px 19px 19px transparent;
+  -webkit-box-shadow: 0px 1px 1.5px black, 0px 3px 3px transparent, 0px 10px 10px transparent, 0px 14px 14px transparent, 0px 19px 19px transparent;
+  box-shadow: 0px 1px 1.5px black, 0px 3px 3px transparent, 0px 10px 10px transparent, 0px 14px 14px transparent, 0px 19px 19px transparent;
+}
+.item:hover:after, .item.hovered:after {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=24);
+  opacity: 0.24;
+  -moz-box-shadow: 0px 1px 1px black, 0px 3px 3px transparent, 0px 6px 3px transparent, 0px 10px 5px transparent, 0px 15px 6px transparent;
+  -webkit-box-shadow: 0px 1px 1px black, 0px 3px 3px transparent, 0px 6px 3px transparent, 0px 10px 5px transparent, 0px 15px 6px transparent;
+  box-shadow: 0px 1px 1px black, 0px 3px 3px transparent, 0px 6px 3px transparent, 0px 10px 5px transparent, 0px 15px 6px transparent;
+}
+.item:active:before, .item:active:after, .item.active:before, .item.active:after {
+  -moz-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+  -o-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+  -webkit-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  -webkit-transition-delay: 0.01s;
+  transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+}
+.item:active:before, .item.active:before {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=19);
+  opacity: 0.19;
+  -moz-box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px transparent, 0px 10px 10px black, 0px 14px 14px transparent, 0px 19px 19px transparent;
+  -webkit-box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px transparent, 0px 10px 10px black, 0px 14px 14px transparent, 0px 19px 19px transparent;
+  box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px transparent, 0px 10px 10px black, 0px 14px 14px transparent, 0px 19px 19px transparent;
+}
+.item:active:after, .item.active:after {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=23);
+  opacity: 0.23;
+  -moz-box-shadow: 0px 1px 1px transparent, 0px 3px 3px transparent, 0px 6px 3px black, 0px 10px 5px transparent, 0px 15px 6px transparent;
+  -webkit-box-shadow: 0px 1px 1px transparent, 0px 3px 3px transparent, 0px 6px 3px black, 0px 10px 5px transparent, 0px 15px 6px transparent;
+  box-shadow: 0px 1px 1px transparent, 0px 3px 3px transparent, 0px 6px 3px black, 0px 10px 5px transparent, 0px 15px 6px transparent;
+}
+.item.depth4:before, .item.depth4:after {
+  -moz-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+  -o-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+  -webkit-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  -webkit-transition-delay: 0.01s;
+  transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+}
+.item.depth4:before {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=25);
+  opacity: 0.25;
+  -moz-box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px transparent, 0px 10px 10px transparent, 0px 14px 14px black, 0px 19px 19px transparent;
+  -webkit-box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px transparent, 0px 10px 10px transparent, 0px 14px 14px black, 0px 19px 19px transparent;
+  box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px transparent, 0px 10px 10px transparent, 0px 14px 14px black, 0px 19px 19px transparent;
+}
+.item.depth4:after {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=22);
+  opacity: 0.22;
+  -moz-box-shadow: 0px 1px 1px transparent, 0px 3px 3px transparent, 0px 6px 3px transparent, 0px 10px 5px black, 0px 15px 6px transparent;
+  -webkit-box-shadow: 0px 1px 1px transparent, 0px 3px 3px transparent, 0px 6px 3px transparent, 0px 10px 5px black, 0px 15px 6px transparent;
+  box-shadow: 0px 1px 1px transparent, 0px 3px 3px transparent, 0px 6px 3px transparent, 0px 10px 5px black, 0px 15px 6px transparent;
+}
+.item.depth5:before, .item.depth5:after {
+  -moz-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+  -o-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+  -webkit-transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  -webkit-transition-delay: 0.01s;
+  transition: box-shadow 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.01s;
+}
+.item.depth5:before {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+  opacity: 0.3;
+  -moz-box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px transparent, 0px 10px 10px transparent, 0px 14px 14px transparent, 0px 19px 19px black;
+  -webkit-box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px transparent, 0px 10px 10px transparent, 0px 14px 14px transparent, 0px 19px 19px black;
+  box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px transparent, 0px 10px 10px transparent, 0px 14px 14px transparent, 0px 19px 19px black;
+}
+.item.depth5:after {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=22);
+  opacity: 0.22;
+  -moz-box-shadow: 0px 1px 1px transparent, 0px 3px 3px transparent, 0px 6px 3px transparent, 0px 10px 5px transparent, 0px 15px 6px black;
+  -webkit-box-shadow: 0px 1px 1px transparent, 0px 3px 3px transparent, 0px 6px 3px transparent, 0px 10px 5px transparent, 0px 15px 6px black;
+  box-shadow: 0px 1px 1px transparent, 0px 3px 3px transparent, 0px 6px 3px transparent, 0px 10px 5px transparent, 0px 15px 6px black;
+}
+.item.depth3:active, .item.depth4:active, .item.depth5:active {
+  margin-top: 30px;
+  margin-left: 50px;
+  -moz-transform: translateX(-10px) translateY(-100px);
+  -ms-transform: translateX(-10px) translateY(-100px);
+  -webkit-transform: translateX(-10px) translateY(-100px);
+  transform: translateX(-10px) translateY(-100px);
+}

@@ -148,7 +148,7 @@ def contractor_detail_view(request, f,id,l):
                                                       'testimonial_form': testimonial_form,
                                                       'availability': avail,
                                                       'time_image': time_image,
-                                                      'monthly_special': monthly_specials
+                                                      'monthly_specials': monthly_specials
                                                       })
 
 def next_month_request(request, id, currentyear, currentmonth):
