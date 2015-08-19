@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.http import HttpRequest, HttpResponse 
+from django.http import HttpRequest, HttpResponse, JsonResponse 
 from zipcode.models import * 
 from zipcode.forms import *
 from django.core.mail import send_mail
 from zipcode.calendars import * 
 from django.views.generic.detail import DetailView
+from django.core import serializers
 
 
 def day_or_night():
@@ -243,4 +244,16 @@ def last_month_request(request, id, currentyear, currentmonth):
             else:
                 htmlcalendar = next_last_month_contractor_calendar(queryset)
                 return HttpResponse(htmlcalendar)
+
+
+def calendar_manager(request, currentdate, uid, currentyear, currentmonth):
+    #if request.is_ajax():
+    today = datetime.datetime(int(currentyear),int( currentmonth), int(currentdate), 0)
+    tomorrow = datetime.datetime(int(currentyear), int(currentmonth), int(currentdate)+1, 0)
+    uid = int(uid)
+    #import pdb; pdb.set_trace()
+    calendardays = ContractorSchedule.objects.filter(firstname_id=uid, start_date__gte = today, end_date__lt = tomorrow)
+    data = serializers.serialize('json', calendardays, fields=('start_date', 'end_date', 'all_day'), use_natural_keys=True )
+    return HttpResponse(data, content_type="application/json")
+    
 

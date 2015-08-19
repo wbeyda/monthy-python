@@ -355,7 +355,6 @@ $( document ).ready(function() {
   
   $(function() {
     $('body').on("click", "td", function(){
-      console.log( $(this).html() );
       var calEvent = $(this).html().split(' ');
       var valEventList = calEvent.shift();
       if ($('.event-popup').hasClass('selected')) {
@@ -366,18 +365,42 @@ $( document ).ready(function() {
       
       var weekday = $(this).attr('class');
       
-      var m = $(this).text();
-      var mo = ordinal_suffix_of(m);
-      var monthdate = mo.trim();      
+      var monthDate = $(this).text();
+      var currentdate = monthDate.split(' ')[0];
+      
+      var mo = ordinal_suffix_of(currentdate);
+      var ordinaldate = mo.trim();      
 
       $.each(dayMapper, function(k,v){    
           if ( k  == weekday) {
-            console.log('the day is ', v , 'and the weekday is', weekday );
-            $('.event-day-header h2').text(v + ' the ' +  monthdate);
-          } else {
-            console.log('this is the k, v', k, v ); 
+            $('.event-day-header h2').text(v + ' the ' +  ordinaldate);
+            
+          }       
+      });
+      var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %}; 
+      var thismonth    = $(".month th:eq(1)").text().split(" ")[0].trim();
+      var currentyear  = $(".month th:eq(1)").text().split(" ")[1] ;
+      $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;
+      var currentMonthString = $.CurrentMonth.m.toString();
+      var urlstring =  String("/cm/" + currentdate + "/"+ contractorID +"/"+ currentyear + "/" + currentMonthString)
+
+      $.ajax({
+          url: urlstring, 
+          method: 'GET', 
+          data: {
+              currentdate: currentdate,
+              uid: contractorID,
+              currentyear: currentyear,               
+              currentmonth: currentMonthString
+          },
+          dataType: 'json',
+          success: function (data) {        
+              if (data != 'None' && data != ""){
+                    console.log( data );
+              }        
           }
       });
+
     });
     return false;
   }); 

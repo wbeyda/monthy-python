@@ -18,4 +18,5 @@ urlpatterns = patterns('',
    url(r'^(?P<id>\d+)\/(?P<currentyear>\d{4})\/(?P<currentmonth>0?[1-9]|1[012])', views.last_month_request , name="last_month_request"),
    url(r'^(?P<id>\d+)\/(?P<currentmonth>0?[1-9]|1[012])\/(?P<currentyear>\d{4})', views.next_month_request , name="next_month_request"),
    url(r'^(?P<id>\d+)\/monthly-specials\/(?P<special>\w+(?:\-\w+)*)', views.monthly_special_detail , name="monthly_special"),
+   url(r'^cm/(?P<currentdate>\d+)/(?P<uid>\d+)/(?P<currentyear>20[0-9]{2})/(?P<currentmonth>\d+)', views.calendar_manager , name="calendar_manager"),
 )

@@ -48,19 +48,11 @@ class ContractorSchedule(models.Model):
         _("background color"), max_length=10, choices=EVENT_COLORS, default='eeeeee'
     )
     def dispatch_number(self):
-        return self.pk.zfill(5)
+        import pdb; pdb.set_trace()
+        pk = str(self.pk).zfill(5)
+        self.pk = int(pk)
+        return self.pk
 
-    '''
-    def add_zeros(self):
-        dn = self.pk
-        self.dispatch_number = dn
-        return self.dispatch_number.zfill(5)
-    
-    def save(self, *args, **kwargs):
-        self.add_zeros()
-        super(ContractorSchedule,self).save(*args, **kwargs)
-       ''' 
-     
     def __str__(self):
         return self.title
     
@@ -71,15 +63,36 @@ class ContractorSchedule(models.Model):
     def end_date_before_start_date(self):
         if self.start_date >= self.end_date:
             raise ValidationError('Start date must be before the end date')
+
     def is_chunk(self):
         if self.start_date.day != self.end_date.day:
             raise ValidationError('Please enter these chunks of days as seperate Schedule Requests')
-    
+   
+    def double_booked(self):
+        qs = ContractorSchedule.objects.filter(
+                                                firstname_id = self.firstname_id
+                                              ).filter(
+                                                      start_date__lte = self.start_date
+                                                      ).filter(
+                                                              end_date__gte = self.start_date
+                                                              )
+        if qs.exists():
+          for i in qs:
+             raise ValidationError(_('Double Booking! job number:'), code="double-booked")
+
+    def two_hour_blocks(self):
+        if self.start_date.day == self.end_date.day:
+            block = self.end_date - self.start_date
+        if block < datetime.timedelta(0, 7200):
+            raise ValidationError(_('Block is under 2 hours'), code="short-block")        
+        
     def clean(self):
-	self.start_date_before_now()
+        #self.start_date_before_now()
+        self.double_booked()
+        self.two_hour_blocks()
         self.end_date_before_start_date()
         #self.is_chunk()
-        self.dispatch_number
+        #self.dispatch_number()
 
 HOURS = ['Midnight','12:15AM','12:30AM,12:45AM']
 
