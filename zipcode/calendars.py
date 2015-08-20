@@ -81,7 +81,7 @@ def contractor_calendar(queryset):
                     if i.start_date.day == j and j not in eventdict:
                         eventdict[j] = event
                     #add to a day with an event
-                    if i.start_date.day == j and eventdict[j] != "" and eventdict[j] is not None and eventdict[j] != event and i.is_chunk == False:
+                    if i.start_date.day == j and eventdict[j] != "" and eventdict[j] is not None and eventdict[j] != event and i.is_chunk != True:
                         eventdict[j] += event
                     
                     #change day from none to event 
@@ -129,7 +129,7 @@ def next_last_month_contractor_calendar(queryset):
             if i.start_date.day == j and j not in eventdict:
                 eventdict[j] = event
             #add to a day with an event
-            if i.start_date.day == j and eventdict[j] != "" and eventdict[j] != event and i.is_chunk == False:
+            if i.start_date.day == j and eventdict[j] != "" and eventdict[j] != event and i.is_chunk != True:
                 eventdict[j] += event
             if j == monthrange(y,m)[1] and n == counter:
                 htmlcalendar = GenericCalendar(y,m).formatmonth(y,m, eventdict)

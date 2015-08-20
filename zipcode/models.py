@@ -77,8 +77,12 @@ class ContractorSchedule(models.Model):
                                                               end_date__gte = self.start_date
                                                               )
         if qs.exists():
-          for i in qs:
-             raise ValidationError(_('Double Booking! job number:'), code="double-booked")
+            for i in qs:
+                if not self.start_date - i.end_date == datetime.timedelta(0):     
+                    raise ValidationError(_('Double Booking! job number: %(value)s'),
+                                   code="double-booked",
+                                   params = {'value': i.id},
+                                  )
 
     def two_hour_blocks(self):
         if self.start_date.day == self.end_date.day:

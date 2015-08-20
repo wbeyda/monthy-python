@@ -354,29 +354,27 @@ $( document ).ready(function() {
   }
   
   $(function() {
-    $('body').on("click", "td", function(){
+    $('body').on("click", "td:not(.noday)", function(){
       var calEvent = $(this).html().split(' ');
       var valEventList = calEvent.shift();
+      var weekday = $(this).attr('class');
+      var monthDate = $(this).text();
+      var currentdate = monthDate.split(' ')[0];
+      var mo = ordinal_suffix_of(currentdate);
+      var ordinaldate = mo.trim();      
+      
       if ($('.event-popup').hasClass('selected')) {
           $('.event-popup').fadeToggle().removeClass('selected');
       } else {
         $('.event-popup').fadeToggle().addClass('selected');
-      }
-      
-      var weekday = $(this).attr('class');
-      
-      var monthDate = $(this).text();
-      var currentdate = monthDate.split(' ')[0];
-      
-      var mo = ordinal_suffix_of(currentdate);
-      var ordinaldate = mo.trim();      
-
-      $.each(dayMapper, function(k,v){    
-          if ( k  == weekday) {
-            $('.event-day-header h2').text(v + ' the ' +  ordinaldate);
+        
+        $.each(dayMapper, function(k,v){    
+            if ( k  == weekday) {
+                $('.event-day-header h2').text(v + ' the ' +  ordinaldate);
             
-          }       
-      });
+            }       
+        });
+      
       var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %}; 
       var thismonth    = $(".month th:eq(1)").text().split(" ")[0].trim();
       var currentyear  = $(".month th:eq(1)").text().split(" ")[1] ;
@@ -393,15 +391,23 @@ $( document ).ready(function() {
               currentyear: currentyear,               
               currentmonth: currentMonthString
           },
-          dataType: 'json',
+          //dataType: 'json',
           success: function (data) {        
+              console.log(data);
               if (data != 'None' && data != ""){
-                    console.log( data );
+                  console.log(data);
+                  $.each(data, function(k,v){
+                      var start_time = v.fields.start_date.split('T')[1]; 
+                      var end_time   = v.fields.end_date.split('T')[1]; 
+                      console.log(start_time, end_time); 
+                  });
               }        
           }
       });
 
-    });
+
+      }
+    }); //onlick
     return false;
   }); 
 
