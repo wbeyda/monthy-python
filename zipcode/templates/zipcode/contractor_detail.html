@@ -131,35 +131,7 @@
               <div class="col-lg-4 col-md-4 hidden-sm hidden-xs"></div>
             </div>
 
-            <div class="row">
-              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
-                    <span>This contractor prefers to work between {% for i in availability %} {{i.prefered_starting_hours }} and {{ i.prefered_ending_hours}}
-                    </span>
-                <div>
-                  <span>This contractor will  {% if i.evenings == True %} work evenings 
-                                                    {% else %} NOT work evenings
-                                                    {%endif %}
-                  </span>
-                </div>
-                <div>
-                  <span>This contractor will {% if i.weekends == True %} work weekends
-                                                   {% else %}NOT work weekends 
-                                                   {% endif  %}
-                  </span>
-                </div>
-                <div>
-                  <span>This contractor will {% if i.anytime == True%} work ANYTIME
-                                                 {% else%} NOT work ANYTIME
-                                                  {% endif %}
-                  </span>
-                </div>
-                <div>
-                  <span>This contractor prefers to work in these zipcodes {{ i.prefered_zipcodes}} 
-                                              {% endfor %}        
-                  </span>
-                </div> 
-              </div>
-            </div>
+           
               
 			</div>
 		</div>
@@ -255,6 +227,39 @@ $( document ).ready(function() {
       $(oldhead).before('<th colspan="2" class="month"><div class="btn-group contractor-calendar-buttons" role="group" aria-label="..."><button type="button" class="left-click" class="btn btn-default"><span class="glyphicon glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button><button type="button" class="right-click" class="btn btn-default">                          <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button></div></th>');
 
   }
+  $.Availability = new Object;
+  $.Availability = {{ availability | safe }};
+  function serialized_time_format(s) {
+      s = s.split(':').splice(0,2).join(':');
+      if (s[0] == "0" ) {
+        s = s.substr(1);
+      }
+      var h = parseInt(s.split(':')[0]);
+      
+      if (h >= 13) {
+        s = s.split(':');
+        s[0] = h - 12;
+        s = s.join(':');
+      }
+      
+      if (h < 11) {
+        s = s + " AM";
+      } else {
+        s = s + " PM";
+      }
+      return s;
+  }
+  
+  var display_start_time = serialized_time_format( $.Availability[0].fields.prefered_starting_hours );
+  var display_end_time   = serialized_time_format( $.Availability[0].fields.prefered_ending_hours );
+  var currentyear  = parseInt($(".month th:eq(1)").text().split(" ")[1]) ;
+  var st = $.Availability[0].fields.prefered_starting_hours ;
+  var et = $.Availability[0].fields.prefered_ending_hours;
+  var start_time = new Date(currentyear, 1, 1, st);
+  var end_time   = new Date(currentyear, 1, 1, et);
+  var hours_in_day = end_time - start_time; 
+  
+    
   
   var monthMapper = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; 
   $.CurrentMonth = new Object();
