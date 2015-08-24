@@ -117,7 +117,7 @@
               <div class="col-lg-4 col-md-4 hidden-sm hidden-xs"></div>
               <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <div class="event-day-header"><h2>Wednesday 22nd</h2></div>
-                <div class="col-time"><h3>9AM</h3></div><div class="availablity-block"></div>
+              <!--  <div class="col-time"><h3>9AM</h3></div><div class="availablity-block"></div>
                 <div class="col-time-spacer"></div><div class="availablity-block"></div>
                 <div class="col-time"><h3>11AM</h3></div><div class="availablity-block"></div>
                 <div class="col-time-spacer"></div><div class="availablity-block"></div>
@@ -126,7 +126,7 @@
                 <div class="col-time"><h3>3PM</h3></div><div class="availablity-block"></div>
                 <div class="col-time-spacer"></div><div class="availablity-block"></div>
                 <div class="col-time"><h3>5PM</h3></div><div class="availablity-block"></div>
-                <div class="col-time-spacer"></div><div class="availablity-block"></div>
+                <div class="col-time-spacer"></div><div class="availablity-block"></div> -->
               </div>
               <div class="col-lg-4 col-md-4 hidden-sm hidden-xs"></div>
             </div>
@@ -227,8 +227,7 @@ $( document ).ready(function() {
       $(oldhead).before('<th colspan="2" class="month"><div class="btn-group contractor-calendar-buttons" role="group" aria-label="..."><button type="button" class="left-click" class="btn btn-default"><span class="glyphicon glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button><button type="button" class="right-click" class="btn btn-default">                          <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button></div></th>');
 
   }
-  $.Availability = new Object;
-  $.Availability = {{ availability | safe }};
+ 
   function serialized_time_format(s) {
       s = s.split(':').splice(0,2).join(':');
       if (s[0] == "0" ) {
@@ -242,7 +241,7 @@ $( document ).ready(function() {
         s = s.join(':');
       }
       
-      if (h < 11) {
+      if (h <= 11) {
         s = s + " AM";
       } else {
         s = s + " PM";
@@ -250,17 +249,57 @@ $( document ).ready(function() {
       return s;
   }
   
+  function add_zeros_to_minutes(m) {
+      if (m < 10) {
+          m = "0" + m;
+      }
+      return m;
+  }
+  
+  function is_even(v) {
+      var val = v.split(":")[0]
+      if (val % 2 != 0) {
+          return v;        
+      } 
+  }
+ 
+  $.Availability = new Object;
+  $.Availability = {{ availability | safe }};
   var display_start_time = serialized_time_format( $.Availability[0].fields.prefered_starting_hours );
   var display_end_time   = serialized_time_format( $.Availability[0].fields.prefered_ending_hours );
   var currentyear  = parseInt($(".month th:eq(1)").text().split(" ")[1]) ;
-  var st = $.Availability[0].fields.prefered_starting_hours ;
-  var et = $.Availability[0].fields.prefered_ending_hours;
-  var start_time = new Date(currentyear, 1, 1, st);
-  var end_time   = new Date(currentyear, 1, 1, et);
-  var hours_in_day = end_time - start_time; 
+  var st = $.Availability[0].fields.prefered_starting_hours.split(':') ;
+  var et = $.Availability[0].fields.prefered_ending_hours.split(':');
+  var start_time = new Date(currentyear, 1, 1, st[0], st[1]);
+  var end_time   = new Date(currentyear, 1, 1, et[0], et[1]);
+  var hours_in_day = end_time.getHours() - start_time.getHours(); //8
+  var ManagedHours = new Array;
+  var hour = start_time.getHours();
+  var minutes = start_time.getMinutes();
+
+  for (var i = 0;i < hours_in_day; i++ ){
+      ManagedHours[i] = hour + ":" + add_zeros_to_minutes(minutes);
+      hour++;
+  } 
   
-    
+  for (var i=0; i < ManagedHours.length ;i++) {
+      ManagedHours[i] = serialized_time_format(ManagedHours[i]);
+  }  
   
+  ManagedHours.push(display_end_time);
+  var updatedHours =  ManagedHours.filter(is_even);
+  updatedHours.reverse();
+  
+  $.each(updatedHours, function(i){
+      $('.event-day-header').after('<div class="col-time"><h3>' 
+                                    + updatedHours[i] 
+                                    + '</h3></div><div class="availablity-block">'
+                                    + '</div><div class="col-time-spacer">'
+                                    + '</div><div class="availablity-block"></div>'
+                                    );
+  });
+  
+
   var monthMapper = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; 
   $.CurrentMonth = new Object();
   var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %}; 
