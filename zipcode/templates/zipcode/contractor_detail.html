@@ -204,31 +204,8 @@
 <script src="{% static 'zipcode/js/unslider.js' %}"></script>
 <script type="text/javascript">
 $( document ).ready(function() {
-  
-    $(function() {
-       $('.gallery-contractor-detail').unslider({
-          speed: 2000,               //  The speed to animate each slide (in milliseconds)
-         delay: 3000,              //  The delay between slide animations (in milliseconds)
-         complete: function() {},  //  A function that gets called after every slide animation
-         keys: true,               //  Enable keyboard (left, right) arrow shortcuts
-        // dots: true,               //  Display dot navigation
-         fluid: false              //  Support responsive design. May break non-responsive designs
-      });
-    }); 
-
-      var oldhead = $('.month th').first();
-      $(oldhead).attr('colspan', '5');
-      $(oldhead).before('<th colspan="2" class="month"><div class="btn-group contractor-calendar-buttons" role="group" aria-label="..."><button type="button" class="left-click" class="btn btn-default"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button><button type="button" class="right-click" class="btn btn-default">                          <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button></div></th>');
-
-
-  function getNewHeader() {
-      var oldhead = $('.month th:eq(0)');
-      $(oldhead).attr('colspan', '5');
-      $(oldhead).before('<th colspan="2" class="month"><div class="btn-group contractor-calendar-buttons" role="group" aria-label="..."><button type="button" class="left-click" class="btn btn-default"><span class="glyphicon glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button><button type="button" class="right-click" class="btn btn-default">                          <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button></div></th>');
-
-  }
  
-  function serialized_time_format(s) {
+  function cal_time_format(s) {
       s = s.split(':').splice(0,2).join(':');
       if (s[0] == "0" ) {
         s = s.substr(1);
@@ -257,16 +234,65 @@ $( document ).ready(function() {
   }
   
   function is_even(v) {
-      var val = v.split(":")[0]
+      if (v.indexOf(':') > -1) {
+          var val = v.split(":")[0];
+      } else {
+          var val = v;
+      }
       if (val % 2 != 0) {
           return v;        
       } 
   }
- 
+  
+  function ordinal_suffix_of(i) {
+      var j = i % 10,
+          k = i % 100;
+      if (j == 1 && k != 11) {
+          return i + "st";
+      }
+      if (j == 2 && k != 12) {
+          return i + "nd";
+      }
+      if (j == 3 && k != 13) {
+          return i + "rd";
+      }
+      return i + "th";
+  }
+  
+  function toObject(names, values) {
+      var result = {};
+      for (var i = 0; i < names.length; i++)
+          result[names[i]] = values[i];
+      return result;
+  } 
+  
+  $(function() {
+       $('.gallery-contractor-detail').unslider({
+          speed: 2000,               //  The speed to animate each slide (in milliseconds)
+         delay: 3000,              //  The delay between slide animations (in milliseconds)
+         complete: function() {},  //  A function that gets called after every slide animation
+         keys: true,               //  Enable keyboard (left, right) arrow shortcuts
+        // dots: true,               //  Display dot navigation
+         fluid: false              //  Support responsive design. May break non-responsive designs
+      });
+    }); 
+
+  var oldhead = $('.month th').first();
+  $(oldhead).attr('colspan', '5');
+  $(oldhead).before('<th colspan="2" class="month"><div class="btn-group contractor-calendar-buttons" role="group" aria-label="..."><button type="button" class="left-click" class="btn btn-default"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button><button type="button" class="right-click" class="btn btn-default">                          <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button></div></th>');
+
+
+  function getNewHeader() {
+      var oldhead = $('.month th:eq(0)');
+      $(oldhead).attr('colspan', '5');
+      $(oldhead).before('<th colspan="2" class="month"><div class="btn-group contractor-calendar-buttons" role="group" aria-label="..."><button type="button" class="left-click" class="btn btn-default"><span class="glyphicon glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button><button type="button" class="right-click" class="btn btn-default">                          <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button></div></th>');
+
+  }
+
   $.Availability = new Object;
   $.Availability = {{ availability | safe }};
-  var display_start_time = serialized_time_format( $.Availability[0].fields.prefered_starting_hours );
-  var display_end_time   = serialized_time_format( $.Availability[0].fields.prefered_ending_hours );
+  var display_start_time = cal_time_format( $.Availability[0].fields.prefered_starting_hours );
+  var display_end_time   = cal_time_format( $.Availability[0].fields.prefered_ending_hours );
   var currentyear  = parseInt($(".month th:eq(1)").text().split(" ")[1]) ;
   var st = $.Availability[0].fields.prefered_starting_hours.split(':') ;
   var et = $.Availability[0].fields.prefered_ending_hours.split(':');
@@ -276,6 +302,11 @@ $( document ).ready(function() {
   var ManagedHours = new Array;
   var hour = start_time.getHours();
   var minutes = start_time.getMinutes();
+  var monthMapper = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; 
+  var dayMapper = {'mon': 'Monday', 'tue': 'Tuesday', 'wed': 'Wednesday', 'thu': 'Thursday', 'fri':'Friday', 'sat':'Saturday', 'sun':'Sunday'};
+  $.CurrentMonth = new Object();
+  var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %}; 
+  var scedblo = [];
 
   for (var i = 0;i < hours_in_day; i++ ){
       ManagedHours[i] = hour + ":" + add_zeros_to_minutes(minutes);
@@ -283,26 +314,45 @@ $( document ).ready(function() {
   } 
   
   for (var i=0; i < ManagedHours.length ;i++) {
-      ManagedHours[i] = serialized_time_format(ManagedHours[i]);
+      ManagedHours[i] = cal_time_format(ManagedHours[i]);
   }  
-  
+ 
+   
   ManagedHours.push(display_end_time);
   var updatedHours =  ManagedHours.filter(is_even);
-  updatedHours.reverse();
+  //updatedHours.reverse();
+  var sb = "";
   
   $.each(updatedHours, function(i){
-      $('.event-day-header').after('<div class="col-time"><h3>' 
-                                    + updatedHours[i] 
-                                    + '</h3></div><div class="availablity-block">'
-                                    + '</div><div class="col-time-spacer">'
-                                    + '</div><div class="availablity-block"></div>'
-                                    );
+      sb = sb + '<div class="col-time"><h3>' 
+              + updatedHours[i] 
+              + '</h3></div><div class="availablity-block">'
+              + '</div><div class="col-time-spacer">'
+              + '</div><div class="availablity-block"></div>';
   });
   
+  $('.event-day-header').after(sb); 
+  
+  var starting_hour = start_time.getHours();
+  
+  for (var i=0; i <= hours_in_day; i++) {
+      scedblo[i] = starting_hour 
+      starting_hour++
+  }
+  
+  scedblo.push( (end_time.getHours()+1) ); //add the last block 
+  
+  $('.availablity-block').each(function(k,v) {
+      $(this).addClass('schedule-block-time-'+ scedblo[k]);
+  });
 
-  var monthMapper = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; 
-  $.CurrentMonth = new Object();
-  var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %}; 
+  var schedule_block_times = new Array;
+
+  $('[class*="schedule-block-time-"]').each( function(k,v){
+      schedule_block_times[k] = v.attributes[0].nodeValue.split(' ')[1];
+  }); 
+  var schedule_block_keys = new Array;
+  
   
   $('body').on("click", ".left-click", function() {    
       var thismonth    = $(".month th:eq(1)").text().split(" ")[0].trim();
@@ -374,28 +424,6 @@ $( document ).ready(function() {
     var descrip = $('.description').text();
     $('[name="description"]').attr('content', function(i,oldval){return oldval + descrip });
 */
-  function deselect(e) {
-    $('.pop').slideFadeToggle(function() {
-      e.removeClass('selected');
-    });    
-  }
-  
-  var dayMapper = {'mon': 'Monday', 'tue': 'Tuesday', 'wed': 'Wednesday', 'thu': 'Thursday', 'fri':'Friday', 'sat':'Saturday', 'sun':'Sunday'};
-  
-  function ordinal_suffix_of(i) {
-    var j = i % 10,
-        k = i % 100;
-    if (j == 1 && k != 11) {
-        return i + "st";
-    }
-    if (j == 2 && k != 12) {
-        return i + "nd";
-    }
-    if (j == 3 && k != 13) {
-        return i + "rd";
-    }
-    return i + "th";
-  }
   
   $(function() {
     $('body').on("click", "td:not(.noday)", function(){
@@ -439,11 +467,16 @@ $( document ).ready(function() {
           success: function (data) {        
               console.log(data);
               if (data != 'None' && data != ""){
-                  console.log(data);
                   $.each(data, function(k,v){
-                      var start_time = v.fields.start_date.split('T')[1]; 
-                      var end_time   = v.fields.end_date.split('T')[1]; 
-                      console.log(start_time, end_time); 
+                      var start_time = new Date(currentyear, parseInt(currentMonthString)-1, currentdate, v.fields.start_date.split('T')[1].split(':')[0]); 
+                      var end_time   = new Date(currentyear, parseInt(currentMonthString)-1, currentdate, v.fields.end_date.split('T')[1].split(':')[0]); 
+                      var block_length = end_time.getHours() - start_time.getHours();
+
+                      console.log($.Availability);
+                      
+                      if (start_time.getHours()) {
+                          
+                      }
                   });
               }        
           }
