@@ -93,7 +93,7 @@ class ContractorSchedule(models.Model):
         
     def clean(self):
         #self.start_date_before_now()
-        self.double_booked()
+        #self.double_booked()
         self.two_hour_blocks()
         self.end_date_before_start_date()
         #self.is_chunk()

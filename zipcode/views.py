@@ -248,12 +248,14 @@ def last_month_request(request, id, currentyear, currentmonth):
 
 
 def calendar_manager(request, currentdate, uid, currentyear, currentmonth):
+    import pdb; pdb.set_trace()
     if request.is_ajax():
         today = datetime.datetime(int(currentyear),int( currentmonth), int(currentdate), 0)
         tomorrow = datetime.datetime(int(currentyear), int(currentmonth), int(currentdate)+1, 0)
         uid = int(uid)
         #import pdb; pdb.set_trace()
         calendardays = ContractorSchedule.objects.filter(firstname_id=uid, start_date__gte = today, end_date__lt = tomorrow).order_by('start_date')
+        #ContractorSchedule.objects.filter(firstname_id = uid, start_date__gte = today) 
         data = serializers.serialize('json', calendardays, fields=('start_date', 'end_date', 'all_day'), use_natural_keys=True )
         return HttpResponse(data, content_type="application/json")
     

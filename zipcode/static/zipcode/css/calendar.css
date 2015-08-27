@@ -46,7 +46,7 @@ button.right-click:hover {
   display: none;
 }
 .availablity-block {
-  background: #2ebad1;
+  background: #f1f1f1;
   width: 13em;
   height: 2.5em;
   /* float: right; */
@@ -68,7 +68,7 @@ button.right-click:hover {
   height: 2em;
   width: 6em;
   padding: 0em;
-  margin-top: -1em;
+  margin-top: -3em;
   right: 8em;
   top: 2em;
   position: relative;
@@ -134,7 +134,7 @@ span.glyphicon.glyphicon-triangle-right {
   box-shadow: 0px 1px 1.5px transparent, 0px 3px 3px #333, 0px 10px 10px transparent, 0px 14px 14px transparent, 0px 19px 19px transparent;
 }
 .available-square {
-  background-color: white;
+  background-color: #f1f1f1;
   height: 3em;
   width: 3em;
   float: left;

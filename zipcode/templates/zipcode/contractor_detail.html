@@ -325,16 +325,16 @@ $( document ).ready(function() {
  
    
   ManagedHours.push(display_end_time);
-  var updatedHours =  ManagedHours.filter(is_even);
+  //var updatedHours =  ManagedHours.filter(is_even);
   //updatedHours.reverse();
   var sb = "";
   
-  $.each(updatedHours, function(i){
+  $.each(ManagedHours, function(i){
       sb = sb + '<div class="col-time"><h3>' 
-              + updatedHours[i] 
-              + '</h3></div><div class="availablity-block">'
-              + '</div><div class="col-time-spacer">'
-              + '</div><div class="availablity-block"></div>';
+              + ManagedHours[i] 
+              + '</h3></div><div class="availablity-block"></div>'
+             /* + '</div><div class="col-time-spacer">'
+              + '</div><div class="availablity-block"></div>'*/;
   });
   
   $('.event-day-header').after(sb); 
@@ -494,21 +494,27 @@ $( document ).ready(function() {
           //dataType: 'json',
           success: function (data) {        
               if (data != 'None' && data != ""){
+                  var blocks = new Object;
                   $.each(data, function(k,v){
                       var start_time = new Date(currentyear, parseInt(currentMonthString)-1, currentdate, v.fields.start_date.split('T')[1].split(':')[0]); 
                       var end_time   = new Date(currentyear, parseInt(currentMonthString)-1, currentdate, v.fields.end_date.split('T')[1].split(':')[0]); 
                       var block_length = end_time.getHours() - start_time.getHours();
-                      
+                       
                       $.each(block_mapper, function(key,val) {
                           if (Number(start_time) == Number(val) ) {
                               console.log('Winner!' + key,val);
-                              $("."+key).css('background', 'red'); //mark unavilable as blue #2ebad1
-                          } else {
-                              console.log(key,val);
+                              $("."+key).css('background', '#2ebad1'); //mark unavilable as blue #2ebad1
+                              blocks[key] = ['start time', start_time];
                           }
-
+                          if (Number(end_time) == Number(val) ) {
+                              var previous_hour = parseInt(key.split('schedule-block-time-')[1])-1;
+                              var new_key = 'schedule-block-time-' + previous_hour;
+                              blocks[new_key] = ['end time', end_time];
+                              $("."+new_key).css('background', "#2ebad1");//mark avilable as grey #F5F5F5
+                          }
                       });
                   });
+                  console.log(blocks);
               }        
           }
       });

@@ -23,7 +23,7 @@ class CareerResumeAdmin(admin.ModelAdmin):
 class ContractorScheduleAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('firstname', 'start_date', 'end_date', 'title', 'background_color','description',)
+            'fields': ('firstname', 'start_date', 'all_day', 'end_date', 'title', 'background_color','description',)
         }),
         ('Location', {
             'classes': ('collapse',),
@@ -31,7 +31,7 @@ class ContractorScheduleAdmin(admin.ModelAdmin):
         }),
     )
 
-    list_display = ('id','firstname','title', 'start_date', 'end_date',)
+    list_display = ('id','firstname','title', 'start_date', 'end_date','all_day',)
     list_filter = ['id']
     search_fields = ['title']
     date_hierarchy = 'start_date'
