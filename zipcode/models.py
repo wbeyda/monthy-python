@@ -87,8 +87,9 @@ class ContractorSchedule(models.Model):
     def two_hour_blocks(self):
         if self.start_date.day == self.end_date.day:
             block = self.end_date - self.start_date
-        if block < datetime.timedelta(0, 7200):
-            raise ValidationError(_('Block is under 2 hours'), code="short-block")        
+            
+            if block < datetime.timedelta(0, 7200):
+                raise ValidationError(_('Block is under 2 hours'), code="short-block")        
         
     def clean(self):
         #self.start_date_before_now()

@@ -288,7 +288,13 @@ $( document ).ready(function() {
       $(oldhead).before('<th colspan="2" class="month"><div class="btn-group contractor-calendar-buttons" role="group" aria-label="..."><button type="button" class="left-click" class="btn btn-default"><span class="glyphicon glyphicon glyphicon-triangle-left" aria-hidden="true"></span></button><button type="button" class="right-click" class="btn btn-default">                          <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></button></div></th>');
 
   }
+  
+  Date.prototype.addHours= function(h){
+    this.setHours(this.getHours()+h);
+    return this;
+  }
 
+  
   $.Availability = new Object;
   $.Availability = {{ availability | safe }};
   var display_start_time = cal_time_format( $.Availability[0].fields.prefered_starting_hours );
@@ -335,7 +341,7 @@ $( document ).ready(function() {
   
   var starting_hour = start_time.getHours();
   
-  for (var i=0; i <= hours_in_day; i++) {
+  for (var i=0; i <= hours_in_day; i++) { //get times from availablity
       scedblo[i] = starting_hour 
       starting_hour++
   }
@@ -343,16 +349,22 @@ $( document ).ready(function() {
   scedblo.push( (end_time.getHours()+1) ); //add the last block 
   
   $('.availablity-block').each(function(k,v) {
-      $(this).addClass('schedule-block-time-'+ scedblo[k]);
+      $(this).addClass('schedule-block-time-'+ scedblo[k]);//add css to blocks
   });
 
-  var schedule_block_times = new Array;
-
-  $('[class*="schedule-block-time-"]').each( function(k,v){
-      schedule_block_times[k] = v.attributes[0].nodeValue.split(' ')[1];
-  }); 
-  var schedule_block_keys = new Array;
-  
+/*
+  for i in scheduleblock: 
+    for j in obj:
+      if i.start_time = j.date:
+        start_time = j.cssclass
+      if i.end_time = j.date:
+        end_time = j.date:
+      start_and_end = [start_time,end_time]   
+      return start_and_end
+ 
+        
+    {cssclass: date} 
+*/
   
   $('body').on("click", ".left-click", function() {    
       var thismonth    = $(".month th:eq(1)").text().split(" ")[0].trim();
@@ -454,6 +466,22 @@ $( document ).ready(function() {
       var currentMonthString = $.CurrentMonth.m.toString();
       var urlstring =  String("/cm/" + currentdate + "/"+ contractorID +"/"+ currentyear + "/" + currentMonthString)
 
+      var schedule_block_keys = new Array;
+
+      $('[class*="schedule-block-time-"]').each( function(k,v){
+          schedule_block_keys[k] = v.attributes[0].nodeValue.split(' ')[1];
+      }); 
+      
+      var schedule_block_times = new Array;
+      var hour_counter = hours_in_day +1;
+  
+      for (var i=0; i <= hour_counter; i++) {
+          var starting_time = new Date(currentyear, monthMapper.indexOf(thismonth) , currentdate,st[0], st[1] ); // make a new date and increment the hour
+          schedule_block_times[i] = starting_time.addHours(i);
+      }
+
+      var block_mapper = toObject(schedule_block_keys,schedule_block_times);
+  
       $.ajax({
           url: urlstring, 
           method: 'GET', 
@@ -465,18 +493,21 @@ $( document ).ready(function() {
           },
           //dataType: 'json',
           success: function (data) {        
-              console.log(data);
               if (data != 'None' && data != ""){
                   $.each(data, function(k,v){
                       var start_time = new Date(currentyear, parseInt(currentMonthString)-1, currentdate, v.fields.start_date.split('T')[1].split(':')[0]); 
                       var end_time   = new Date(currentyear, parseInt(currentMonthString)-1, currentdate, v.fields.end_date.split('T')[1].split(':')[0]); 
                       var block_length = end_time.getHours() - start_time.getHours();
-
-                      console.log($.Availability);
                       
-                      if (start_time.getHours()) {
-                          
-                      }
+                      $.each(block_mapper, function(key,val) {
+                          if (Number(start_time) == Number(val) ) {
+                              console.log('Winner!' + key,val);
+                              $("."+key).css('background', 'red'); //mark unavilable as blue #2ebad1
+                          } else {
+                              console.log(key,val);
+                          }
+
+                      });
                   });
               }        
           }
