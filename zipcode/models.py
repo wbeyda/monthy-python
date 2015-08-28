@@ -48,7 +48,6 @@ class ContractorSchedule(models.Model):
         _("background color"), max_length=10, choices=EVENT_COLORS, default='eeeeee'
     )
     def dispatch_number(self):
-        import pdb; pdb.set_trace()
         pk = str(self.pk).zfill(5)
         self.pk = int(pk)
         return self.pk

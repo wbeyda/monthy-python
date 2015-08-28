@@ -1,6 +1,7 @@
 from django.shortcuts import render
+import json
 from django.http import HttpResponseRedirect
-from django.http import HttpRequest, HttpResponse, JsonResponse 
+from django.http import HttpRequest, HttpResponse 
 from zipcode.models import * 
 from zipcode.forms import *
 from django.core.mail import send_mail
@@ -248,15 +249,48 @@ def last_month_request(request, id, currentyear, currentmonth):
 
 
 def calendar_manager(request, currentdate, uid, currentyear, currentmonth):
-    import pdb; pdb.set_trace()
+#    import pdb; pdb.set_trace()
     if request.is_ajax():
         today = datetime.datetime(int(currentyear),int( currentmonth), int(currentdate), 0)
         tomorrow = datetime.datetime(int(currentyear), int(currentmonth), int(currentdate)+1, 0)
         uid = int(uid)
-        #import pdb; pdb.set_trace()
-        calendardays = ContractorSchedule.objects.filter(firstname_id=uid, start_date__gte = today, end_date__lt = tomorrow).order_by('start_date')
-        #ContractorSchedule.objects.filter(firstname_id = uid, start_date__gte = today) 
-        data = serializers.serialize('json', calendardays, fields=('start_date', 'end_date', 'all_day'), use_natural_keys=True )
+
+        calendardays = ContractorSchedule.objects.filter(firstname_id=uid, 
+                                                         start_date__gte = today,
+                                                         end_date__lt = tomorrow
+                                                        ).order_by('start_date')
+
+        first_day_of_chunks_of_days = ContractorSchedule.objects.filter(firstname_id = uid,
+                                                           start_date__gte = today,
+                                                           all_day = True,
+                                                           start_date__lte = tomorrow
+                                                           ).order_by('start_date')
+
+        middle_of_a_chunk_of_days = ContractorSchedule.objects.filter(firstname_id = uid, 
+                                                                      start_date__lte = today, 
+                                                                      end_date__gte = tomorrow,
+                                                                      all_day = True,
+                                                                     ).order_by('star_date')
+
+        end_of_a_chunk_of_days = ContractorSchedule.objects.filter(firstname_id = uid,
+                                                                   end_date__gte = today,
+                                                                   end_date__lte = tomorrow,
+                                                                   all_day = True,
+                                                                  ).order_by('start_date') 
+        
+        if first_day_of_chunks_of_days.exists():
+            first_day = serializers.serialize('json', first_day_of_chunks_of_days, fields=('start_date', 'end_date', 'all_day'), use_natural_keys=True )
+       
+        if middle_of_a_chunk_of_days.exists():
+            middle = serializer.serialze('json', middle_of_a_chunk_of_days, fields =('start_date', 'end_date', 'all_day'), use_natural_keys=True  ) 
+        
+        if end_of_a_chunk_of_days.exists():
+            end = serializer.serialze('json', end_of_a_chunk_of_days, fields =('start_date', 'end_date', 'all_day'), use_natural_keys=True  ) 
+
+        if calendardays.exists():
+            caldays = serializers.serialize('json', calendardays, fields=('start_date', 'end_date', 'all_day'), use_natural_keys=True )
+        
+        data = json.dumps({ 'first_day': first_day, 'middle': middle, 'caldays': caldays })
         return HttpResponse(data, content_type="application/json")
     
 
