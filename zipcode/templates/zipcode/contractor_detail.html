@@ -294,6 +294,26 @@ $( document ).ready(function() {
     return this;
   }
 
+;!(function ($) {
+    $.fn.classes = function (callback) {
+        var classes = [];
+        $.each(this, function (i, v) {
+            var splitClassName = v.className.split(/\s+/);
+            for (var j in splitClassName) {
+                var className = splitClassName[j];
+                if (-1 === classes.indexOf(className)) {
+                    classes.push(className);
+                }
+            }
+        });
+        if ('function' === typeof callback) {
+            for (var i in classes) {
+                callback(classes[i]);
+            }
+        }
+        return classes;
+    };
+})(jQuery);
   
   $.Availability = new Object;
   $.Availability = {{ availability | safe }};
@@ -439,6 +459,7 @@ $( document ).ready(function() {
   
   $(function() {
     $('body').on("click", "td:not(.noday)", function(){
+      $('.availablity-block').css('background', '#f1f1f1')
       var calEvent = $(this).html().split(' ');
       var valEventList = calEvent.shift();
       var weekday = $(this).attr('class');
@@ -446,7 +467,7 @@ $( document ).ready(function() {
       var currentdate = monthDate.split(' ')[0];
       var mo = ordinal_suffix_of(currentdate);
       var ordinaldate = mo.trim();      
-      
+ 
       if ($('.event-popup').hasClass('selected')) {
           $('.event-popup').fadeToggle().removeClass('selected');
       } else {
@@ -491,27 +512,55 @@ $( document ).ready(function() {
               currentyear: currentyear,               
               currentmonth: currentMonthString
           },
-          //dataType: 'json',
+          dataType: 'json',
           success: function (data) {        
               if (data != 'None' && data != ""){
                   var blocks = new Object;
+
                   $.each(data, function(k,v){
                       var start_time = new Date(currentyear, parseInt(currentMonthString)-1, currentdate, v.fields.start_date.split('T')[1].split(':')[0]); 
                       var end_time   = new Date(currentyear, parseInt(currentMonthString)-1, currentdate, v.fields.end_date.split('T')[1].split(':')[0]); 
                       var block_length = end_time.getHours() - start_time.getHours();
-                       
+                      var all_day = v.fields.all_day;
+      
                       $.each(block_mapper, function(key,val) {
                           if (Number(start_time) == Number(val) ) {
-                              console.log('Winner!' + key,val);
                               $("."+key).css('background', '#2ebad1'); //mark unavilable as blue #2ebad1
-                              blocks[key] = ['start time', start_time];
+                              blocks['start_time'] = start_time;
+
                           }
-                          if (Number(end_time) == Number(val) ) {
+                          if ( Number(end_time) == Number(val) && all_day == true) {
+                              last_block = parseInt($('.availablity-block:last-child').classes()[1].split('schedule-block-time-')[1]);
+                              start_block  =  blocks['start_time'].getHours(); 
+                              var all_day_block = [];
+                              for (var i = start_block; i <= last_block; i++ ){
+                                  all_day_block.push('schedule-block-time-' + i)
+                              }
+                              for (var i = 0; i <= all_day_block.length; i++) {
+                                  $('.' + all_day_block[i]).css('background', '#2ebad1');
+                              }
+                              return false;//break out of loop
+                              
+                          } else if (Number(end_time) == Number(val) && all_day != true) { //take the endtime and subtract an hour color it in
                               var previous_hour = parseInt(key.split('schedule-block-time-')[1])-1;
                               var new_key = 'schedule-block-time-' + previous_hour;
-                              blocks[new_key] = ['end time', end_time];
-                              $("."+new_key).css('background', "#2ebad1");//mark avilable as grey #F5F5F5
+                              blocks['end_time'] =  end_time;
+                              
+                              //$("."+new_key).css('background', "#2ebad1");//mark avilable as grey #F5F5F5
+                              
+                              start_block  =  blocks['start_time'].getHours(); 
+                              var end_day_block = [];
+                              
+                              for (var i = start_block; i <= previous_hour; i++ ){
+                                  end_day_block.push('schedule-block-time-' + i)
+                              }
+                              for (var i = 0; i <= end_day_block.length; i++) {
+                                  $('.' + end_day_block[i]).css('background', '#2ebad1');
+                              }
+                              return false;//break out of loop */
+
                           }
+ 
                       });
                   });
                   console.log(blocks);

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 import json
+import itertools
 from django.http import HttpResponseRedirect
 from django.http import HttpRequest, HttpResponse 
 from zipcode.models import * 
@@ -249,11 +250,20 @@ def last_month_request(request, id, currentyear, currentmonth):
 
 
 def calendar_manager(request, currentdate, uid, currentyear, currentmonth):
-#    import pdb; pdb.set_trace()
+
+    #import pdb; pdb.set_trace()
     if request.is_ajax():
         today = datetime.datetime(int(currentyear),int( currentmonth), int(currentdate), 0)
-        tomorrow = datetime.datetime(int(currentyear), int(currentmonth), int(currentdate)+1, 0)
+        import calendar
+        last_day_of_month  = calendar.monthrange(int(currentyear), int(currentmonth))[1]
+        if int(currentdate) == last_day_of_month and int(currentmonth) == 12: 
+            tomorrow = datetime.datetime(int(currentyear)+1, 1,1,0)
+        elif int(currentdate) == last_day_of_month and int(currentmonth) <= 11:
+            tomorrow = datetime.datetime(int(currentyear), int(currentmonth)+1, 1, 0)
+        else:  
+            tomorrow = datetime.datetime(int(currentyear), int(currentmonth), int(currentdate)+1, 0)
         uid = int(uid)
+        all_the_days = []
 
         calendardays = ContractorSchedule.objects.filter(firstname_id=uid, 
                                                          start_date__gte = today,
@@ -270,7 +280,7 @@ def calendar_manager(request, currentdate, uid, currentyear, currentmonth):
                                                                       start_date__lte = today, 
                                                                       end_date__gte = tomorrow,
                                                                       all_day = True,
-                                                                     ).order_by('star_date')
+                                                                     ).order_by('start_date')
 
         end_of_a_chunk_of_days = ContractorSchedule.objects.filter(firstname_id = uid,
                                                                    end_date__gte = today,
@@ -278,19 +288,38 @@ def calendar_manager(request, currentdate, uid, currentyear, currentmonth):
                                                                    all_day = True,
                                                                   ).order_by('start_date') 
         
-        if first_day_of_chunks_of_days.exists():
-            first_day = serializers.serialize('json', first_day_of_chunks_of_days, fields=('start_date', 'end_date', 'all_day'), use_natural_keys=True )
        
+        if first_day_of_chunks_of_days.exists():
+           all_the_days.append(first_day_of_chunks_of_days)
+        else :
+            first_day = ""
+            all_the_days.append(first_day) 
+
         if middle_of_a_chunk_of_days.exists():
-            middle = serializer.serialze('json', middle_of_a_chunk_of_days, fields =('start_date', 'end_date', 'all_day'), use_natural_keys=True  ) 
+            all_the_days.append(middle_of_a_chunk_of_days)
+        else:
+            middle = ""
+            all_the_days.append(middle)
         
         if end_of_a_chunk_of_days.exists():
-            end = serializer.serialze('json', end_of_a_chunk_of_days, fields =('start_date', 'end_date', 'all_day'), use_natural_keys=True  ) 
-
-        if calendardays.exists():
-            caldays = serializers.serialize('json', calendardays, fields=('start_date', 'end_date', 'all_day'), use_natural_keys=True )
+            all_the_days.append( end_of_a_chunk_of_days) 
+        else:
+            end = ""
+            all_the_days.append( end)
         
-        data = json.dumps({ 'first_day': first_day, 'middle': middle, 'caldays': caldays })
+        if calendardays.exists():
+            all_the_days.append(calendardays)
+        else:
+            caldays = ""
+            all_the_days.append( caldays )
+        
+        filtered_days = [elem for elem in all_the_days if elem != ""]
+        print filtered_days 
+        all_days = list(itertools.chain(filtered_days[0]))
+        data = serializers.serialize('json', all_days, use_natural_keys=True ) 
+        
+        #data = json.dumps({ 'first_day': first_day, 'middle': middle, 'end': end , 'caldays': caldays })
+
         return HttpResponse(data, content_type="application/json")
     
 

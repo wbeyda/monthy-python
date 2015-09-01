@@ -1,3 +1,9 @@
 from django.test import TestCase
+from .models import ContractorSchedule
+import datetime
 
-# Create your tests here.
+
+class ScheduleMethodTests(TestCase):
+
+    def test_create_test_dates(self):
+       pass
