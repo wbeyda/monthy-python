@@ -141,6 +141,8 @@ def contractor_detail_view(request, f,id,l):
     htmlcalendar = contractor_calendar(con)
     from django.forms.models import inlineformset_factory
     conschedule = ContractorSchedule.objects.filter(firstname_id=id)
+     
+    conschedule = ContractorSchedule.objects.filter(firstname_id=id)
     testimonial_form = testimonialform_factory(conschedule)
     time_image = day_or_night()
     monthly_specials = MonthlySpecial.objects.filter(special_active=True)

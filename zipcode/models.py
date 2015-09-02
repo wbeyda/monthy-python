@@ -40,10 +40,10 @@ class ContractorSchedule(models.Model):
     firstname = models.ForeignKey(Contractor)
     start_date = models.DateTimeField(verbose_name=_("start date"))
     end_date = models.DateTimeField(_("end date"))
-    repairs = models.BooleanField(_('repairs'), default=False )
+    repair = models.BooleanField(_('repair'), default=False )
     estimate = models.BooleanField(_('estimate'), default=False )
     installation = models.BooleanField(_('installation'), default=False )
-    maintenance = models.BooleanField(_('preventitive maintenance'), default=False )
+    maintenance = models.BooleanField(_('Preventitive Maintenance'), default=False )
     all_day = models.BooleanField(_("all day"), default=False)
     title = models.CharField(_("title"), max_length=255, blank=True)
     description = models.TextField(_("description"),blank=True)
@@ -51,6 +51,7 @@ class ContractorSchedule(models.Model):
     background_color = models.CharField(
         _("background color"), max_length=10, choices=EVENT_COLORS, default='eeeeee'
     )
+
     def dispatch_number(self):
         pk = str(self.pk).zfill(5)
         self.pk = int(pk)

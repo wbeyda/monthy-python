@@ -23,7 +23,7 @@ class CareerResumeAdmin(admin.ModelAdmin):
 class ContractorScheduleAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('firstname', 'start_date', 'all_day', 'end_date', 'title', 'background_color','description',)
+            'fields': ('firstname', 'title', 'start_date', 'end_date',( 'all_day', 'estimate', 'repair', 'maintenance', 'installation',),'background_color','description',)
         }),
         ('Location', {
             'classes': ('collapse',),
