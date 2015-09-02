@@ -14,10 +14,8 @@ from django.core import serializers
 def day_or_night():
     if datetime.datetime.now().time().hour < 17:
         time_image = 'day'
-        print(time_image)
     else:
         time_image = 'night'
-        print(time_image)
     return time_image
 
 
@@ -121,6 +119,7 @@ def show_gallery(request):
 
 
 def request_event(request):
+    time_image = day_or_night()
     if request.method == "POST":
         requested_event = ContractorScheduleForm(request.POST)
         if requested_event.is_valid():
@@ -131,7 +130,6 @@ def request_event(request):
         return render(request, 'request_event.html', {'requested_event':requested_event})
     else:
         requested_event = ContractorScheduleForm(request.POST)
-    time_image = day_or_night()
     return render(request, 'request_event.html', {'requested_event':requested_event,'time_image': time_image})
 
 
@@ -314,7 +312,6 @@ def calendar_manager(request, currentdate, uid, currentyear, currentmonth):
             all_the_days.append( caldays )
         
         filtered_days = [elem for elem in all_the_days if elem != ""]
-        print filtered_days 
         all_days = list(itertools.chain(filtered_days[0]))
         data = serializers.serialize('json', all_days, use_natural_keys=True ) 
         
