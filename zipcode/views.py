@@ -132,29 +132,6 @@ def request_event(request):
         requested_event = ContractorScheduleForm(request.POST)
     return render(request, 'request_event.html', {'requested_event':requested_event,'time_image': time_image})
 
-
-def contractor_detail_view(request, f,id,l):
-    con = Contractor.objects.filter(id=id).prefetch_related()
-    avail = Availability.objects.filter(contractor_id=id).prefetch_related()
-    avail = serializers.serialize("json", avail)
-    testimonials = Testimonial.objects.filter(contractor_id=id).prefetch_related().exclude(approved_status=False)
-    htmlcalendar = contractor_calendar(con)
-    from django.forms.models import inlineformset_factory
-    conschedule = ContractorSchedule.objects.filter(firstname_id=id)
-     
-    conschedule = ContractorSchedule.objects.filter(firstname_id=id)
-    testimonial_form = testimonialform_factory(conschedule)
-    time_image = day_or_night()
-    monthly_specials = MonthlySpecial.objects.filter(special_active=True)
-    return render(request, 'contractor_detail.html', {'con': con, 
-                                                      'htmlcalendar': htmlcalendar, 
-                                                      'testimonials': testimonials, 
-                                                      'testimonial_form': testimonial_form,
-                                                      'availability': avail,
-                                                      'time_image': time_image,
-                                                      'monthly_specials': monthly_specials
-                                                      })
-
 def next_month_request(request, id, currentyear, currentmonth):
     if request.is_ajax():
         if int(request.GET.get('currentmonth')) == 12:
@@ -249,7 +226,7 @@ def last_month_request(request, id, currentyear, currentmonth):
                 return HttpResponse(htmlcalendar)
 
 
-def calendar_manager(request, currentdate, uid, currentyear, currentmonth):
+def calendar_manager_blocks(request, currentdate, uid, currentyear, currentmonth):
 
     #import pdb; pdb.set_trace()
     if request.is_ajax():
@@ -321,4 +298,63 @@ def calendar_manager(request, currentdate, uid, currentyear, currentmonth):
 
         return HttpResponse(data, content_type="application/json")
     
+def calendar_manager_cells( id, month, year):
+    fdom = datetime.datetime(year, month, 1,0)
 
+    if month == 12:
+        ldom = datetime.datetime(year+1,1,1,0)
+    else:
+        ldom = datetime.datetime(year,month+1,1,0)
+
+    cal_query = ContractorSchedule.objects.filter(firstname_id =id, start_date__gte = fdom, end_date__lt = ldom)
+    av = Availability.objects.get(id=id)
+    sh = av.prefered_starting_hours
+    eh = av.prefered_ending_hours  
+    ah = datetime.combine(date.today(), eh) - datetime.combine(date.today(), sh)
+    avail_hours = ah.total_seconds() / 3600 #8.0 or 8.5
+    all_days = cal_query.filter(all_day = True)
+    full_days = []
+    
+    for i in all_day: #if the first day of a chunk starts at the begining of Availability add it to full days in full_days
+        chunk_of_days = list(range(i.start_date.day, i.end_date.day))
+        if chunk_of_days > 0:
+            psh = datetime.combine(i.start_date, sh)
+        if psh == i.start_date:
+            full_days.append(i.start_date.day)
+   
+    for i in chunk_of_days[1:]: #add the rest of the days from a chunk to full_days 
+        full_days.append(i)
+
+
+    for i in cal_query:
+        full_days.append(i.start_date.day)
+
+    a = [elem for elem in full_days if elem >= avail_hours /2]
+    full_days_in_this_month = []
+    [full_days_in_this_month.append(item) for item in a if item not in full_days_in_this_month]
+    return full_days_in_this_month 
+
+    
+
+def contractor_detail_view(request, f,id,l):
+    con = Contractor.objects.filter(id=id).prefetch_related()
+    avail = Availability.objects.filter(contractor_id=id).prefetch_related()
+    avail = serializers.serialize("json", avail)
+    testimonials = Testimonial.objects.filter(contractor_id=id).prefetch_related().exclude(approved_status=False)
+    htmlcalendar = contractor_calendar(con)
+    from django.forms.models import inlineformset_factory
+    conschedule = ContractorSchedule.objects.filter(firstname_id=id)
+    testimonial_form = testimonialform_factory(conschedule)
+    time_image = day_or_night()
+    monthly_specials = MonthlySpecial.objects.filter(special_active=True)
+    cal_man_cells = calendar_manager_cells(id, datetime.today().month, datetime.today().year)
+    
+    return render(request, 'contractor_detail.html', {'con': con, 
+                                                      'htmlcalendar': htmlcalendar, 
+                                                      'testimonials': testimonials, 
+                                                      'testimonial_form': testimonial_form,
+                                                      'availability': avail,
+                                                      'time_image': time_image,
+                                                      'monthly_specials': monthly_specials,
+                                                      'cal_man_cells': cal_man_cells
+                                                      })

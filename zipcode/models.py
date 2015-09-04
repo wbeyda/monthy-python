@@ -96,7 +96,7 @@ class ContractorSchedule(models.Model):
                 raise ValidationError(_('Block is under 2 hours'), code="short-block")        
     
     def multiple_days(self):
-        if self.start_date.day <= self.end_date.day and self.all_day == False:
+        if self.start_date.day < self.end_date.day and self.all_day == False:
             raise ValidationError(_('Please check All day if this is multiple days'), code="multiple-days")    
 
     def clean(self):
