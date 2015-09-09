@@ -1,6 +1,5 @@
 from django.shortcuts import render
-import json
-import itertools
+import json, itertools, datetime
 from django.http import HttpResponseRedirect
 from django.http import HttpRequest, HttpResponse 
 from zipcode.models import * 
@@ -298,27 +297,28 @@ def calendar_manager_blocks(request, currentdate, uid, currentyear, currentmonth
 
         return HttpResponse(data, content_type="application/json")
     
-def calendar_manager_cells( id, month, year):
+def calendar_manager_cells( uid, month, year):
+    #import pdb; pdb.set_trace()
     fdom = datetime.datetime(year, month, 1,0)
 
     if month == 12:
         ldom = datetime.datetime(year+1,1,1,0)
     else:
         ldom = datetime.datetime(year,month+1,1,0)
-
-    cal_query = ContractorSchedule.objects.filter(firstname_id =id, start_date__gte = fdom, end_date__lt = ldom)
-    av = Availability.objects.get(id=id)
+    
+    cal_query = ContractorSchedule.objects.filter(firstname_id =int(uid), start_date__gte = fdom, end_date__lt = ldom)
+    av = Availability.objects.get(contractor_id=int(uid))
     sh = av.prefered_starting_hours
     eh = av.prefered_ending_hours  
-    ah = datetime.combine(date.today(), eh) - datetime.combine(date.today(), sh)
+    ah = datetime.datetime.combine(date.today(), eh) - datetime.datetime.combine(date.today(), sh)
     avail_hours = ah.total_seconds() / 3600 #8.0 or 8.5
-    all_days = cal_query.filter(all_day = True)
+    alldays = cal_query.filter(all_day = True)
     full_days = []
     
-    for i in all_day: #if the first day of a chunk starts at the begining of Availability add it to full days in full_days
+    for i in alldays: #if the first day of a chunk starts at the begining of Availability add it to full days in full_days
         chunk_of_days = list(range(i.start_date.day, i.end_date.day))
         if chunk_of_days > 0:
-            psh = datetime.combine(i.start_date, sh)
+            psh = datetime.datetime.combine(i.start_date, sh)
         if psh == i.start_date:
             full_days.append(i.start_date.day)
    
@@ -347,7 +347,7 @@ def contractor_detail_view(request, f,id,l):
     testimonial_form = testimonialform_factory(conschedule)
     time_image = day_or_night()
     monthly_specials = MonthlySpecial.objects.filter(special_active=True)
-    cal_man_cells = calendar_manager_cells(id, datetime.today().month, datetime.today().year)
+    cal_man_cells = calendar_manager_cells(id, datetime.datetime.today().month, datetime.datetime.today().year)
     
     return render(request, 'contractor_detail.html', {'con': con, 
                                                       'htmlcalendar': htmlcalendar, 

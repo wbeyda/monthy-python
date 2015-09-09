@@ -8,7 +8,6 @@
 {% block title %} {% for i in con %} {{ i.firstname| title }} {{i.lastname| title}} {% endfor %}{% endblock %}
 {% load staticfiles %}
 {% block nav %}
-
 <div class="header">
     <div>
         {% if time_image == 'day'%}
@@ -317,6 +316,7 @@ $( document ).ready(function() {
   
   $.Availability = new Object;
   $.Availability = {{ availability | safe }};
+  $.FullCells = {{ cal_man_cells | safe }};
   var display_start_time = cal_time_format( $.Availability[0].fields.prefered_starting_hours );
   var display_end_time   = cal_time_format( $.Availability[0].fields.prefered_ending_hours );
   var currentyear  = parseInt($(".month th:eq(1)").text().split(" ")[1]) ;
@@ -333,6 +333,9 @@ $( document ).ready(function() {
   $.CurrentMonth = new Object();
   var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %}; 
   var scedblo = [];
+
+  
+
 
   for (var i = 0;i < hours_in_day; i++ ){
       ManagedHours[i] = hour + ":" + add_zeros_to_minutes(minutes);
@@ -599,5 +602,7 @@ $( document ).ready(function() {
       }); }
     }); //onlick
     return false;
-  }); }); </script>
+  }); 
+}); 
+</script>
 {% endblock %}
