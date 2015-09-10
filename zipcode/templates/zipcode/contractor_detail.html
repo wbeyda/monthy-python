@@ -316,7 +316,7 @@ $( document ).ready(function() {
   
   $.Availability = new Object;
   $.Availability = {{ availability | safe }};
-  $.FullCells = {{ cal_man_cells | safe }};
+  $FullDayCells = {{ cal_man_cells | safe }};
   var display_start_time = cal_time_format( $.Availability[0].fields.prefered_starting_hours );
   var display_end_time   = cal_time_format( $.Availability[0].fields.prefered_ending_hours );
   var currentyear  = parseInt($(".month th:eq(1)").text().split(" ")[1]) ;
@@ -333,8 +333,7 @@ $( document ).ready(function() {
   $.CurrentMonth = new Object();
   var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %}; 
   var scedblo = [];
-
-  
+  var myDaysToReplace = []
 
 
   for (var i = 0;i < hours_in_day; i++ ){
@@ -375,25 +374,33 @@ $( document ).ready(function() {
       $(this).addClass('schedule-block-time-'+ scedblo[k]);//add css to blocks
   });
 
-/*
-  for i in scheduleblock: 
-    for j in obj:
-      if i.start_time = j.date:
-        start_time = j.cssclass
-      if i.end_time = j.date:
-        end_time = j.date:
-      start_and_end = [start_time,end_time]   
-      return start_and_end
+
+/* for full days add blue blocks  */
+  $.each($FullDayCells, function(k,v) {
+      myDaysToReplace.push( $('td').eq(v) );
+  });
+/* removing markup on first loop breaks counter with eq hence the second each loops*/
+  $.each(myDaysToReplace, function(k,v) {
+      $(this).replaceWith(v.text().split(' ')[0] + '<div class="unavail-block"></div>');
+  });
+
  
-        
-    {cssclass: date} 
-*/
-  
   $('body').on("click", ".left-click", function() {    
       var thismonth    = $(".month th:eq(1)").text().split(" ")[0].trim();
       var currentyear  = $(".month th:eq(1)").text().split(" ")[1] ;
       $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;            
       var currentMonthString = $.CurrentMonth.m.toString();
+
+      if (currentMonthString == '1') {
+          var fulldaycellsurl = String("/" + parseInt(currentyear)-1 + "/" + currentMonthString + "/" + contractorID); 
+          var fulldaycell_currentyear = parseInt(currentyear) -1;
+          var fulldaycell_currentmonth = currentMonthString;
+      } else {
+          var fulldaycellsurl = String("/" + currentyear + "/" + parseInt(currentMonthString) -1 + "/" + contractorID); 
+          var fulldaycell_currentyear = currentyear;
+          var fulldaycell_currentmonth = parseInt(currentMonthString) -1;
+      } 
+   
       $.ajax({
           url: String("/"+ contractorID +"/"+ currentyear +"/"+ currentMonthString ),           
           method: 'GET',
@@ -407,7 +414,21 @@ $( document ).ready(function() {
                   $(".month").replaceWith(data);
                   $("#nomonth").text("");
                   getNewHeader();
-              }                                   
+              }
+              $.ajax({
+                  url: fulldaycellsurl, 
+                  method: 'GET',
+                  data: {
+                      currentyear: fulldaycell_currentyear,
+                      currentmonth: fulldaycell_currentmonth,
+                      uid: contractorID,
+                  },
+              }).done(function() {
+                  console.log('data');
+              });
+            
+
+                                   
           },
           error: function (jqXHR, error) {
                 var lastmonth = monthMapper.indexOf(thismonth) -1;
@@ -590,13 +611,9 @@ $( document ).ready(function() {
                                   $('.' + end_day_block[i]).css('background', '#2ebad1').addClass('unavailable').removeClass('available');
                               }
                               return false;//break out of loop */
-
                           }
-                          
- 
                       });
                   });
-                  console.log(blocks);
               }        
           }
       }); }
