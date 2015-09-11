@@ -132,14 +132,14 @@ def request_event(request):
     return render(request, 'request_event.html', {'requested_event':requested_event,'time_image': time_image})
 
     
-def calendar_manager_cells( year, month, uid):
+def calendar_manager_cells(request,  currentyear, currentmonth, uid):
     #import pdb; pdb.set_trace()
-    fdom = datetime.datetime(year, int(month), 1,0)
+    fdom = datetime.datetime(int(currentyear), int(currentmonth), 1,0)
 
-    if month == 12:
-        ldom = datetime.datetime(year+1,1,1,0)
+    if int(currentmonth) == 12:
+        ldom = datetime.datetime(int(currentyear)+1,1,1,0)
     else:
-        ldom = datetime.datetime(year,int(month)+1,1,0)
+        ldom = datetime.datetime(int(currentyear),int(currentmonth)+1,1,0)
     
     cal_query = ContractorSchedule.objects.filter(firstname_id =int(uid), start_date__gte = fdom, end_date__lt = ldom)
     av = Availability.objects.get(contractor_id=int(uid))
@@ -149,6 +149,7 @@ def calendar_manager_cells( year, month, uid):
     avail_hours = ah.total_seconds() / 3600 #8.0 or 8.5
     alldays = cal_query.filter(all_day = True)
     full_days = []
+    chunk_of_days = []
     
     for i in alldays: #if the first day of a chunk starts at the begining of Availability add it to full days in full_days
         chunk_of_days = list(range(i.start_date.day, i.end_date.day))
@@ -167,7 +168,12 @@ def calendar_manager_cells( year, month, uid):
     a = [elem for elem in full_days if elem >= avail_hours /2]
     full_days_in_this_month = []
     [full_days_in_this_month.append(item) for item in a if item not in full_days_in_this_month]
-    return full_days_in_this_month 
+
+    if request.is_ajax():
+        full_days_json = json.dumps(full_days_in_this_month)
+        return HttpResponse(full_days_json)
+    else:
+        return full_days_in_this_month 
 
 
 def next_month_request(request, id, currentyear, currentmonth):
@@ -348,7 +354,7 @@ def contractor_detail_view(request, f,id,l):
     testimonial_form = testimonialform_factory(conschedule)
     time_image = day_or_night()
     monthly_specials = MonthlySpecial.objects.filter(special_active=True)
-    cal_man_cells = calendar_manager_cells( datetime.datetime.today().year, datetime.datetime.today().month, id)
+    cal_man_cells = calendar_manager_cells(request, datetime.datetime.today().year, datetime.datetime.today().month, id)
     
     return render(request, 'contractor_detail.html', {'con': con, 
                                                       'htmlcalendar': htmlcalendar, 
