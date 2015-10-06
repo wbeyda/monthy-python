@@ -6,8 +6,11 @@ from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django.utils.text import Truncator
 from image_cropping import ImageRatioField
+from django.contrib.auth.models import User
+
 
 class Contractor(models.Model):
+    user = models.ForeignKey(User, unique=True)
     areacode = models.PositiveIntegerField(max_length=5)
     firstname = models.CharField(max_length=20)
     lastname = models.CharField(max_length=20)

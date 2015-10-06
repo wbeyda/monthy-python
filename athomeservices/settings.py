@@ -92,6 +92,3 @@ MEDIA_ROOT = '/home/django/venv/athomeservices/media/'
 MEDIA_URL = '/media/'
 
 COMPRESS_PRECOMPILERS = (('text/less', 'lessc {infile} {outfile}'),)
-
-
-

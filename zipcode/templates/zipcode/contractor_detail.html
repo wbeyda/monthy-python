@@ -382,7 +382,8 @@ $.each($FullDayCells, function(k,v) {
     });
 /* removing markup on first loop breaks counter with eq hence the second each loops*/
 $.each(myDaysToReplace, function(k,v) {
-    $(this).replaceWith(v.text().split(' ')[0] + '<div class="unavail-block"></div>');
+    $(this).children().replaceWith('<div class="unavail-block"></div>');
+   // $(this).replaceWith(v.text().split(' ')[0] + '<div class="unavail-block"></div>');
     });
 
 

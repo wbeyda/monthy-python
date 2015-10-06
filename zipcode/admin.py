@@ -12,7 +12,7 @@ class AvailabilityInline(admin.TabularInline):
 
 class ContractorAdmin(ImageCroppingMixin, admin.ModelAdmin):
     inlines = [AvailabilityInline,]
-    list_display = ('firstname', 'lastname','areacode', 'trade', 'secondaryTrades' ,'bio', 'image_tag',)
+    list_display = ('user','firstname', 'lastname','areacode', 'trade', 'secondaryTrades' ,'bio', 'image_tag',)
     #fields = ('firstname', 'lastname', 'areacode', 'trade', 'secondaryTrades' ,'bio', 'pic',)
     #prepopulated_fields = {"firstname": ("firstname",  'lastname',)}
     #readonly_fields = ('image_tag',)
