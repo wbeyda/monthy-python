@@ -5,18 +5,27 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django.utils.text import Truncator
+from image_cropping import ImageRatioField
 
 class Contractor(models.Model):
-	areacode = models.PositiveIntegerField(max_length=5)
-	firstname = models.CharField(max_length=20)
-	lastname = models.CharField(max_length=20)
-	trade = models.CharField(max_length=20)
-	secondaryTrades = models.CharField(max_length=200)
-	bio = models.TextField()
-	pic = models.ImageField(upload_to = 'photos/%Y/%m/%d')
+    areacode = models.PositiveIntegerField(max_length=5)
+    firstname = models.CharField(max_length=20)
+    lastname = models.CharField(max_length=20)
+    trade = models.CharField(max_length=20)
+    secondaryTrades = models.CharField(max_length=200)
+    bio = models.TextField()
+    pic = models.ImageField(upload_to = 'photos/%Y/%m/%d')
+    cropping = ImageRatioField('pic', '400x400')
 	
-	def __unicode__(self):
-		return self.firstname + ' ' + self.lastname
+    def __unicode__(self):
+        return self.firstname + ' ' + self.lastname
+
+    def image_tag(self):
+        return u'<img class="admin_img_preview" style="max-height:20em;" src=' + self.pic.url +'/>'
+
+    image_tag.short_description = 'Image'
+    image_tag.allow_tags = True 
+
 
 class CareerResume(models.Model):
 	name = models.CharField(max_length=20)

@@ -38,8 +38,13 @@ def results(request, postcode):
 def get_zip(request):
     if request.method == 'POST':
         form = ZipForm(request.POST)
-        if form.is_valid():                             
-            return HttpResponseRedirect('/search/' + request.POST['zipsearch'])
+        if form.is_valid():
+            c = Contractor.objects.filter(areacode=request.POST['zipsearch'])                             
+            contractor = ""
+            for i in c:
+                contractor += '/'+ i.firstname +'/'+  str(i.id) +'/'+ i.lastname
+            return HttpResponseRedirect(str(contractor))
+            #return HttpResponseRedirect('/search/' + request.POST['zipsearch'])
     else:
         form = ZipForm()
     return render(request, 'search.html', {'form': form})

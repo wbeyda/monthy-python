@@ -2,6 +2,7 @@ from django.contrib.admin import AdminSite
 from django.contrib import admin
 from zipcode.models import *
 from django.utils.translation import ugettext_lazy
+from image_cropping import ImageCroppingMixin
 AdminSite.site_header = "At Home Services Admin"
 AdminSite.site_title = ugettext_lazy('At Home Services Site Admin')
 
@@ -9,11 +10,13 @@ class AvailabilityInline(admin.TabularInline):
     model = Availability
 
 
-class ContractorAdmin(admin.ModelAdmin):
+class ContractorAdmin(ImageCroppingMixin, admin.ModelAdmin):
     inlines = [AvailabilityInline,]
-    list_display = ('firstname', 'lastname','areacode', 'trade', 'secondaryTrades' ,'bio', 'pic',)
-    fields = ('firstname', 'lastname', 'areacode', 'trade', 'secondaryTrades' ,'bio', 'pic',)
-    prepopulated_fields = {"firstname": ("firstname",  'lastname',)}
+    list_display = ('firstname', 'lastname','areacode', 'trade', 'secondaryTrades' ,'bio', 'image_tag',)
+    #fields = ('firstname', 'lastname', 'areacode', 'trade', 'secondaryTrades' ,'bio', 'pic',)
+    #prepopulated_fields = {"firstname": ("firstname",  'lastname',)}
+    #readonly_fields = ('image_tag',)
+    
     
 class CareerResumeAdmin(admin.ModelAdmin):
     list_display = ('name','address','email','phone','resume')

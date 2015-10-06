@@ -36,6 +36,8 @@ INSTALLED_APPS = (
     #'debug_toolbar',
     'django_extensions',
     'compressor',
+    'image_cropping',
+    'easy_thumbnails',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -53,6 +55,10 @@ ROOT_URLCONF = 'athomeservices.urls'
 
 WSGI_APPLICATION = 'athomeservices.wsgi.application'
 
+from easy_thumbnails.conf import Settings as thumbnail_settings
+THUMBNAIL_PROCESSORS = (
+    'image_cropping.thumbnail_processors.crop_corners',
+) + thumbnail_settings.THUMBNAIL_PROCESSORS
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
