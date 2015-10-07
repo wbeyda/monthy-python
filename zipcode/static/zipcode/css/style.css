@@ -323,6 +323,7 @@ textarea {
 }
 .profile-pic {
   max-height: 28em;
+  min-height: 22em;
 }
 .profile-name {
   height: 2em;

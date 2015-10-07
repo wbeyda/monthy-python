@@ -1,12 +1,14 @@
 import datetime
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django.utils.text import Truncator
-from image_cropping import ImageRatioField
 from django.contrib.auth.models import User
+
+from image_cropping import ImageRatioField
 
 
 class Contractor(models.Model):
@@ -48,6 +50,8 @@ EVENT_COLORS  = [
         ('ffffff', _('white')),
         ('fcda09', _('yellow')),
     ]
+
+
 class ContractorSchedule(models.Model):
     firstname = models.ForeignKey(Contractor)
     start_date = models.DateTimeField(verbose_name=_("start date"))
@@ -111,14 +115,63 @@ class ContractorSchedule(models.Model):
         if self.start_date.day < self.end_date.day and self.all_day == False:
             raise ValidationError(_('Please check All day if this is multiple days'), code="multiple-days")    
 
+    def all_day_double(self):
+        #import pdb; pdb.set_trace()
+        if self.all_day == True:
+            st = self.start_date
+            newStartDate = datetime.datetime(st.year, st.month, st.day,0,0)
+            newEndDate =   datetime.datetime(st.year, st.month, st.day +1, 0,0) 
+            qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id
+                                                  ).filter(all_day = True
+                                                  ).filter(start_date__gt = newStartDate
+                                                  ).filter(start_date__lt = newEndDate)
+                                                  
+            if qs.exists():
+                raise ValidationError(_('This day is already booked all day.'), code="day already has all day")
+
+    def day_is_full(self):
+        st = self.start_date
+        newStartDate = datetime.datetime(st.year, st.month, st.day,0,0)
+        newEndDate =   datetime.datetime(st.year, st.month, st.day +1, 0,0) 
+        qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id
+                                              ).filter(all_day = True
+                                              ).filter(start_date__gt = newStartDate
+                                              ).filter(start_date__lt = newEndDate)
+                                                  
+        if qs.exists():
+            raise ValidationError(_('This day is already full.'), code="day already full")
+
+    def before_prefered_start_time(self):
+        a = Availability.objects.get(id=self.firstname_id)
+        pst = a.prefered_starting_hours #datetime.time(9,0) 
+        stt = datetime.time(self.start_date.hour, self.start_date.minute)
+        if datetime.datetime.combine(datetime.datetime.today(), pst) > datetime.datetime.combine(datetime.datetime.today(), stt) == False: 
+            raise ValidationError(_('This is before the Contractors prefered starting hour. An email has been sent to ask for permission'),
+                                     code='This is before the Contractors prefered starting hour')
+
+    def after_prefered_end_time(self):
+        a = Availability.objects.get(id=self.firstname_id)
+        pet = a.prefered_ending_hours #datetime.time(17,0) 
+        seh = datetime.time(self.end_date.hour, self.end_date.minute)
+        if datetime.datetime.combine(datetime.datetime.today(), pet) < datetime.datetime.combine(datetime.datetime.today(), seh) == False: 
+            raise ValidationError(_('This is after the Contractors prefered ending hour. An email has been sent to ask for permission'),
+                                     code='This is after the Contractors prefered ending hour')
+
+
+
     def clean(self):
-        #self.start_date_before_now()
-        #self.double_booked()
+        self.start_date_before_now()
+        self.double_booked()
         self.two_hour_blocks()
         self.end_date_before_start_date()
-        #self.is_chunk()
+        self.is_chunk()
         #self.dispatch_number()
         self.multiple_days()        
+        self.all_day_double()
+        self.day_is_full()
+        self.before_prefered_start_time()
+        self.after_prefered_end_time()
+
 
 HOURS = ['Midnight','12:15AM','12:30AM,12:45AM']
 
