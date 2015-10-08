@@ -10,7 +10,6 @@ from django.contrib.auth.models import User
 
 from image_cropping import ImageRatioField
 
-
 class Contractor(models.Model):
     user = models.ForeignKey(User, unique=True)
     areacode = models.PositiveIntegerField(max_length=5)
@@ -89,20 +88,57 @@ class ContractorSchedule(models.Model):
             raise ValidationError('Please enter these chunks of days as seperate Schedule Requests')
    
     def double_booked(self):
-        qs = ContractorSchedule.objects.filter(
-                                                firstname_id = self.firstname_id
-                                              ).filter(
-                                                      start_date__lte = self.start_date
-                                                      ).filter(
-                                                              end_date__gte = self.start_date
-                                                              )
+        #import pdb; pdb.set_trace()
+        qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id,
+                                               start_date__lte = self.start_date,
+                                               end_date__gte = self.start_date,
+                                               end_date__lt = self.end_date,)
+        #----[1](2)[3][4](5)----
         if qs.exists():
             for i in qs:
                 if not self.start_date - i.end_date == datetime.timedelta(0):     
                     raise ValidationError(_('Double Booking! job number: %(value)s'),
-                                   code="double-booked",
-                                   params = {'value': i.id},
-                                  )
+                                          code="double-booked",
+                                          params = {'value': i.id},
+                                         )
+        qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id,
+                                               start_date__gte = self.start_date,
+                                               start_date__lte = self.end_date,
+                                               end_date__gte = self.start_date,)
+        
+        #---(1)[2][3](4)[5]----
+        if qs.exists():
+            for i in qs:
+                if not self.start_date - i.end_date == datetime.timedelta(0):     
+                    raise ValidationError(_('Double Booking! job number: %(value)s'),
+                                          code="double-booked",
+                                           params = {'value': i.id},
+                                          )
+        qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id,
+                                               start_date__gte = self.start_date,
+                                               end_date__lte = self.end_date,)
+        
+        #----(1)[2][3][4][5](6)----
+        if qs.exists():
+            for i in qs:
+                if not self.start_date - i.end_date == datetime.timedelta(0):     
+                    raise ValidationError(_('Double Booking! job number: %(value)s'),
+                                          code="double-booked",
+                                           params = {'value': i.id},
+                                          )
+        qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id,
+                                               start_date__lte = self.start_date,
+                                               end_date__gte = self.end_date,)
+        
+        #----[2](3)(4)[5]----
+        if qs.exists():
+            for i in qs:
+                if not self.start_date - i.end_date == datetime.timedelta(0):     
+                    raise ValidationError(_('Double Booking! job number: %(value)s'),
+                                          code="double-booked",
+                                           params = {'value': i.id},
+                                          )
+
 
     def two_hour_blocks(self):
         if self.start_date.day == self.end_date.day:
@@ -116,11 +152,10 @@ class ContractorSchedule(models.Model):
             raise ValidationError(_('Please check All day if this is multiple days'), code="multiple-days")    
 
     def all_day_double(self):
-        #import pdb; pdb.set_trace()
         if self.all_day == True:
             st = self.start_date
             newStartDate = datetime.datetime(st.year, st.month, st.day,0,0)
-            newEndDate =   datetime.datetime(st.year, st.month, st.day +1, 0,0) 
+            newEndDate =   datetime.datetime(st.year, st.month, st.day, 23,59) 
             qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id
                                                   ).filter(all_day = True
                                                   ).filter(start_date__gt = newStartDate
@@ -132,7 +167,7 @@ class ContractorSchedule(models.Model):
     def day_is_full(self):
         st = self.start_date
         newStartDate = datetime.datetime(st.year, st.month, st.day,0,0)
-        newEndDate =   datetime.datetime(st.year, st.month, st.day +1, 0,0) 
+        newEndDate =   datetime.datetime(st.year, st.month, st.day, 23,59) 
         qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id
                                               ).filter(all_day = True
                                               ).filter(start_date__gt = newStartDate
@@ -157,10 +192,16 @@ class ContractorSchedule(models.Model):
             raise ValidationError(_('This is after the Contractors prefered ending hour. An email has been sent to ask for permission'),
                                      code='This is after the Contractors prefered ending hour')
 
-
-
+    def clean_seconds(self):
+        s = self.start_date 
+        self.start_date = s.replace(minute=0, hour=0, second=0, microsecond=0)
+        e = self.end_date
+        self.end_date = e.replace(minute=0, hour=0, second=0, microsecond=0)
+        return self 
+    
     def clean(self):
         self.start_date_before_now()
+        #self.clean_seconds()
         self.double_booked()
         self.two_hour_blocks()
         self.end_date_before_start_date()
