@@ -194,14 +194,14 @@ class ContractorSchedule(models.Model):
 
     def clean_seconds(self):
         s = self.start_date 
-        self.start_date = s.replace(minute=0, hour=0, second=0, microsecond=0)
+        self.start_date = s.replace( second=0, microsecond=0)
         e = self.end_date
-        self.end_date = e.replace(minute=0, hour=0, second=0, microsecond=0)
+        self.end_date = e.replace( second=0, microsecond=0)
         return self 
     
     def clean(self):
         self.start_date_before_now()
-        #self.clean_seconds()
+        self.clean_seconds()
         self.double_booked()
         self.two_hour_blocks()
         self.end_date_before_start_date()

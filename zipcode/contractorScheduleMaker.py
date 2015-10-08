@@ -47,6 +47,7 @@ while True:
     try:
        # c.start_date_before_now()
         c.end_date_before_start_date()
+        c.clean_seconds()
         #c.is_chunk()
         c.double_booked()
         c.two_hour_blocks()

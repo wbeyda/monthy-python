@@ -376,16 +376,28 @@ $('.availablity-block').each(function(k,v) {
     });
 
 
-/* for full days add blue blocks  */
+$.each($FullDayCells, function(k,v) {
+    console.log( v );
+    myDaysToReplace.push( $('td:not(.noday)').eq(v-1).prop('dayNumber', v) );
+});
+
+$.each(myDaysToReplace, function(k,v) {
+    console.log(this.prop('dayNumber'));
+    this.empty().append(this.prop('dayNumber')+'<div class="unavail-block"></div>');
+});
+
+
+/*
+// for full days add blue blocks  
 $.each($FullDayCells, function(k,v) {
     myDaysToReplace.push( $('td:not(.noday)').eq(v-1) );
     });
-/* removing markup on first loop breaks counter with eq hence the second each loops*/
+// removing markup on first loop breaks counter with eq hence the second each loops
 $.each(myDaysToReplace, function(k,v) {
     $(this).children().replaceWith('<div class="unavail-block"></div>');
    // $(this).replaceWith(v.text().split(' ')[0] + '<div class="unavail-block"></div>');
     });
-
+*/
 
 $('body').on("click", ".left-click", function() {    
     var thismonth    = $(".month th:eq(1)").text().split(" ")[0].trim();
@@ -578,10 +590,16 @@ $(function() {
               },
               dataType: 'json',
               success: function (data) {        
-                  if (data != 'None' && data != ""){ var blocks = new Object; 
+                  if (data != 'None' && data != ""){ 
+                      var blocks = new Object; 
                       $.each(data, function(k,v){
-                        var start_time = new Date(currentyear, parseInt(currentMonthString)-1, currentdate, v.fields.start_date.split('T')[1].split(':')[0]); 
-                        var end_time   = new Date(currentyear, parseInt(currentMonthString)-1, currentdate, v.fields.end_date.split('T')[1].split(':')[0]); 
+                        var start_time = new Date(parseInt(currentyear),
+                                                  parseInt(currentMonthString)-1, 
+                                                  parseInt(currentdate), 
+                                                  parseInt(v.fields.start_date.split('T')[1].split(':')[0])); 
+                        var end_time   = new Date(parseInt(currentyear), 
+                                                  parseInt(currentMonthString)-1, 
+                                                  parseInt(currentdate, v.fields.end_date.split('T')[1].split(':')[0])); 
                         var block_length = end_time.getHours() - start_time.getHours();
                         var all_day = v.fields.all_day;
                         var real_start_date = new Date(v.fields.start_date.split('T')[0].split('-')[0],
@@ -608,7 +626,7 @@ $(function() {
                                 var previous_hour = parseInt(key.split('schedule-block-time-')[1])-1;
                                 var new_key = 'schedule-block-time-' + previous_hour;
                                 blocks['end_time'] =  end_time;
-                                start_block  =  blocks['start_time'].getHours(); 
+                                var start_block  =  blocks['start_time'].getHours(); 
                                 var end_day_block = [];
 
                                 for (var i = start_block; i <= previous_hour; i++ ){
@@ -622,7 +640,7 @@ $(function() {
 
                             if ( Number(end_time) == Number(val) && all_day == true) {
                                 last_block = parseInt($('.availablity-block:last-child').classes()[1].split('schedule-block-time-')[1]);
-                                start_block  =  blocks['start_time'].getHours(); 
+                                var start_block  =  blocks['start_time'].getHours(); 
                                 var all_day_block = [];
                                 for (var i = start_block; i <= last_block; i++ ){
                                   all_day_block.push('schedule-block-time-' + i)
@@ -639,7 +657,7 @@ $(function() {
 
                             //$("."+new_key).css('background', "#2ebad1");//mark avilable as grey #F5F5F5
 
-                            start_block  =  blocks['start_time'].getHours(); 
+                            var start_block  =  blocks['start_time'].getHours(); 
                             var end_day_block = [];
 
                             for (var i = start_block; i <= previous_hour; i++ ){
