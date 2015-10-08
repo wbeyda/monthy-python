@@ -38,9 +38,23 @@ class ContractorScheduleAdmin(admin.ModelAdmin):
     list_filter = ['id']
     search_fields = ['title']
     date_hierarchy = 'start_date'
+    
+    def get_queryset(self, request):
+        qs = super(ContractorScheduleAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(firstname__user__username = request.user.username)
+
+
 
 class GalleryAdmin(admin.ModelAdmin):
     list_display = ('author','picdate','picture','caption','sourceURL','contractor','job','testimonial','hashtags','socialtags')
+
+    def get_queryset(self, request):
+        qs = super(GalleryAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(contractor__user__username = request.user.username)
 
 class TestimonialAdmin(admin.ModelAdmin):
     list_display = ('approved_status',
@@ -79,6 +93,13 @@ class TestimonialAdmin(admin.ModelAdmin):
           self.message_user(request, "%s successfully marked as approved." % message_bit)
     
     actions = [mark_as_approved]
+
+    def get_queryset(self, request):
+        qs = super(TestimonialAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(contractor__user__username = request.user.username)
+
 
 class MonthlySpecialAdmin(admin.ModelAdmin):
     list_display = ('special_pic','special_text','special_color','special_active')
