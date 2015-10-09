@@ -334,7 +334,7 @@ $( document ).ready(function() {
   $.CurrentMonth = new Object();
   var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %}; 
   var scedblo = [];
-  var myDaysToReplace = []
+  var myDaysToReplace = [];
 
 
   for (var i = 0;i < hours_in_day; i++ ){
@@ -376,28 +376,15 @@ $('.availablity-block').each(function(k,v) {
     });
 
 
+// for full days add blue blocks  
 $.each($FullDayCells, function(k,v) {
-    console.log( v );
     myDaysToReplace.push( $('td:not(.noday)').eq(v-1).prop('dayNumber', v) );
 });
 
-$.each(myDaysToReplace, function(k,v) {
-    console.log(this.prop('dayNumber'));
-    this.empty().append(this.prop('dayNumber')+'<div class="unavail-block"></div>');
-});
-
-
-/*
-// for full days add blue blocks  
-$.each($FullDayCells, function(k,v) {
-    myDaysToReplace.push( $('td:not(.noday)').eq(v-1) );
-    });
 // removing markup on first loop breaks counter with eq hence the second each loops
 $.each(myDaysToReplace, function(k,v) {
-    $(this).children().replaceWith('<div class="unavail-block"></div>');
-   // $(this).replaceWith(v.text().split(' ')[0] + '<div class="unavail-block"></div>');
-    });
-*/
+    $(this).empty().append($(this).prop('dayNumber')+'<div class="unavail-block"></div>');
+});
 
 $('body').on("click", ".left-click", function() {    
     var thismonth    = $(".month th:eq(1)").text().split(" ")[0].trim();
@@ -441,21 +428,22 @@ $('body').on("click", ".left-click", function() {
                             $FullDayCells = jQuery.parseJSON(results);
                             var myDaysToReplace = [];
                             /* for full days add blue blocks  */
+
                             $.each($FullDayCells, function(k,v) {
-                              myDaysToReplace.push( $('td:not(.noday)').eq(v-1) );
-                              });
-                            /* removing markup on first loop breaks counter with eq hence the second each loops*/
+                                myDaysToReplace.push( $('td:not(.noday)').eq(v-1).prop('dayNumber', v) );
+                            });
+
                             $.each(myDaysToReplace, function(k,v) {
-                              $(this).replaceWith(v.text().split(' ')[0] + '<div class="unavail-block"></div>');
-                              });
-                            }
-                 });
-              },
-              error: function (jqXHR, error) {
-                  var lastmonth = monthMapper.indexOf(thismonth) -1;
-                  $("#nomonth").text("No events for "+ monthMapper[lastmonth] +" to display");
-              }
-          });
+                                $(this).empty().append($(this).prop('dayNumber')+'<div class="unavail-block"></div>');
+                            });
+                        },
+                        error: function (jqXHR, error) {
+                            var lastmonth = monthMapper.indexOf(thismonth) -1;
+                            $("#nomonth").text("No events for "+ monthMapper[lastmonth] +" to display");
+                        }
+                });
+            }
+      });
   });
 
   $('body').on("click", ".right-click", function() {    
@@ -501,14 +489,15 @@ $('body').on("click", ".left-click", function() {
                             $FullDayCells = jQuery.parseJSON(results);
                             var myDaysToReplace = [];
                             /* for full days add blue blocks  */
+
                             $.each($FullDayCells, function(k,v) {
-                              myDaysToReplace.push( $('td:not(.noday)').eq(v-1) );
-                              });
-                            /* removing markup on first loop breaks counter with eq hence the second each loops*/
+                                myDaysToReplace.push( $('td:not(.noday)').eq(v-1).prop('dayNumber', v) );
+                            });
+
                             $.each(myDaysToReplace, function(k,v) {
-                              $(this).replaceWith(v.text().split(' ')[0] + '<div class="unavail-block"></div>');
-                              });
-                            }
+                                $(this).empty().append($(this).prop('dayNumber')+'<div class="unavail-block"></div>');
+                            });
+                        }
                  });
               }
           });
@@ -537,6 +526,7 @@ $('body').on("click", ".left-click", function() {
 
 $(function() {
     $('body').on("click", "td:not(.noday)", function(){
+
       $('.availablity-block').css('background', '#f1f1f1').addClass('available').removeClass('unavailable');
       var calEvent = $(this).html().split(' ');
       var valEventList = calEvent.shift();
@@ -579,6 +569,14 @@ $(function() {
 
       var block_mapper = toObject(schedule_block_keys,schedule_block_times);
 
+      if ($(this).children().classes() == "unavail-block"){
+
+         $.each(block_mapper, function(key,val) {
+              $("."+key).css('background', '#2ebad1').addClass('unavailable').removeClass('available'); //mark unavilable as blue #2ebad1
+        });
+        return true;
+      }
+
       $.ajax({
               url: urlstring, 
               method: 'GET', 
@@ -591,85 +589,81 @@ $(function() {
               dataType: 'json',
               success: function (data) {        
                   if (data != 'None' && data != ""){ 
+                      $.each(data, function(k,v) {
+                    
+                          $.each(block_mapper, function(key,val) {
+                              if (v == parseInt(key.split('-')[3])){
+                                  $("."+key).css('background', '#2ebad1').addClass('unavailable').removeClass('available'); //mark unavilable as blue #2ebad1
+                              }
+
+                          });
+                      });
+                     /* 
                       var blocks = new Object; 
                       $.each(data, function(k,v){
-                        var start_time = new Date(parseInt(currentyear),
-                                                  parseInt(currentMonthString)-1, 
-                                                  parseInt(currentdate), 
-                                                  parseInt(v.fields.start_date.split('T')[1].split(':')[0])); 
-                        var end_time   = new Date(parseInt(currentyear), 
-                                                  parseInt(currentMonthString)-1, 
-                                                  parseInt(currentdate, v.fields.end_date.split('T')[1].split(':')[0])); 
-                        var block_length = end_time.getHours() - start_time.getHours();
-                        var all_day = v.fields.all_day;
-                        var real_start_date = new Date(v.fields.start_date.split('T')[0].split('-')[0],
-                          v.fields.start_date.split('T')[0].split('-')[1]-1,
-                          v.fields.start_date.split('T')[0].split('-')[2],
-                          v.fields.start_date.split('T')[1].split(':')[0], 
-                          v.fields.start_date.split('T')[1].split(':')[1] 
-                          );
-
-                        var real_end_date = new Date(v.fields.end_date.split('T')[0].split('-')[0],
-                          v.fields.end_date.split('T')[0].split('-')[1]-1,
-                          v.fields.end_date.split('T')[0].split('-')[2],
-                          v.fields.end_date.split('T')[1].split(':')[0], 
-                          v.fields.end_date.split('T')[1].split(':')[1] 
-                          );
+                          var start_time = new Date(parseInt(currentyear),parseInt(currentMonthString)-1,parseInt(currentdate),parseInt(v.fields.start_date.split('T')[1].split(':')[0])); 
+                          var end_time   = new Date(parseInt(currentyear),parseInt(currentMonthString)-1,parseInt(currentdate, v.fields.end_date.split('T')[1].split(':')[0])); 
+                          var block_length = end_time.getHours() - start_time.getHours();
+                          var all_day = v.fields.all_day;
+                          var real_start_date = new Date(v.fields.start_date.split('T')[0].split('-')[0],v.fields.start_date.split('T')[0].split('-')[1]-1,
+                            v.fields.start_date.split('T')[0].split('-')[2],v.fields.start_date.split('T')[1].split(':')[0],v.fields.start_date.split('T')[1].split(':')[1]);
+                          var real_end_date = new Date(v.fields.end_date.split('T')[0].split('-')[0],v.fields.end_date.split('T')[0].split('-')[1]-1,
+                            v.fields.end_date.split('T')[0].split('-')[2],v.fields.end_date.split('T')[1].split(':')[0],v.fields.end_date.split('T')[1].split(':')[1]);
 
                           $.each(block_mapper, function(key,val) {
-                            if (Number(start_time) == Number(val) ) {
-                                $("."+key).css('background', '#2ebad1').addClass('unavailable').removeClass('available'); //mark unavilable as blue #2ebad1
-                                blocks['start_time'] = start_time;
-                            }
+                              if (Number(start_time) == Number(val) ) {
+                                  $("."+key).css('background', '#2ebad1').addClass('unavailable').removeClass('available'); //mark unavilable as blue #2ebad1
+                                  blocks['start_time'] = start_time;
+                              }
 
-                            if (real_start_date.getDay() < real_end_date.getDay() && all_day ==true && Number(real_end_date) == Number(val) ) {
-                                var previous_hour = parseInt(key.split('schedule-block-time-')[1])-1;
-                                var new_key = 'schedule-block-time-' + previous_hour;
-                                blocks['end_time'] =  end_time;
-                                var start_block  =  blocks['start_time'].getHours(); 
-                                var end_day_block = [];
+                              if (real_start_date.getDay() < real_end_date.getDay() && all_day ==true && Number(real_end_date) == Number(val) ) {
+                                  var previous_hour = parseInt(key.split('schedule-block-time-')[1])-1;
+                                  var new_key = 'schedule-block-time-' + previous_hour;
+                                  blocks['end_time'] =  end_time;
+                                  var start_block  =  blocks['start_time'].getHours(); 
+                                  var end_day_block = [];
 
-                                for (var i = start_block; i <= previous_hour; i++ ){
+                                  for (var i = start_block; i <= previous_hour; i++ ){
+                                      end_day_block.push('schedule-block-time-' + i)
+                                  }
+                                  for (var i = 0; i <= end_day_block.length; i++) {
+                                      $('.' + end_day_block[i]).css('background', '#2ebad1').addClass('unavailable').removeClass('available');
+                                  }
+                                  return false;//break out of loop  
+                              }
+
+                              if ( Number(end_time) == Number(val) && all_day == true) {
+                                  last_block = parseInt($('.availablity-block:last-child').classes()[1].split('schedule-block-time-')[1]);
+                                  var start_block  =  blocks['start_time'].getHours(); 
+                                  var all_day_block = [];
+                                  for (var i = start_block; i <= last_block; i++ ){
+                                    all_day_block.push('schedule-block-time-' + i)
+                                  }
+                                  for (var i = 0; i <= all_day_block.length; i++) {
+                                    $('.' + all_day_block[i]).css('background', '#2ebad1').addClass('unavailable').removeClass('available');
+                                  }
+                                  return false;//break out of loop
+
+                              } else if (Number(end_time) == Number(val) && all_day != true) { //take the endtime and subtract an hour color it in
+                                  var previous_hour = parseInt(key.split('schedule-block-time-')[1])-1;
+                                  var new_key = 'schedule-block-time-' + previous_hour;
+                                  blocks['end_time'] =  end_time;
+
+                                  //$("."+new_key).css('background', "#2ebad1");//mark avilable as grey #F5F5F5
+
+                                  var start_block  =  blocks['start_time'].getHours(); 
+                                  var end_day_block = [];
+
+                                  for (var i = start_block; i <= previous_hour; i++ ){
                                     end_day_block.push('schedule-block-time-' + i)
-                                }
-                                for (var i = 0; i <= end_day_block.length; i++) {
+                                  }
+                                  for (var i = 0; i <= end_day_block.length; i++) {
                                     $('.' + end_day_block[i]).css('background', '#2ebad1').addClass('unavailable').removeClass('available');
-                                }
-                                return false;//break out of loop */ 
-                            }
-
-                            if ( Number(end_time) == Number(val) && all_day == true) {
-                                last_block = parseInt($('.availablity-block:last-child').classes()[1].split('schedule-block-time-')[1]);
-                                var start_block  =  blocks['start_time'].getHours(); 
-                                var all_day_block = [];
-                                for (var i = start_block; i <= last_block; i++ ){
-                                  all_day_block.push('schedule-block-time-' + i)
-                                }
-                                for (var i = 0; i <= all_day_block.length; i++) {
-                                  $('.' + all_day_block[i]).css('background', '#2ebad1').addClass('unavailable').removeClass('available');
-                                }
-                                return false;//break out of loop
-
-                        } else if (Number(end_time) == Number(val) && all_day != true) { //take the endtime and subtract an hour color it in
-                            var previous_hour = parseInt(key.split('schedule-block-time-')[1])-1;
-                            var new_key = 'schedule-block-time-' + previous_hour;
-                            blocks['end_time'] =  end_time;
-
-                            //$("."+new_key).css('background', "#2ebad1");//mark avilable as grey #F5F5F5
-
-                            var start_block  =  blocks['start_time'].getHours(); 
-                            var end_day_block = [];
-
-                            for (var i = start_block; i <= previous_hour; i++ ){
-                              end_day_block.push('schedule-block-time-' + i)
-                            }
-                            for (var i = 0; i <= end_day_block.length; i++) {
-                              $('.' + end_day_block[i]).css('background', '#2ebad1').addClass('unavailable').removeClass('available');
-                            }
-                            return false;//break out of loop */
-                        }
-                      });
-                      });
+                                  }
+                                  return false;//break out of loop 
+                              }
+                          });
+                      });*/
                   }        
               }
         }); //ajax

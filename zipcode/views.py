@@ -154,7 +154,6 @@ def calendar_manager_cells(request,  currentyear, currentmonth, uid):
     alldays = cal_query.filter(all_day = True)
     full_days = []
 
-    
     for i in alldays: #if the first day of a chunk starts at the begining of Availability add it to full days in full_days
         full_days.append(range(i.start_date.day, i.end_date.day))
     full_days_in_this_month = sum(full_days, [])
@@ -292,6 +291,34 @@ def calendar_manager_blocks(request, currentdate, uid, currentyear, currentmonth
         uid = int(uid)
         all_the_days = []
 
+        #import pdb; pdb.set_trace()
+
+        qs = ContractorSchedule.objects.filter(firstname_id = uid)
+        days_that_end_today = qs.filter(end_date__lte=tomorrow, start_date__gte=today)
+        days_that_start_today = qs.filter(end_date__lte=tomorrow, end_date__gte=today)
+        from itertools import chain
+        result_list = list(chain(days_that_end_today, days_that_start_today))
+        result_list = set(result_list)          #remove any duplicates
+        all_the_hours = []
+
+        for i in result_list:
+            hourly_range = range(i.start_date.hour,i.end_date.hour+1)
+            all_the_hours.append(hourly_range)
+        all_the_hours = sum(all_the_hours,[])
+        avail = Availability.objects.get(id=uid)
+        s = avail.prefered_starting_hours.hour
+        e = avail.prefered_ending_hours.hour
+        all_the_hours =[h for h in all_the_hours if h in range(s, e+1)]
+        import json
+        data = json.dumps(all_the_hours)
+        #data = serializers.serialize('json', all_the_hours, use_natural_keys=True ) 
+        """
+        for i in all_the_hours:
+            if i < avail.prefered_starting_hours.hour:
+                all_the_hours.remove(i)
+            if i > avail.prefered_ending_hours.hour:
+                all_the_hours.remove(i)
+        
         calendardays = ContractorSchedule.objects.filter(firstname_id=uid, 
                                                          start_date__gte = today,
                                                          end_date__lt = tomorrow
@@ -314,8 +341,8 @@ def calendar_manager_blocks(request, currentdate, uid, currentyear, currentmonth
                                                                    end_date__lte = tomorrow,
                                                                    all_day = True,
                                                                   ).order_by('start_date') 
-        
-       
+
+
         if first_day_of_chunks_of_days.exists():
            all_the_days.append(first_day_of_chunks_of_days)
         else :
@@ -343,9 +370,7 @@ def calendar_manager_blocks(request, currentdate, uid, currentyear, currentmonth
         filtered_days = [elem for elem in all_the_days if elem != ""]
         all_days = list(itertools.chain(filtered_days[0]))
         data = serializers.serialize('json', all_days, use_natural_keys=True ) 
-        
-        #data = json.dumps({ 'first_day': first_day, 'middle': middle, 'end': end , 'caldays': caldays })
-
+        """ 
         return HttpResponse(data, content_type="application/json")
    
 
