@@ -138,7 +138,6 @@ def request_event(request):
 
     
 def calendar_manager_cells(request,  currentyear, currentmonth, uid):
-    #import pdb; pdb.set_trace()
     fdom = datetime.datetime(int(currentyear), int(currentmonth), 1,0)
 
     if int(currentmonth) == 12:
@@ -154,26 +153,28 @@ def calendar_manager_cells(request,  currentyear, currentmonth, uid):
     avail_hours = ah.total_seconds() / 3600 #8.0 or 8.5
     alldays = cal_query.filter(all_day = True)
     full_days = []
-    chunk_of_days = []
+
     
     for i in alldays: #if the first day of a chunk starts at the begining of Availability add it to full days in full_days
-        chunk_of_days = list(range(i.start_date.day, i.end_date.day))
+        full_days.append(range(i.start_date.day, i.end_date.day))
+    full_days_in_this_month = sum(full_days, [])
+    """ 
         if chunk_of_days > 0:
             psh = datetime.datetime.combine(i.start_date, sh)
         if psh == i.start_date:
             full_days.append(i.start_date.day)
-   
+
     for i in chunk_of_days[1:]: #add the rest of the days from a chunk to full_days 
         full_days.append(i)
 
-
     for i in cal_query:
-        full_days.append(i.start_date.day)
+        full_days.append(i.start_date.day) 
 
     a = [elem for elem in full_days if elem >= avail_hours /2]
     full_days_in_this_month = []
     [full_days_in_this_month.append(item) for item in a if item not in full_days_in_this_month]
-
+    
+    """
     if request.is_ajax():
         full_days_json = json.dumps(full_days_in_this_month)
         return HttpResponse(full_days_json)
