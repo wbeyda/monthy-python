@@ -376,7 +376,8 @@ $('.availablity-block').each(function(k,v) {
     });
 
 
-// for full days add blue blocks  
+// for full days add blue blocks
+/* 
 $.each($FullDayCells, function(k,v) {
     myDaysToReplace.push( $('td:not(.noday)').eq(v-1).prop('dayNumber', v) );
 });
@@ -385,7 +386,7 @@ $.each($FullDayCells, function(k,v) {
 $.each(myDaysToReplace, function(k,v) {
     $(this).empty().append($(this).prop('dayNumber')+'<div class="unavail-block"></div>');
 });
-
+*/
 $('body').on("click", ".left-click", function() {    
     var thismonth    = $(".month th:eq(1)").text().split(" ")[0].trim();
     var currentyear  = $(".month th:eq(1)").text().split(" ")[1] ;

@@ -291,27 +291,38 @@ def calendar_manager_blocks(request, currentdate, uid, currentyear, currentmonth
         uid = int(uid)
         all_the_days = []
 
-        #import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
 
         qs = ContractorSchedule.objects.filter(firstname_id = uid)
-        days_that_end_today = qs.filter(end_date__lte=tomorrow, start_date__gte=today)
-        days_that_start_today = qs.filter(end_date__lte=tomorrow, end_date__gte=today)
+        days_that_end_today = qs.filter(end_date__lte=tomorrow, end_date__gte=today)
+        days_that_start_today = qs.filter(start_date__lte=tomorrow, start_date__gte=today)
+        in_the_middle_of_a_block = qs.filter(start_date__lte=today, end_date__gte=tomorrow)
+
         from itertools import chain
-        result_list = list(chain(days_that_end_today, days_that_start_today))
+        result_list = list(chain(days_that_end_today, days_that_start_today, in_the_middle_of_a_block))
         result_list = set(result_list)          #remove any duplicates
         all_the_hours = []
 
-        for i in result_list:
-            hourly_range = range(i.start_date.hour,i.end_date.hour+1)
-            all_the_hours.append(hourly_range)
-        all_the_hours = sum(all_the_hours,[])
         avail = Availability.objects.get(id=uid)
+        for i in result_list:
+            if i.start_date.day == i.end_date.day:                                #normal days
+                hourly_range = range(i.start_date.hour,i.end_date.hour+1)
+            elif i.start_date.day < today.day and i.end_date.day >= tomorrow.day:  #in the middle of a block
+                hourly_range = range(avail.prefered_starting_hours.hour, avail.prefered_ending_hours.hour+1)
+            elif i.start_date.day < today.day:                                    # started before today
+                hourly_range = range(avail.prefered_starting_hours.hour, i.end_date.hour+1)
+            elif i.start_date.day < i.end_date.day:                               # starts today but ends after 
+                hourly_range = range(i.start_date.hour, avail.prefered_ending_hours.hour+1)
+            all_the_hours.append(hourly_range)
+
+        all_the_hours = sum(all_the_hours,[])
         s = avail.prefered_starting_hours.hour
         e = avail.prefered_ending_hours.hour
         all_the_hours =[h for h in all_the_hours if h in range(s, e+1)]
-        import json
         data = json.dumps(all_the_hours)
-        #data = serializers.serialize('json', all_the_hours, use_natural_keys=True ) 
+        return HttpResponse(data, content_type="application/json")
+
+
         """
         for i in all_the_hours:
             if i < avail.prefered_starting_hours.hour:
@@ -370,9 +381,8 @@ def calendar_manager_blocks(request, currentdate, uid, currentyear, currentmonth
         filtered_days = [elem for elem in all_the_days if elem != ""]
         all_days = list(itertools.chain(filtered_days[0]))
         data = serializers.serialize('json', all_days, use_natural_keys=True ) 
-        """ 
         return HttpResponse(data, content_type="application/json")
-   
+        """ 
 
 def contractor_detail_view(request, f,id,l):
     con = Contractor.objects.filter(id=id).prefetch_related()
