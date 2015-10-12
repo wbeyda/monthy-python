@@ -138,12 +138,34 @@ def request_event(request):
 
     
 def calendar_manager_cells(request,  currentyear, currentmonth, uid):
+    print datetime.datetime.now()
     fdom = datetime.datetime(int(currentyear), int(currentmonth), 1,0)
+
+    #import pdb; pdb.set_trace()
 
     if int(currentmonth) == 12:
         ldom = datetime.datetime(int(currentyear)+1,1,1,0)
     else:
         ldom = datetime.datetime(int(currentyear),int(currentmonth)+1,1,0)
+    import calendar
+    month_range = calendar.monthrange(currentyear,currentmonth)[1] 
+
+    avail = Availability.objects.get(contractor_id=int(uid))
+    length_of_hours = len(range(avail.prefered_starting_hours.hour, avail.prefered_ending_hours.hour+1))
+    full_days = []
+    for i in range(1,month_range+1):
+        full_day = calendar_manager_blocks(request,i, uid, currentyear, currentmonth)        
+        if len(full_day) == length_of_hours:
+            full_days.append(i) 
+    if request.is_ajax():
+        full_days_json = json.dumps(full_days)
+        print datetime.datetime.now()
+        return HttpResponse(full_days_json)
+    else:
+        print datetime.datetime.now()
+        return full_days 
+
+    """
     
     cal_query = ContractorSchedule.objects.filter(firstname_id =int(uid), start_date__gte = fdom, end_date__lt = ldom)
     av = Availability.objects.get(contractor_id=int(uid))
@@ -157,7 +179,9 @@ def calendar_manager_cells(request,  currentyear, currentmonth, uid):
     for i in alldays: #if the first day of a chunk starts at the begining of Availability add it to full days in full_days
         full_days.append(range(i.start_date.day, i.end_date.day))
     full_days_in_this_month = sum(full_days, [])
-    """ 
+
+    #this is where comments started
+     
         if chunk_of_days > 0:
             psh = datetime.datetime.combine(i.start_date, sh)
         if psh == i.start_date:
@@ -173,12 +197,12 @@ def calendar_manager_cells(request,  currentyear, currentmonth, uid):
     full_days_in_this_month = []
     [full_days_in_this_month.append(item) for item in a if item not in full_days_in_this_month]
     
-    """
     if request.is_ajax():
         full_days_json = json.dumps(full_days_in_this_month)
         return HttpResponse(full_days_json)
     else:
         return full_days_in_this_month 
+    """
 
 
 def next_month_request(request, id, currentyear, currentmonth):
@@ -278,49 +302,52 @@ def last_month_request(request, id, currentyear, currentmonth):
 def calendar_manager_blocks(request, currentdate, uid, currentyear, currentmonth):
 
     #import pdb; pdb.set_trace()
+    today = datetime.datetime(int(currentyear),int( currentmonth), int(currentdate), 0)
+    import calendar
+    last_day_of_month  = calendar.monthrange(int(currentyear), int(currentmonth))[1]
+    if int(currentdate) == last_day_of_month and int(currentmonth) == 12: 
+        tomorrow = datetime.datetime(int(currentyear)+1, 1,1,0)
+    elif int(currentdate) == last_day_of_month and int(currentmonth) <= 11:
+        tomorrow = datetime.datetime(int(currentyear), int(currentmonth)+1, 1, 0)
+    else:  
+        tomorrow = datetime.datetime(int(currentyear), int(currentmonth), int(currentdate)+1, 0)
+    uid = int(uid)
+    all_the_days = []
+
+    #import pdb; pdb.set_trace()
+
+    qs = ContractorSchedule.objects.filter(firstname_id = uid)
+    days_that_end_today = qs.filter(end_date__lte=tomorrow, end_date__gte=today)
+    days_that_start_today = qs.filter(start_date__lte=tomorrow, start_date__gte=today)
+    in_the_middle_of_a_block = qs.filter(start_date__lte=today, end_date__gte=tomorrow)
+
+    from itertools import chain
+    result_list = list(chain(days_that_end_today, days_that_start_today, in_the_middle_of_a_block))
+    result_list = set(result_list)          #remove any duplicates
+    all_the_hours = []
+
+    avail = Availability.objects.get(id=uid)
+    for i in result_list:
+        if i.start_date.day == i.end_date.day:                                #normal days
+            hourly_range = range(i.start_date.hour,i.end_date.hour+1)
+        elif i.start_date.day < today.day and i.end_date.day >= tomorrow.day:  #in the middle of a block
+            hourly_range = range(avail.prefered_starting_hours.hour, avail.prefered_ending_hours.hour+1)
+        elif i.start_date.day < today.day:                                    # started before today
+            hourly_range = range(avail.prefered_starting_hours.hour, i.end_date.hour+1)
+        elif i.start_date.day < i.end_date.day:                               # starts today but ends after 
+            hourly_range = range(i.start_date.hour, avail.prefered_ending_hours.hour+1)
+        all_the_hours.append(hourly_range)
+
+    all_the_hours = sum(all_the_hours,[])
+    s = avail.prefered_starting_hours.hour
+    e = avail.prefered_ending_hours.hour
+    all_the_hours =[h for h in all_the_hours if h in range(s, e+1)]
+    data = json.dumps(sorted(set(all_the_hours))) #remove duplicates and sort for clarity
+
     if request.is_ajax():
-        today = datetime.datetime(int(currentyear),int( currentmonth), int(currentdate), 0)
-        import calendar
-        last_day_of_month  = calendar.monthrange(int(currentyear), int(currentmonth))[1]
-        if int(currentdate) == last_day_of_month and int(currentmonth) == 12: 
-            tomorrow = datetime.datetime(int(currentyear)+1, 1,1,0)
-        elif int(currentdate) == last_day_of_month and int(currentmonth) <= 11:
-            tomorrow = datetime.datetime(int(currentyear), int(currentmonth)+1, 1, 0)
-        else:  
-            tomorrow = datetime.datetime(int(currentyear), int(currentmonth), int(currentdate)+1, 0)
-        uid = int(uid)
-        all_the_days = []
-
-        import pdb; pdb.set_trace()
-
-        qs = ContractorSchedule.objects.filter(firstname_id = uid)
-        days_that_end_today = qs.filter(end_date__lte=tomorrow, end_date__gte=today)
-        days_that_start_today = qs.filter(start_date__lte=tomorrow, start_date__gte=today)
-        in_the_middle_of_a_block = qs.filter(start_date__lte=today, end_date__gte=tomorrow)
-
-        from itertools import chain
-        result_list = list(chain(days_that_end_today, days_that_start_today, in_the_middle_of_a_block))
-        result_list = set(result_list)          #remove any duplicates
-        all_the_hours = []
-
-        avail = Availability.objects.get(id=uid)
-        for i in result_list:
-            if i.start_date.day == i.end_date.day:                                #normal days
-                hourly_range = range(i.start_date.hour,i.end_date.hour+1)
-            elif i.start_date.day < today.day and i.end_date.day >= tomorrow.day:  #in the middle of a block
-                hourly_range = range(avail.prefered_starting_hours.hour, avail.prefered_ending_hours.hour+1)
-            elif i.start_date.day < today.day:                                    # started before today
-                hourly_range = range(avail.prefered_starting_hours.hour, i.end_date.hour+1)
-            elif i.start_date.day < i.end_date.day:                               # starts today but ends after 
-                hourly_range = range(i.start_date.hour, avail.prefered_ending_hours.hour+1)
-            all_the_hours.append(hourly_range)
-
-        all_the_hours = sum(all_the_hours,[])
-        s = avail.prefered_starting_hours.hour
-        e = avail.prefered_ending_hours.hour
-        all_the_hours =[h for h in all_the_hours if h in range(s, e+1)]
-        data = json.dumps(all_the_hours)
         return HttpResponse(data, content_type="application/json")
+    else:
+        return sorted(set(all_the_hours))
 
 
         """
