@@ -138,31 +138,30 @@ def request_event(request):
 
     
 def calendar_manager_cells(request,  currentyear, currentmonth, uid):
-    print datetime.datetime.now()
     fdom = datetime.datetime(int(currentyear), int(currentmonth), 1,0)
 
-    #import pdb; pdb.set_trace()
+    import pdb; pdb.set_trace()
 
     if int(currentmonth) == 12:
         ldom = datetime.datetime(int(currentyear)+1,1,1,0)
     else:
         ldom = datetime.datetime(int(currentyear),int(currentmonth)+1,1,0)
     import calendar
-    month_range = calendar.monthrange(currentyear,currentmonth)[1] 
+    month_range = calendar.monthrange(int(currentyear),int(currentmonth))[1] 
 
     avail = Availability.objects.get(contractor_id=int(uid))
     length_of_hours = len(range(avail.prefered_starting_hours.hour, avail.prefered_ending_hours.hour+1))
     full_days = []
     for i in range(1,month_range+1):
         full_day = calendar_manager_blocks(request,i, uid, currentyear, currentmonth)        
+        if type(full_day) == HttpResponse:
+            full_day = json.loads(full_day.content)
         if len(full_day) == length_of_hours:
             full_days.append(i) 
     if request.is_ajax():
         full_days_json = json.dumps(full_days)
-        print datetime.datetime.now()
         return HttpResponse(full_days_json)
     else:
-        print datetime.datetime.now()
         return full_days 
 
     """

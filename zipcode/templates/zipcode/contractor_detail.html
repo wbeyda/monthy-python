@@ -212,6 +212,10 @@ $( document ).ready(function() {
       }
       var h = parseInt(s.split(':')[0]);
       
+      if (s == ":00") {
+        return "12:00 AM"
+      }
+
       if (h >= 13) {
         s = s.split(':');
         s[0] = h - 12;
