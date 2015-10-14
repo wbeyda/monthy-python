@@ -113,11 +113,16 @@
               <div class="col-lg-2 col-md-2 hidden-sm hidden-xs"></div>
             </div>
                    
+
            <div class="row event-popup">
               <div class="col-lg-4 col-md-4 hidden-sm hidden-xs"></div>
               <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                <div class="event-day-header"><h2>Wednesday 22nd</h2></div>
-              <!--  <div class="col-time"><h3>9AM</h3></div><div class="availablity-block"></div>
+                <div class="event-day-header"><h2>Wednesday 22nd</h2>
+                 <div class="btn-group schedule-btn" role="group">
+                    <button type="button" class="btn btn-default">Schedule An Event</button>
+                  </div>
+                </div>
+<!--                <div class="col-time"><h3>9M</h3></div><div class="availablity-block"></div>
                 <div class="col-time-spacer"></div><div class="availablity-block"></div>
                 <div class="col-time"><h3>11AM</h3></div><div class="availablity-block"></div>
                 <div class="col-time-spacer"></div><div class="availablity-block"></div>
@@ -126,12 +131,14 @@
                 <div class="col-time"><h3>3PM</h3></div><div class="availablity-block"></div>
                 <div class="col-time-spacer"></div><div class="availablity-block"></div>
                 <div class="col-time"><h3>5PM</h3></div><div class="availablity-block"></div>
-                <div class="col-time-spacer"></div><div class="availablity-block"></div> -->
-              </div>
-              <div class="col-lg-4 col-md-4 hidden-sm hidden-xs"></div>
-            </div>
+                <div class="col-time-spacer"></div><div class="availablity-block"></div>
+ -->             </div>
+              <div class="col-lg-4 col-md-4 hidden-sm hidden-xs">
 
-           
+              </div>
+            </div>
+            <div class="schedule-form"></div>
+
               
 			</div>
 		</div>
@@ -268,8 +275,10 @@ $( document ).ready(function() {
       for (var i = 0; i < names.length; i++)
           result[names[i]] = values[i];
       return result;
-  } 
-  
+  }
+
+
+
   $(function() {
        $('.gallery-contractor-detail').unslider({
           speed: 2000,               //  The speed to animate each slide (in milliseconds)
@@ -318,7 +327,7 @@ $( document ).ready(function() {
         return classes;
     };
 })(jQuery);
-  
+  $('.schedule-form').css('display', 'none');  
   $.Availability = new Object;
   $.Availability = {{ availability | safe }};
   $FullDayCells = {{ cal_man_cells | safe }};
@@ -676,6 +685,36 @@ $(function() {
     }); //onlick
       return false;
   }); 
+
+
+  $('body').on("click", ".schedule-btn", function() { 
+      console.log('schedulin some stuff!!');
+      $.get( {% url 'schedule' %}, function(data) {
+          console.log('loaded the form');
+          console.log(data);
+
+        if ($('.event-popup').hasClass('selected')) {
+            $('.event-popup').fadeToggle(0).removeClass('selected');
+        } else {
+            $('.event-popup').fadeToggle(0).addClass('selected');
+        }
+
+        if ($('.schedule-form').hasClass('selected')) {
+            $('.schedule-form').fadeToggle().removeClass('selected').css({'visibility':'hidden', 'display':'none'});
+            $('.schedule-form').html('');
+        } else {
+            var button = '<button type="button" class="close schedule-close-btn" data-hide="alert">X</button>';
+            $('.schedule-form').html(button + data );
+            $('.schedule-form').fadeToggle().addClass('selected').css({'visibility':'visible','display':'block'});
+        }
+      });
+
+  });   
+
+  $("body").on("click",  ".schedule-close-btn", function(){
+      $(this).parent().fadeToggle().removeClass('selected').css({'visibility': 'hidden', 'display': 'none'});
+      console.log($(this));
+  });
 
 }); 
 

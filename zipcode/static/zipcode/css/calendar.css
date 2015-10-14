@@ -1,3 +1,45 @@
+.schedule-btn {
+  background: #f9d907;
+  color: black;
+}
+.schedule-close-btn {
+  position: relative;
+  top: -1.5em;
+  right: -1.5em;
+}
+.schedule-form {
+  background: #d5f1f6;
+  width: 30em;
+  padding: 3em;
+  position: relative;
+  top: -72em;
+  left: 27em;
+}
+#schedule-form {
+  width: 23em;
+  right: 2em;
+  position: relative;
+}
+#schedule-form label {
+  text-align: left;
+  clear: both;
+  float: left;
+  margin-right: 15px;
+  width: 9em;
+  position: relative;
+  right: 3em;
+  top: 2.7em;
+}
+#schedule-form input {
+  text-align: left;
+  margin-top: 1em;
+  width: 20em;
+  right: -3em;
+  position: relative;
+}
+textarea#id_description {
+  margin-top: 4em;
+}
 .contractor-calendar-buttons {
   margin-left: 0.7em;
   margin-bottom: 0.2em;
@@ -48,7 +90,7 @@ button.right-click:hover {
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
   width: 24em;
   position: relative;
-  top: -57em;
+  top: -72em;
   left: 30em;
   background-color: white;
   display: none;

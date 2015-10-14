@@ -1,54 +1,18 @@
-{% extends "base.html" %}
-{% block title %}Schedule an event{% endblock %}
 {% load staticfiles %}
-{% block nav %}
 
-<div class="header">
-    <div>
-        {% if time_image == 'day'%}
-            <img class="home-header" src="{% static 'zipcode/images/headers/SLCDay1920.jpg' %}">
-        {% elif  time_image == 'night'%}
-            <img class="home-header" src="{% static 'zipcode/images/headers/SLCNight1920.jpg' %}">
-        {% endif %}
-    </div>
-</div>
-
-
-<nav class="navbar navbar-default">
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li><a href="/">Home</a></li>
-        <li><a href="value">Value Care</a></li>
-        <li><a class="active" href="careers">Careers</a></li>
-        <li><a href="gallery">Gallery</a></li>   
-      </ul>     
-    </div><!-- /.navbar-collapse -->
-</nav>
-
-<div id="wrapper">
-    <div id="sidebar-wrapper">
-        <h3 id="schedule">SCHEDULE A PROJECT</h3>
-        
-        {% load zipcode_extras %}
-        {% show_search_form %}
-    </div>
-    <div id="sidebar-ad">
-        <h3>HAVE AN EMERGENCY?</h3>
-        <H5>Call us directly at</H5>
-        <H3>801-933-4663</H3>
-
-    </div>
-    <div id="page-content-wrapper">
-        <div class="page-content">
-{% endblock %}
 {% block content %}
 <div class="row">
 	<div class ="col-lg-2"></div>
 	<div class ="col-lg-8">
-		<form id="schedule-form" action="#" enctype="multipart/form-data" method="post">
+		<form id="schedule-form" action="#" class="form-horizontal" enctype="multipart/form-data" method="post">
 			{% csrf_token %}
-			{{ requested_event }}
-			<input type="submit" id="career-submit"value="Submit" />
+      {% for field in requested_event %}
+          <label class="{% for class in field.label_classes %}{{ class }} {% endfor %}"
+          for="{{ field.name }}">{{ field.label }}</label>
+          {{ field }}
+      {% endfor %}
+      <button type="submit" id="schedule-submit" value="Submit" class="btn btn-default">Submit</button>
+			<!--<input type="submit" id="career-submit"value="Submit" /> -->
 		</form>
 	</div>
 	<div class ="col-lg-2"></div>
@@ -61,7 +25,6 @@
 
 <script type="text/javascript">
 $( document ).ready(function() {
-
 	var d = $("#id_start_date_1");
 	var e = $("#id_end_date_1");
 	d.each(function(i){
@@ -78,7 +41,6 @@ $( document ).ready(function() {
 		$( "#id_start_date_1" ).timepicker({step: 15, minTime: '6:00am',show2400: true, timeFormat: 'H:i'})	
 		$( "#id_end_date_1"   ).timepicker({step: 15, minTime: '6:00am',show2400: true, timeFormat: 'H:i'})	
 	});
-
 });
 </script>
 {% endblock %}

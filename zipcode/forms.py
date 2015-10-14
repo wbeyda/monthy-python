@@ -20,12 +20,17 @@ class ContactForm(forms.Form):
 
 
 class ContractorScheduleForm(forms.ModelForm):
-		start_date = SplitDateTimeField()
-		end_date   = SplitDateTimeField()
-		
-		class Meta:
-                        model = ContractorSchedule
-                        fields = ['firstname', 'start_date','end_date', 'all_day', 'title', 'description', 'location', 'background_color']
+
+    class Meta:
+        model = ContractorSchedule
+        fields = ['title', 'start_date','end_date', 'all_day', 'repair', 'estimate', 'installation', 'maintenance', 'description', 'location',]
+
+    def __init__(self, *args, **kwargs):
+        super(ContractorScheduleForm, self).__init__(*args, **kwargs)
+
+        self.fields['start_date'] = SplitDateTimeField()
+        self.fields['end_date'] = SplitDateTimeField()
+
 
 class TestimonialForm(forms.ModelForm):
     class Meta:

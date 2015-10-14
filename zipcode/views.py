@@ -87,6 +87,15 @@ def post_testimonial(request, id):
             return HttpResponse('error')
 
 
+def request_event(request):
+    data = request.POST if request.POST else None
+    requested_event = ContractorScheduleForm(data)
+    if requested_event.is_valid():
+        requested_event.save()
+        return HttpResponseRedirect('schedule/')
+    return render(request, 'request_event.html', {'requested_event':requested_event})
+
+
 def validate_file_extension(value):
     import os
     ext = os.path.splitext(value.name)[1]
@@ -120,27 +129,12 @@ def show_gallery(request):
     gallery = Gallery.objects.all().prefetch_related()
     time_image = day_or_night() 
     return render(request, 'gallery.html', {'gallery':gallery,'time_image': time_image})
-
-
-def request_event(request):
-    time_image = day_or_night()
-    if request.method == "POST":
-        requested_event = ContractorScheduleForm(request.POST)
-        if requested_event.is_valid():
-            requested_event.save()
-            return HttpResponseRedirect('schedule/')
-        else:
-            requested_event = ContractorScheduleForm(request.POST)
-        return render(request, 'request_event.html', {'requested_event':requested_event})
-    else:
-        requested_event = ContractorScheduleForm(request.POST)
-    return render(request, 'request_event.html', {'requested_event':requested_event,'time_image': time_image})
-
     
+
 def calendar_manager_cells(request,  currentyear, currentmonth, uid):
     fdom = datetime.datetime(int(currentyear), int(currentmonth), 1,0)
 
-    import pdb; pdb.set_trace()
+    #import pdb; pdb.set_trace()
 
     if int(currentmonth) == 12:
         ldom = datetime.datetime(int(currentyear)+1,1,1,0)
@@ -165,7 +159,6 @@ def calendar_manager_cells(request,  currentyear, currentmonth, uid):
         return full_days 
 
     """
-    
     cal_query = ContractorSchedule.objects.filter(firstname_id =int(uid), start_date__gte = fdom, end_date__lt = ldom)
     av = Availability.objects.get(contractor_id=int(uid))
     sh = av.prefered_starting_hours

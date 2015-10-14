@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.utils.text import slugify
 from django.utils.text import Truncator
 from django.contrib.auth.models import User
@@ -30,13 +31,26 @@ class Contractor(models.Model):
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True 
 
+class Customer(models.Model):
+    phone_regex = RegexValidator(regex=r'^\d{3}-\d{3}-\d{4}$', message='Phone number must be in valid US format: 555-123-1234')
+
+    first_name         = models.CharField(max_length=20)
+    last_name          = models.CharField(max_length=20)
+    email              = models.CharField(max_length=20)
+    phone_number       = models.CharField(validators=['phone_regex'])
+    address_line_1     = models.CharField(max_length=200)
+    address_line_2     = models.CharField(max_length=200)
+    city               = models.CharField(max_length=200)
+    state              = models.CharField(max_length=200)
+    zipcode            = models.PositiveIntegerField(max_length=5)
+    subscribed         = models.BooleanField(default=True)
 
 class CareerResume(models.Model):
-	name = models.CharField(max_length=20)
-	address = models.CharField(max_length=20)
-	email = models.EmailField()
-	phone = models.IntegerField(max_length=10)
-	resume = models.FileField(upload_to='files/%Y/%m/%d')
+    name    = models.CharField(max_length=20)
+    address = models.CharField(max_length=20)
+    email   = models.EmailField(max_length=254)
+    phone   = models.IntegerField(max_length=10)
+    resume  = models.FileField(upload_to='files/%Y/%m/%d')
 
 EVENT_COLORS  = [
         ('eeeeee', _('gray')),
@@ -52,17 +66,19 @@ EVENT_COLORS  = [
 
 
 class ContractorSchedule(models.Model):
-    firstname = models.ForeignKey(Contractor)
-    start_date = models.DateTimeField(verbose_name=_("start date"))
-    end_date = models.DateTimeField(_("end date"))
-    repair = models.BooleanField(_('repair'), default=False )
-    estimate = models.BooleanField(_('estimate'), default=False )
+    firstname    = models.ForeignKey(Contractor)
+    start_date   = models.DateTimeField(verbose_name=_("start date"))
+    end_date     = models.DateTimeField(_("end date"))
+    repair       = models.BooleanField(_('repair'), default=False )
+    estimate     = models.BooleanField(_('estimate'), default=False )
     installation = models.BooleanField(_('installation'), default=False )
-    maintenance = models.BooleanField(_('Preventitive Maintenance'), default=False )
-    all_day = models.BooleanField(_("all day"), default=False)
-    title = models.CharField(_("title"), max_length=255, blank=True)
-    description = models.TextField(_("description"),blank=True)
-    location = models.ManyToManyField('Location', verbose_name=_('locations'), blank=True)
+    maintenance  = models.BooleanField(_('Preventitive Maintenance'), default=False )
+    all_day      = models.BooleanField(_("all day"), default=False)
+    emergency    = models.BooleanField(_("Emergency"), default=False)
+    value_care   = models.BooleanField(_("Value Care"), default=False)
+    title        = models.CharField(_("title"), max_length=255, blank=True)
+    description  = models.TextField(_("description"),blank=True)
+    location     = models.ManyToManyField('Location', verbose_name=_('locations'), blank=True)
     background_color = models.CharField(
         _("background color"), max_length=10, choices=EVENT_COLORS, default='eeeeee'
     )
@@ -79,12 +95,22 @@ class ContractorSchedule(models.Model):
         if self.start_date != None and self.start_date < timezone.now():
             raise ValidationError('Start Date cannot be before now')
 
+    def clean_seconds(self):
+        import pdb; pdb.set_trace()
+        s = self.start_date 
+        if s is None:
+            return self
+        self.start_date = s.replace( second=0, microsecond=0)
+        e = self.end_date
+        self.end_date = e.replace( second=0, microsecond=0)
+        return self 
+
     def end_date_before_start_date(self):
-        if self.start_date >= self.end_date:
+        if self.start_date is not None and self.start_date >= self.end_date:
             raise ValidationError('Start date must be before the end date')
 
     def is_chunk(self):
-        if self.start_date.day != self.end_date.day:
+        if self.start_date.day is not None and self.start_date.day != self.end_date.day:
             raise ValidationError('Please enter these chunks of days as seperate Schedule Requests')
    
     def double_booked(self):
@@ -191,13 +217,6 @@ class ContractorSchedule(models.Model):
         if datetime.datetime.combine(datetime.datetime.today(), pet) < datetime.datetime.combine(datetime.datetime.today(), seh) == False: 
             raise ValidationError(_('This is after the Contractors prefered ending hour. An email has been sent to ask for permission'),
                                      code='This is after the Contractors prefered ending hour')
-
-    def clean_seconds(self):
-        s = self.start_date 
-        self.start_date = s.replace( second=0, microsecond=0)
-        e = self.end_date
-        self.end_date = e.replace( second=0, microsecond=0)
-        return self 
     
     def clean(self):
         self.start_date_before_now()
@@ -231,20 +250,14 @@ class Availability(models.Model):
 
 		
 class Location(models.Model):
-    name = models.CharField(_('Name'), max_length=255)
-    address_line_1 = models.CharField(
-        _('Address Line 1'), max_length=255, blank=True)
-    address_line_2 = models.CharField(
-        _('Address Line 2'), max_length=255, blank=True)
-    address_line_3 = models.CharField(
-        _('Address Line 3'), max_length=255, blank=True)
-    state = models.CharField(
-        _('State / Province / Region'), max_length=63, blank=True)
-    city = models.CharField(
-        _('City / Town'), max_length=63, blank=True)
-    zipcode = models.CharField(
-        _('ZIP / Postal Code'), max_length=31, blank=True)
-    country = models.CharField(_('Country'), max_length=127, blank=True)
+    name           = models.CharField(_('Name'), max_length=255)
+    address_line_1 = models.CharField(_('Address Line 1'), max_length=255, blank=True)
+    address_line_2 = models.CharField(_('Address Line 2'), max_length=255, blank=True)
+    address_line_3 = models.CharField(_('Address Line 3'), max_length=255, blank=True)
+    state          = models.CharField(_('State / Province / Region'), max_length=63, blank=True)
+    city           = models.CharField(_('City / Town'), max_length=63, blank=True)
+    zipcode        = models.CharField(_('ZIP / Postal Code'), max_length=31, blank=True)
+    country        = models.CharField(_('Country'), max_length=127, blank=True)
 
     def __str__(self):
         return self.name
@@ -368,7 +381,4 @@ class MonthlySpecial(models.Model):
 
     def clean(self):
         self.slugify_text()
-
-
-
 
