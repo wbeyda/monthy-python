@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'compressor',
     'image_cropping',
     'easy_thumbnails',
+    'localflavor',
 )
 
 MIDDLEWARE_CLASSES = (

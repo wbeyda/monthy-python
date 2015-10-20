@@ -11,6 +11,12 @@ from django.contrib.auth.models import User
 
 from image_cropping import ImageRatioField
 
+from localflavor.us.models import PhoneNumberField
+from localflavor.us.models import USZipCodeField 
+from localflavor.us.models import USStateField 
+
+
+
 class Contractor(models.Model):
     user = models.ForeignKey(User, unique=True)
     areacode = models.PositiveIntegerField(max_length=5)
@@ -32,18 +38,20 @@ class Contractor(models.Model):
     image_tag.allow_tags = True 
 
 class Customer(models.Model):
-    phone_regex = RegexValidator(regex=r'^\d{3}-\d{3}-\d{4}$', message='Phone number must be in valid US format: 555-123-1234')
-
     first_name         = models.CharField(max_length=20)
     last_name          = models.CharField(max_length=20)
-    email              = models.CharField(max_length=20)
-    phone_number       = models.CharField(validators=['phone_regex'])
+    email              = models.CharField(max_length=254)
+    phone_number       = PhoneNumberField()
     address_line_1     = models.CharField(max_length=200)
-    address_line_2     = models.CharField(max_length=200)
+    address_line_2     = models.CharField(max_length=200, blank=True)
     city               = models.CharField(max_length=200)
-    state              = models.CharField(max_length=200)
-    zipcode            = models.PositiveIntegerField(max_length=5)
+    state              = USStateField() 
+    zipcode            = USZipCodeField() 
     subscribed         = models.BooleanField(default=True)
+    special_notes      = models.TextField(default='', blank=True)
+
+    def __unicode__(self):
+        return self.phone_number
 
 class CareerResume(models.Model):
     name    = models.CharField(max_length=20)
@@ -67,6 +75,7 @@ EVENT_COLORS  = [
 
 class ContractorSchedule(models.Model):
     firstname    = models.ForeignKey(Contractor)
+    customer     = models.OneToOneField(Customer)
     start_date   = models.DateTimeField(verbose_name=_("start date"))
     end_date     = models.DateTimeField(_("end date"))
     repair       = models.BooleanField(_('repair'), default=False )
@@ -93,10 +102,11 @@ class ContractorSchedule(models.Model):
     
     def start_date_before_now(self):
         if self.start_date != None and self.start_date < timezone.now():
-            raise ValidationError('Start Date cannot be before now')
+            raise ValidationError(_('Start Date cannot be before now'),
+                                 code="#id_start_date_0", 
+                                  )
 
     def clean_seconds(self):
-        import pdb; pdb.set_trace()
         s = self.start_date 
         if s is None:
             return self
@@ -107,7 +117,9 @@ class ContractorSchedule(models.Model):
 
     def end_date_before_start_date(self):
         if self.start_date is not None and self.start_date >= self.end_date:
-            raise ValidationError('Start date must be before the end date')
+            raise ValidationError(_('Start date must be before the end date'),
+                                code = "#id_end_date_0"
+                                )
 
     def is_chunk(self):
         if self.start_date.day is not None and self.start_date.day != self.end_date.day:
@@ -124,7 +136,7 @@ class ContractorSchedule(models.Model):
             for i in qs:
                 if not self.start_date - i.end_date == datetime.timedelta(0):     
                     raise ValidationError(_('Double Booking! job number: %(value)s'),
-                                          code="double-booked",
+                                          code="#id_start_date_0",
                                           params = {'value': i.id},
                                          )
         qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id,
@@ -137,7 +149,7 @@ class ContractorSchedule(models.Model):
             for i in qs:
                 if not self.start_date - i.end_date == datetime.timedelta(0):     
                     raise ValidationError(_('Double Booking! job number: %(value)s'),
-                                          code="double-booked",
+                                          code="#id_start_date_0",
                                            params = {'value': i.id},
                                           )
         qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id,
@@ -149,7 +161,7 @@ class ContractorSchedule(models.Model):
             for i in qs:
                 if not self.start_date - i.end_date == datetime.timedelta(0):     
                     raise ValidationError(_('Double Booking! job number: %(value)s'),
-                                          code="double-booked",
+                                          code="#id_start_date_0",
                                            params = {'value': i.id},
                                           )
         qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id,
@@ -161,7 +173,7 @@ class ContractorSchedule(models.Model):
             for i in qs:
                 if not self.start_date - i.end_date == datetime.timedelta(0):     
                     raise ValidationError(_('Double Booking! job number: %(value)s'),
-                                          code="double-booked",
+                                          code="#id_start_date_0",
                                            params = {'value': i.id},
                                           )
 
@@ -171,11 +183,12 @@ class ContractorSchedule(models.Model):
             block = self.end_date - self.start_date
             
             if block < datetime.timedelta(0, 7200):
-                raise ValidationError(_('Block is under 2 hours'), code="short-block")        
+                raise ValidationError(_('Block is under 2 hours'),
+                                       code="#id_start_date_1")        
     
     def multiple_days(self):
         if self.start_date.day < self.end_date.day and self.all_day == False:
-            raise ValidationError(_('Please check All day if this is multiple days'), code="multiple-days")    
+            raise ValidationError(_('Please check All day if this is multiple days'), code="#id_all_day")    
 
     def all_day_double(self):
         if self.all_day == True:
@@ -188,7 +201,7 @@ class ContractorSchedule(models.Model):
                                                   ).filter(start_date__lt = newEndDate)
                                                   
             if qs.exists():
-                raise ValidationError(_('This day is already booked all day.'), code="day already has all day")
+                raise ValidationError(_('This day is already booked all day.'), code="#id_all_day")
 
     def day_is_full(self):
         st = self.start_date
@@ -200,15 +213,16 @@ class ContractorSchedule(models.Model):
                                               ).filter(start_date__lt = newEndDate)
                                                   
         if qs.exists():
-            raise ValidationError(_('This day is already full.'), code="day already full")
+            raise ValidationError(_('This day is already full.'), code="#id_start_date_0")
 
     def before_prefered_start_time(self):
+        import pdb; pdb.set_trace()
         a = Availability.objects.get(id=self.firstname_id)
         pst = a.prefered_starting_hours #datetime.time(9,0) 
         stt = datetime.time(self.start_date.hour, self.start_date.minute)
         if datetime.datetime.combine(datetime.datetime.today(), pst) > datetime.datetime.combine(datetime.datetime.today(), stt) == False: 
             raise ValidationError(_('This is before the Contractors prefered starting hour. An email has been sent to ask for permission'),
-                                     code='This is before the Contractors prefered starting hour')
+                                     code='#id_start_date_1')
 
     def after_prefered_end_time(self):
         a = Availability.objects.get(id=self.firstname_id)
@@ -216,7 +230,7 @@ class ContractorSchedule(models.Model):
         seh = datetime.time(self.end_date.hour, self.end_date.minute)
         if datetime.datetime.combine(datetime.datetime.today(), pet) < datetime.datetime.combine(datetime.datetime.today(), seh) == False: 
             raise ValidationError(_('This is after the Contractors prefered ending hour. An email has been sent to ask for permission'),
-                                     code='This is after the Contractors prefered ending hour')
+                                     code='#id_end_date_1')
     
     def clean(self):
         self.start_date_before_now()
@@ -225,13 +239,21 @@ class ContractorSchedule(models.Model):
         self.two_hour_blocks()
         self.end_date_before_start_date()
         self.is_chunk()
-        #self.dispatch_number()
         self.multiple_days()        
         self.all_day_double()
         self.day_is_full()
-        self.before_prefered_start_time()
-        self.after_prefered_end_time()
 
+    def save(self, *args, **kwargs):
+        super(ContractorSchedule, self).save(*args, **kwargs)
+        try:
+            self.before_prefered_start_time()
+        except ValidationError as e:
+            return e
+        try:
+            self.after_prefered_end_time()
+        except ValidationError as e:
+            return e
+            
 
 HOURS = ['Midnight','12:15AM','12:30AM,12:45AM']
 

@@ -87,7 +87,6 @@
             <div class="row">
               <div class="col-lg-12">
                 <h1 class="contractor-calendar-name monthly">{{ i.firstname | capfirst}}'s Calendar</h1>
-                <a href="{% url 'schedule' %}">Schedule an Event</a>
                   <!--<div class="btn-group contractor-calendar-buttons" role="group" aria-label="...">
                     <button type="button" id="left-click" class="btn btn-default">
                       <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
@@ -197,7 +196,7 @@
         </div>
     {% endfor %}
     <div>
-      <form id="schedule-form" action="/testimonial_post/{% for i in con %}{{i.id}}{% endfor %}" enctype="multipart/form-data" method="post">
+      <form id="testimonial-form" action="/testimonial_post/{% for i in con %}{{i.id}}{% endfor %}" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         {{ testimonial_form }}
         <input type="submit" id="testimonial-submit"value="Submit" />
@@ -689,9 +688,7 @@ $(function() {
 
   $('body').on("click", ".schedule-btn", function() { 
       console.log('schedulin some stuff!!');
-      $.get( {% url 'schedule' %}, function(data) {
-          console.log('loaded the form');
-          console.log(data);
+      $.get( "/schedule/" + {%  for i in con %} "{{i.id | safe}}" {% endfor %}, function(data) {
 
         if ($('.event-popup').hasClass('selected')) {
             $('.event-popup').fadeToggle(0).removeClass('selected');
@@ -713,11 +710,90 @@ $(function() {
 
   $("body").on("click",  ".schedule-close-btn", function(){
       $(this).parent().fadeToggle().removeClass('selected').css({'visibility': 'hidden', 'display': 'none'});
-      console.log($(this));
   });
 
+//copied from https://docs.djangoproject.com/en/1.7/ref/contrib/csrf/
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function create_post() {
+    var mydata = $('#schedule-form').serializeArray();
+   // var csrftoken = getCookie('csrftoken');
+    //mydata.push({ firstname: {% for i in con %} "{{i.id | safe}}" {% endfor %} }); 
+    //mydata.push(csrftoken);
+   // mydata[9][name] = 'firstname';
+    //mydata[9][value] = {%  for i in con %} "{{i.id | safe}}" {% endfor %};
+    //console.table(mydata);
+    $.ajax({
+        url : "/schedule/" + {%  for i in con %} "{{i.id | safe}}" {% endfor %}, // the endpoint
+        type : "POST", // http method
+        data : { 
+                  'firstname': {%  for i in con %} "{{i.id | safe}}" {% endfor %},
+                  'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val(), 
+                  'customer': $('#id_customer').val(),
+                  'title': $('#id_title').val(),
+                  'start_date_0': $('#id_start_date_0').val(),
+                  'start_date_1': $('#id_start_date_1').val(),
+                  'end_date_0': $('#id_end_date_0').val(),
+                  'end_date_1': $('#id_end_date_1').val(),
+                  'all_day': $('#id_all_day').is(':checked'),
+                  'repair': $('#id_repair').is(':checked'),
+                  'estimate': $('#id_estimate').is(':checked'),
+                  'installation': $('#id_installation').is(':checked'),
+                  'maintenance': $('#id_maintenance').is(':checked'),
+                  'value_care': $('#id_value_care').is(':checked'),
+                  'emergency': $('#id_emergency').is(':checked'),
+                  'description': $('#id_description').val(),
+                  'location': $('#id_location :selected').val(),
+               }, // data sent with the post request
+        success : function(json) {
+                      if (json.success == false) {
+                          if (json.__all__[0].code.length > 0) { //bring feild with error into focus
+                              var m = json.__all__[0].code 
+                              $(m).focus()
+                              var labelstring = m.split('#')[1];
+                              $('[for="' + labelstring + '"]').before("<div class='error-message'>"+ json.__all__[0].message +"</div>")
+                          } 
+                      
+                      } else {
+                          $('#schedule-form').children().each( function(k, v) {
+                              if (!$(this).is('label')) {
+                                $(this).val('');
+                              } 
+                          });
+
+                      }
+                      console.log(json); // log the returned json to the console
+                },
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#schedule-post-text').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+' '+err+
+                '<button class="close" data-dismiss="alert">&times;</button> </div>'); // add the error to the dom
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+    });    
+};
+
+  $('body').on('submit', '#schedule-form', function(event) {
+      if ( $("#schedule-form").children(".error-message") ){
+          $('.error-message').remove();
+      }      
+      event.preventDefault();
+      create_post();
+  });
 }); 
-
-
 </script>
 {% endblock %}

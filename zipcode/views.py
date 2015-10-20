@@ -2,12 +2,14 @@ from django.shortcuts import render
 import json, itertools, datetime
 from django.http import HttpResponseRedirect
 from django.http import HttpRequest, HttpResponse 
+from django.http import JsonResponse
 from zipcode.models import * 
 from zipcode.forms import *
 from django.core.mail import send_mail
 from zipcode.calendars import * 
 from django.views.generic.detail import DetailView
 from django.core import serializers
+from django.core.context_processors import csrf
 
 
 def day_or_night():
@@ -24,10 +26,12 @@ def home(request):
     monthly_specials = MonthlySpecial.objects.filter(special_active=True)
     return render(request, 'home.html', {'time_image': time_image, 'testimonials': testimonials, 'monthly_specials': monthly_specials})
 
+
 def monthly_special_detail(request, id, special):
     time_image = day_or_night()
     monthly_special = MonthlySpecial.objects.get(id = id)
     return render(request, 'monthly_special_detail.html', {'monthly_special': monthly_special, 'time_image': time_image})
+
 
 def results(request, postcode):
     con = Contractor.objects.filter(areacode=postcode).prefetch_related().order_by("lastname")
@@ -75,7 +79,6 @@ def post_testimonial(request, id):
     if request.method == 'POST':
         testimonial_form = TestimonialForm(request.POST,request.FILES)
         if testimonial_form.is_valid():
-            import pdb; pdb.set_trace()
             newform = testimonial_form.save(commit=False)
             newform.contractor_id = id
             newform.approved_status = False
@@ -87,12 +90,23 @@ def post_testimonial(request, id):
             return HttpResponse('error')
 
 
-def request_event(request):
+def request_event(request, id):
+    #import pdb; pdb.set_trace()
     data = request.POST if request.POST else None
+    if request.method == 'POST':
+        cust = Customer.objects.get(phone_number = data['customer'])
+        data = request.POST.copy()
+        data['customer'] = cust.pk
     requested_event = ContractorScheduleForm(data)
     if requested_event.is_valid():
+        requested_event.save(commit=False)
+        requested_event.firstname_id = id
         requested_event.save()
-        return HttpResponseRedirect('schedule/')
+        return HttpResponse("Thanks! We'll be in contact shortly")
+    if data is not None and requested_event.errors.as_data() is not None:
+        errors = {f: e.get_json_data() for f, e in requested_event.errors.items()}
+        errors['success'] = False
+        return JsonResponse(data=errors)    
     return render(request, 'request_event.html', {'requested_event':requested_event})
 
 
@@ -425,3 +439,8 @@ def contractor_detail_view(request, f,id,l):
                                                       'monthly_specials': monthly_specials,
                                                       'cal_man_cells': cal_man_cells
                                                       })
+
+
+def customer_create(request):
+    customer = "" 
+    return customer

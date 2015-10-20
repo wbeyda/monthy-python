@@ -1,46 +1,35 @@
 {% load staticfiles %}
 
-{% block content %}
 <div class="row">
 	<div class ="col-lg-2"></div>
 	<div class ="col-lg-8">
 		<form id="schedule-form" action="#" class="form-horizontal" enctype="multipart/form-data" method="post">
 			{% csrf_token %}
-      {% for field in requested_event %}
-          <label class="{% for class in field.label_classes %}{{ class }} {% endfor %}"
-          for="{{ field.name }}">{{ field.label }}</label>
-          {{ field }}
-      {% endfor %}
+      {{ requested_event }}
       <button type="submit" id="schedule-submit" value="Submit" class="btn btn-default">Submit</button>
 			<!--<input type="submit" id="career-submit"value="Submit" /> -->
 		</form>
 	</div>
-	<div class ="col-lg-2"></div>
+	<div class ="col-lg-2">
+    <div id="schedule-post-text"></div> 
+  </div>
 </div>
-{% endblock %}
 
-{% block extra-javascript %}
 <script src="{% static 'zipcode/js/jquery-timepicker-master/jquery.timepicker.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'zipcode/js/jquery-timepicker-master/jquery.timepicker.css' %}"/>
 
 <script type="text/javascript">
 $( document ).ready(function() {
-	var d = $("#id_start_date_1");
-	var e = $("#id_end_date_1");
-	d.each(function(i){
-		$(this).before("<label for='id_start_date_1'>Start Time:</label>");
-	});
-	
-	e.each(function(i){
-		$(this).before("<label for='id_start_date_1'>End Time:</label>");
-	});
+  $('[for="id_firstname"]').remove();
+	$("#id_start_date_1").before("<label for='id_start_date_1'>Start Time:</label>");
+
+	$("#id_end_date_1").before("<label for='id_end_date_1'>End Time:</label>");
 	
 	$(function() {
-		$( "#id_start_date_0" ).datepicker();
-		$( "#id_end_date_0" ).datepicker();
+		$( "#id_start_date_0" ).datepicker({firstDay: 1});
+		$( "#id_end_date_0" ).datepicker({firstDay: 1});
 		$( "#id_start_date_1" ).timepicker({step: 15, minTime: '6:00am',show2400: true, timeFormat: 'H:i'})	
 		$( "#id_end_date_1"   ).timepicker({step: 15, minTime: '6:00am',show2400: true, timeFormat: 'H:i'})	
 	});
 });
 </script>
-{% endblock %}

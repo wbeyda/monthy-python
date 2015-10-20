@@ -17,7 +17,16 @@ class ContractorAdmin(ImageCroppingMixin, admin.ModelAdmin):
     #prepopulated_fields = {"firstname": ("firstname",  'lastname',)}
     #readonly_fields = ('image_tag',)
     
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ( 'customerName' , 'email', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'state', 'zipcode', 'subscribed',)
+
+    def customerName(self, obj):
+        return obj.last_name + ', ' + obj.first_name
     
+    customerName.short_description = 'Customer Name'
+
+
 class CareerResumeAdmin(admin.ModelAdmin):
     list_display = ('name','address','email','phone','resume')
     fields = ('name','address','email','phone','resume')
@@ -26,7 +35,7 @@ class CareerResumeAdmin(admin.ModelAdmin):
 class ContractorScheduleAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('firstname', 'title', 'start_date', 'end_date',( 'all_day', 'estimate', 'repair', 'maintenance', 'installation',),'background_color','description',)
+            'fields': ('firstname', 'customer', 'title', 'start_date', 'end_date',( 'all_day', 'estimate', 'repair', 'maintenance', 'installation',),'background_color','description',)
         }),
         ('Location', {
             'classes': ('collapse',),
@@ -34,10 +43,15 @@ class ContractorScheduleAdmin(admin.ModelAdmin):
         }),
     )
 
-    list_display = ('id','firstname','title', 'start_date', 'end_date','all_day',)
+    list_display = ('id','firstname','getCustomerName', 'title', 'start_date', 'end_date','all_day',)
     list_filter = ['id']
+    list_display_links = ('firstname',)
     search_fields = ['title']
     date_hierarchy = 'start_date'
+    
+    def getCustomerName(self,obj):
+        return obj.customer.first_name + ', ' + obj.customer.last_name
+    getCustomerName.short_description = "Customer Name"
     
     def get_queryset(self, request):
         qs = super(ContractorScheduleAdmin, self).get_queryset(request)

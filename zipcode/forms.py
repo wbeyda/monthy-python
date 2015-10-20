@@ -1,5 +1,8 @@
 from django.forms import MultiWidget
 from django.forms import SplitDateTimeField  
+from django.forms import CharField 
+from django.forms.widgets import TextInput
+from django.forms.widgets import HiddenInput 
 from django import forms
 from zipcode.models import *
         
@@ -23,11 +26,15 @@ class ContractorScheduleForm(forms.ModelForm):
 
     class Meta:
         model = ContractorSchedule
-        fields = ['title', 'start_date','end_date', 'all_day', 'repair', 'estimate', 'installation', 'maintenance', 'description', 'location',]
-
+        fields = ['firstname','customer', 'start_date','end_date', 'all_day', 'repair', 'estimate', 'installation', 'maintenance', 'value_care', 'emergency', 'description', 'location',]
+        labels = {'customer': 'Phone'}
+        widgets = {
+                    'customer': TextInput( attrs= {'required': True, 'placeholder': '801-486-4418'}),
+                    'firstname': HiddenInput(),
+                  }
+        
     def __init__(self, *args, **kwargs):
         super(ContractorScheduleForm, self).__init__(*args, **kwargs)
-
         self.fields['start_date'] = SplitDateTimeField()
         self.fields['end_date'] = SplitDateTimeField()
 
@@ -46,4 +53,15 @@ def testimonialform_factory(qs):
             fields =     ['customer_name','customer_city','customer_testimonial','job','job_pic','job_pic_url','hashtags','socialtags']
             exclude = ['best_of']    
     return TestimonialForm
+
+
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'state', 'zipcode', 'subscribed'] 
+        exclude = ['special_notes']
+
+
+
+
 
