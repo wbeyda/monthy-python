@@ -60,18 +60,6 @@ class CareerResume(models.Model):
     phone   = models.IntegerField(max_length=10)
     resume  = models.FileField(upload_to='files/%Y/%m/%d')
 
-EVENT_COLORS  = [
-        ('eeeeee', _('gray')),
-        ('777777', _('dark-gray')),
-        ('ef3b70', _('red')),
-        ('2ebad1', _('blue')),
-        ('85d4f5',_('light-blue')),
-        ('57b449', _('green')),
-        ('000000', _('black')),
-        ('ffffff', _('white')),
-        ('fcda09', _('yellow')),
-    ]
-
 
 class ContractorSchedule(models.Model):
     firstname    = models.ForeignKey(Contractor)
@@ -88,9 +76,10 @@ class ContractorSchedule(models.Model):
     title        = models.CharField(_("title"), max_length=255, blank=True)
     description  = models.TextField(_("description"),blank=True)
     location     = models.ManyToManyField('Location', verbose_name=_('locations'), blank=True)
-    background_color = models.CharField(
-        _("background color"), max_length=10, choices=EVENT_COLORS, default='eeeeee'
-    )
+    completed    = models.BooleanField(_('completed'), default=False)
+    pending      = models.BooleanField(_('pending'), default=True)
+    approved     = models.BooleanField(_('approved'), default=False)
+
 
     def dispatch_number(self):
         pk = str(self.pk).zfill(5)
@@ -179,7 +168,7 @@ class ContractorSchedule(models.Model):
 
 
     def two_hour_blocks(self):
-        if self.start_date.day == self.end_date.day:
+        if self.start_date.day == self.end_date.day and self.start_date < self.end_date:
             block = self.end_date - self.start_date
             
             if block < datetime.timedelta(0, 7200):
@@ -382,6 +371,19 @@ TEXT_COLORS = [
         ('000000', _('black')),
         ('ffffff', _('white')),
     ]
+
+EVENT_COLORS  = [
+        ('eeeeee', _('gray')),
+        ('777777', _('dark-gray')),
+        ('ef3b70', _('red')),
+        ('2ebad1', _('blue')),
+        ('85d4f5',_('light-blue')),
+        ('57b449', _('green')),
+        ('000000', _('black')),
+        ('ffffff', _('white')),
+        ('fcda09', _('yellow')),
+    ]
+
 class MonthlySpecial(models.Model):
     special_pic          = models.FileField(upload_to='specials/%Y/%m/%d', blank=True, help_text="please make sure all images are the same width")
     special_text         = models.CharField( _('Special Text'), max_length=255)
@@ -404,3 +406,8 @@ class MonthlySpecial(models.Model):
     def clean(self):
         self.slugify_text()
 
+    def image_tag(self):
+        return u'<a href="' + self.special_pic.url + '"><img class="admin_img_preview" style="max-height:20em;" src=' + self.special_pic.url +'/></a>'
+
+    image_tag.short_description = 'Image'
+    image_tag.allow_tags = True 

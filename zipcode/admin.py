@@ -43,7 +43,7 @@ class ContractorScheduleAdmin(admin.ModelAdmin):
         }),
     )
 
-    list_display = ('id','firstname','getCustomerName', 'title', 'start_date', 'end_date','all_day',)
+    list_display = ('id','firstname','getCustomerName', 'title', 'start_date', 'end_date','all_day',  'approved', 'pending', 'completed')
     list_filter = ['id']
     list_display_links = ('firstname',)
     search_fields = ['title']
@@ -116,7 +116,7 @@ class TestimonialAdmin(admin.ModelAdmin):
 
 
 class MonthlySpecialAdmin(admin.ModelAdmin):
-    list_display = ('special_pic','special_text','special_color','special_active')
+    list_display = ('image_tag','special_pic', 'special_text','special_color','special_active')
     exclude = ('special_url',)
 
 
