@@ -117,10 +117,7 @@
               <div class="col-lg-4 col-md-4 hidden-sm hidden-xs"></div>
               <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <div class="event-day-header"><h2>Wednesday 22nd</h2>
-                 <div class="btn-group schedule-btn" role="group">
-                    <button type="button" class="btn btn-default">Schedule An Event</button>
-                  </div>
-                </div>
+              </div>
 <!--                <div class="col-time"><h3>9M</h3></div><div class="availablity-block"></div>
                 <div class="col-time-spacer"></div><div class="availablity-block"></div>
                 <div class="col-time"><h3>11AM</h3></div><div class="availablity-block"></div>
@@ -344,7 +341,8 @@ $( document ).ready(function() {
   var monthMapper = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; 
   var dayMapper = {'mon': 'Monday', 'tue': 'Tuesday', 'wed': 'Wednesday', 'thu': 'Thursday', 'fri':'Friday', 'sat':'Saturday', 'sun':'Sunday'};
   $.CurrentMonth = new Object();
-  var contractorID = {%  for i in con %} "{{i.id | safe}}" {% endfor %}; 
+  $.CurrentDate = {};
+  var contractorID ={% for i in con %} "{{i.id | safe}}" {% endfor %}; 
   var scedblo = [];
   var myDaysToReplace = [];
 
@@ -367,7 +365,7 @@ $( document ).ready(function() {
 $.each(ManagedHours, function(i){
     sb = sb + '<div class="col-time"><h3>' 
     + ManagedHours[i] 
-    + '</h3></div><div class="availablity-block"></div>'
+    + '</h3></div><button class="availablity-block"></button>'
     /* + '</div><div class="col-time-spacer">'
        + '</div><div class="availablity-block"></div>'*/;
     });
@@ -563,6 +561,9 @@ $(function() {
       var thismonth    = $(".month th:eq(1)").text().split(" ")[0].trim();
       var currentyear  = $(".month th:eq(1)").text().split(" ")[1] ;
       $.CurrentMonth.m = monthMapper.indexOf(thismonth) +1;
+      $.CurrentDate.month = monthMapper.indexOf(thismonth) +1;
+      $.CurrentDate.day = monthDate.split(' ')[0];
+      $.CurrentDate.year = currentyear;
       var currentMonthString = $.CurrentMonth.m.toString();
       var urlstring =  String("/cm/" + currentdate + "/"+ contractorID +"/"+ currentyear + "/" + currentMonthString)
 
@@ -686,9 +687,15 @@ $(function() {
   }); 
 
 
-  $('body').on("click", ".schedule-btn", function() { 
+  $('body').on("click", ".availablity-block", function() { 
       console.log('schedulin some stuff!!');
-      $.get( "/schedule/" + {%  for i in con %} "{{i.id | safe}}" {% endfor %}, function(data) {
+      console.log($.CurrentDate);
+      var get = $.grep(this.className.split(' '), function(v,i) { return v.indexOf('schedule-block-time-') ===0;}).join();
+      var hour = get.split('-')[3];
+      var cid = {%  for i in con %} "{{i.id | safe}}" {% endfor %};
+      var url = "/schedule/" + cid + "/" + $.CurrentDate.month + "/" + $.CurrentDate.day + "/" + $.CurrentDate.year + "/" + hour;
+ 
+      $.get( url, function(data) {
 
         if ($('.event-popup').hasClass('selected')) {
             $('.event-popup').fadeToggle(0).removeClass('selected');
@@ -794,6 +801,7 @@ function create_post() {
       event.preventDefault();
       create_post();
   });
+
 }); 
 </script>
 {% endblock %}

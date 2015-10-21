@@ -90,14 +90,16 @@ def post_testimonial(request, id):
             return HttpResponse('error')
 
 
-def request_event(request, id):
-    #import pdb; pdb.set_trace()
+def request_event(request, id, month=None, day=None, year=None, hour=None):
     data = request.POST if request.POST else None
     if request.method == 'POST':
         cust = Customer.objects.get(phone_number = data['customer'])
         data = request.POST.copy()
         data['customer'] = cust.pk
-    requested_event = ContractorScheduleForm(data)
+        requested_event = ContractorScheduleForm(data)
+    else:
+        start_date = datetime.datetime(int(year),int(month),int(day),int(hour)) 
+        requested_event = ContractorScheduleForm(initial = {'start_date': start_date})
     if requested_event.is_valid():
         requested_event.save(commit=False)
         requested_event.firstname_id = id
