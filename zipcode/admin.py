@@ -35,7 +35,7 @@ class CareerResumeAdmin(admin.ModelAdmin):
 class ContractorScheduleAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('firstname', 'customer', 'title', 'start_date', 'end_date',( 'all_day', 'estimate', 'repair', 'maintenance', 'installation',),'description',)
+            'fields': ('firstname', 'customer', ('requested','pending','completed'),'title', ('start_date', 'end_date'),( 'all_day', 'estimate', 'repair', 'maintenance', 'installation',),'description',)
         }),
         ('Location', {
             'classes': ('collapse',),
@@ -43,7 +43,7 @@ class ContractorScheduleAdmin(admin.ModelAdmin):
         }),
     )
 
-    list_display = ('id','firstname','getCustomerName', 'title', 'start_date', 'end_date','all_day',  'approved', 'pending', 'completed')
+    list_display = ('id','firstname','getCustomerName', 'title', 'start_date', 'end_date','all_day',  'requested', 'pending', 'completed')
     list_filter = ['id']
     list_display_links = ('firstname',)
     search_fields = ['title']

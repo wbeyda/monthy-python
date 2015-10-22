@@ -78,9 +78,15 @@ class ContractorSchedule(models.Model):
     description  = models.TextField(_("description"),blank=True)
     location     = models.ManyToManyField('Location', verbose_name=_('locations'), blank=True)
     completed    = models.BooleanField(_('completed'), default=False)
-    pending      = models.BooleanField(_('pending'), default=True)
-    approved     = models.BooleanField(_('approved'), default=False)
+    pending      = models.BooleanField(_('pending'), default=False)
+    requested    = models.BooleanField(_('requested'), default=True)
 
+
+    def incorrect_status(self):
+        if self.requested == self.pending:
+            raise ValidationError(_("Job cannot be Requested and Pending please uncheck one"), code="requested and pending are wrong")
+        if self.requested is True and self.completed is True:
+            raise ValidationError('Status cannot be in Requested and Completed, Please uncheck Requested', code="requested is true and completed is true")
 
     def dispatch_number(self):
         pk = str(self.pk).zfill(5)
@@ -91,10 +97,11 @@ class ContractorSchedule(models.Model):
         return self.title
     
     def start_date_before_now(self):
-        if self.start_date != None and self.start_date < timezone.now():
-            raise ValidationError(_('Start Date cannot be before now'),
-                                 code="#id_start_date_0", 
-                                  )
+        if self.pk is None:
+            if self.start_date != None and self.start_date < timezone.now():
+                raise ValidationError(_('Start Date cannot be before now'),
+                                     code="#id_start_date_0", 
+                                      )
 
     def clean_seconds(self):
         s = self.start_date 
@@ -120,7 +127,7 @@ class ContractorSchedule(models.Model):
         qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id,
                                                start_date__lte = self.start_date,
                                                end_date__gte = self.start_date,
-                                               end_date__lt = self.end_date,)
+                                               end_date__lt = self.end_date,).exclude(pk=self.pk )
         #----[1](2)[3][4](5)----
         if qs.exists():
             for i in qs:
@@ -132,8 +139,7 @@ class ContractorSchedule(models.Model):
         qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id,
                                                start_date__gte = self.start_date,
                                                start_date__lte = self.end_date,
-                                               end_date__gte = self.start_date,)
-        
+                                               end_date__gte = self.start_date,).exclude(pk=self.pk ) 
         #---(1)[2][3](4)[5]----
         if qs.exists():
             for i in qs:
@@ -144,8 +150,7 @@ class ContractorSchedule(models.Model):
                                           )
         qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id,
                                                start_date__gte = self.start_date,
-                                               end_date__lte = self.end_date,)
-        
+                                               end_date__lte = self.end_date,).exclude(pk=self.pk )
         #----(1)[2][3][4][5](6)----
         if qs.exists():
             for i in qs:
@@ -156,7 +161,7 @@ class ContractorSchedule(models.Model):
                                           )
         qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id,
                                                start_date__lte = self.start_date,
-                                               end_date__gte = self.end_date,)
+                                               end_date__gte = self.end_date,).exclude(pk= self.pk,)
         
         #----[2](3)(4)[5]----
         if qs.exists():
@@ -221,8 +226,9 @@ class ContractorSchedule(models.Model):
         if datetime.datetime.combine(datetime.datetime.today(), pet) < datetime.datetime.combine(datetime.datetime.today(), seh) == False: 
             raise ValidationError(_('This is after the Contractors prefered ending hour. An email has been sent to ask for permission'),
                                      code='#id_end_date_1')
-    
+ 
     def clean(self):
+        self.incorrect_status()    
         self.start_date_before_now()
         self.clean_seconds()
         self.double_booked()
@@ -231,7 +237,7 @@ class ContractorSchedule(models.Model):
         self.is_chunk()
         self.multiple_days()        
         self.all_day_double()
-        self.day_is_full()
+        #self.day_is_full()
 
     def save(self, *args, **kwargs):
         super(ContractorSchedule, self).save(*args, **kwargs)
@@ -243,7 +249,6 @@ class ContractorSchedule(models.Model):
             self.after_prefered_end_time()
         except ValidationError as e:
             return e
-            
 
 HOURS = ['Midnight','12:15AM','12:30AM,12:45AM']
 
@@ -368,7 +373,6 @@ class Testimonial(models.Model):
     image_tag.allow_tags = True   
 
     def customer_job_mismatch(self):
-        import pdb; pdb.set_trace()
         if self.customer.id != self.job.customer.id: 
             raise ValidationError(_("Customer Job Mismatch"), code="wrong job")
     def clean(self):
