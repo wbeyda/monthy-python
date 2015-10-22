@@ -51,7 +51,8 @@ class Customer(models.Model):
     special_notes      = models.TextField(default='', blank=True)
 
     def __unicode__(self):
-        return self.phone_number
+        print self.phone_number
+        return unicode(self.phone_number)
 
 class CareerResume(models.Model):
     name    = models.CharField(max_length=20)
@@ -205,7 +206,7 @@ class ContractorSchedule(models.Model):
             raise ValidationError(_('This day is already full.'), code="#id_start_date_0")
 
     def before_prefered_start_time(self):
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
         a = Availability.objects.get(id=self.firstname_id)
         pst = a.prefered_starting_hours #datetime.time(9,0) 
         stt = datetime.time(self.start_date.hour, self.start_date.minute)
@@ -289,7 +290,7 @@ class Gallery(models.Model):
         if self.author is not None:
             return self.author
         else:
-            return self.testimonial.customer_name 
+            return self.testimonial.customer 
 
     def picture_is_job_pic(self):
         if self.testimonial != None and not self.picture:
@@ -303,7 +304,7 @@ class Gallery(models.Model):
 
     def author_is_customer_name(self):
         if self.testimonial != None and self.author == u'':
-            self.author = self.testimonial.customer_name
+            self.author = self.testimonial.customer
         return self.author
 
     def sourceurl_is_job_pic_url(self):
@@ -346,8 +347,7 @@ class Gallery(models.Model):
 
   
 class Testimonial(models.Model):
-    customer_name        = models.CharField(_('customer name'), max_length=255)
-    customer_city        = models.CharField(_('customer city'), max_length=255)
+    customer             = models.ForeignKey(Customer)
     customer_testimonial = models.TextField(_('customer testimonial'))
     customer_date        = models.DateTimeField(_("customer date"), auto_now_add=True)
     contractor           = models.ForeignKey(Contractor)
@@ -360,12 +360,19 @@ class Testimonial(models.Model):
     best_of              = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.customer_name 
+        return unicode(self.customer) 
 
     def image_tag(self):
         return u'<img class="admin_img_preview" style="max-height:20em;" src=' + self.job_pic.url +'/>'
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True   
+
+    def customer_job_mismatch(self):
+        import pdb; pdb.set_trace()
+        if self.customer.id != self.job.customer.id: 
+            raise ValidationError(_("Customer Job Mismatch"), code="wrong job")
+    def clean(self):
+        self.customer_job_mismatch()
 
 TEXT_COLORS = [
         ('000000', _('black')),
@@ -407,7 +414,8 @@ class MonthlySpecial(models.Model):
         self.slugify_text()
 
     def image_tag(self):
-        return u'<a href="' + self.special_pic.url + '"><img class="admin_img_preview" style="max-height:20em;" src=' + self.special_pic.url +'/></a>'
+        preview_image =u'<img class="admin_img_preview" style="max-height:20em;" src=' + self.special_pic.url + '/>'
+        return preview_image
 
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True 

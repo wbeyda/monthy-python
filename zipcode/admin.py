@@ -35,7 +35,7 @@ class CareerResumeAdmin(admin.ModelAdmin):
 class ContractorScheduleAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('firstname', 'customer', 'title', 'start_date', 'end_date',( 'all_day', 'estimate', 'repair', 'maintenance', 'installation',),'background_color','description',)
+            'fields': ('firstname', 'customer', 'title', 'start_date', 'end_date',( 'all_day', 'estimate', 'repair', 'maintenance', 'installation',),'description',)
         }),
         ('Location', {
             'classes': ('collapse',),
@@ -73,10 +73,9 @@ class GalleryAdmin(admin.ModelAdmin):
 class TestimonialAdmin(admin.ModelAdmin):
     list_display = ('approved_status',
                     'contractor',
-                    'customer_name',
+                    'customer',
                     'customer_date',
-                    'customer_city',
-                    'customer_testimonial',
+                    'truncate_words',
                     'job',
                     'image_tag',
                     'job_pic_url',
@@ -96,6 +95,13 @@ class TestimonialAdmin(admin.ModelAdmin):
                     'fields': ('image_tag'),
                     'classes': ('extrapretty'),
                     }
+
+    def truncate_words(self, obj, length=350, suffix="..."):
+        if len(obj.customer_testimonial) <= length:
+            return obj.customer_testimonial
+        else:
+            return ' '.join(obj.customer_testimonial[:length].split(' ')[0:-1]) + suffix
+    truncate_words.short_description = 'Customer Testimonial'        
 
     def mark_as_approved(self, request, queryset):
           rows_updated = queryset.update(approved_status = True)

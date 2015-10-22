@@ -42,7 +42,8 @@ class ContractorScheduleForm(forms.ModelForm):
 class TestimonialForm(forms.ModelForm):
     class Meta:
         model = Testimonial
-        fields = ['customer_name','customer_city','customer_testimonial','job','job_pic','job_pic_url','hashtags','socialtags']
+        fields = ['customer','customer_testimonial','job','job_pic','job_pic_url','hashtags','socialtags']
+    
 
 def testimonialform_factory(qs):
 
@@ -50,8 +51,14 @@ def testimonialform_factory(qs):
         job = forms.ModelMultipleChoiceField(queryset=qs)
         class Meta:
             model = Testimonial
-            fields =     ['customer_name','customer_city','customer_testimonial','job','job_pic','job_pic_url','hashtags','socialtags']
-            exclude = ['best_of']    
+            fields =     ['customer','customer_testimonial','job','job_pic','job_pic_url','hashtags','socialtags']
+            labels = {'customer': 'Phone'}
+            widgets = {
+                        'customer': TextInput( attrs= {'required': True, 'placeholder': '801-486-4418'}),
+                        'best_of': HiddenInput(),
+                      }
+
+
     return TestimonialForm
 
 
