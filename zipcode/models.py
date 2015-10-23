@@ -87,6 +87,12 @@ class ContractorSchedule(models.Model):
             raise ValidationError(_("Job cannot be Requested and Pending please uncheck one"), code="requested and pending are wrong")
         if self.requested is True and self.completed is True:
             raise ValidationError('Status cannot be in Requested and Completed, Please uncheck Requested', code="requested is true and completed is true")
+        if self.requested is False and self.pending is False and self.completed is False:
+            raise ValidationError('All statuses cannot be unchecked please check something', code="nothing is checked")
+        if self.requested is True and self.pending is True and self.completed is True:
+            raise ValidationError('All statuses cannot be checked please uncheck something', code="all are checked")
+        if self.pending is False and self.completed is True:
+            raise ValidationError(_('Was this job completed without a pending phase? If not please check pending also'), code='this is just wrong')
 
     def dispatch_number(self):
         pk = str(self.pk).zfill(5)
@@ -193,7 +199,7 @@ class ContractorSchedule(models.Model):
             qs = ContractorSchedule.objects.filter(firstname_id = self.firstname_id
                                                   ).filter(all_day = True
                                                   ).filter(start_date__gt = newStartDate
-                                                  ).filter(start_date__lt = newEndDate)
+                                                  ).filter(start_date__lt = newEndDate).exclude(pk=self.pk)
                                                   
             if qs.exists():
                 raise ValidationError(_('This day is already booked all day.'), code="#id_all_day")
@@ -280,17 +286,12 @@ class Location(models.Model):
         return self.name
 
 class Gallery(models.Model):
-    picture     = models.FileField(upload_to='gallery/%Y/%m/%d', blank=True, help_text="select your own or select a Testimonial with a pic")
     caption     = models.CharField(_('caption'),max_length=3000, blank=True, help_text="write your own or select a Customers Testimonial")
-    author      = models.CharField(_('author'), max_length=255, blank=True,  help_text="Who is the pic Author? or select a Testimonial")
-    sourceURL   = models.URLField(_('source URL'), blank=True,               help_text="paste the URL or let me get it from a Testimonial")
-    picdate     = models.DateTimeField(_("pic date"), blank=True,            help_text="select the date for this job or just select a Testimonial" )
-    contractor  = models.ForeignKey(Contractor)
-    job         = models.ForeignKey(ContractorSchedule, default=00000)
-    hashtags    = models.CharField(_('hashtags'), max_length=255, blank=True, default=None)
-    socialtags  = models.CharField(_('socialtags'), max_length=255, blank=True, default=None)
     testimonial = models.ForeignKey('Testimonial', blank=True, default=None)
 
+    def __str__(self):
+        return self.testimonial.customer.first_name + " " +self.testimonial.customer.last_name
+"""
     def __str__(self):
         if self.author is not None:
             return self.author
@@ -349,7 +350,7 @@ class Gallery(models.Model):
         self.hashtags_from_testimonials()
         self.socialtags_from_testimonials()
         self.contractor_from_testimonials() 
-
+"""
   
 class Testimonial(models.Model):
     customer             = models.ForeignKey(Customer)

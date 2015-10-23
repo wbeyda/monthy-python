@@ -169,25 +169,25 @@
         <h1 class="monthly">Testimonials</h1>    
     </div>
     {% for i in testimonials %}
-    {% if forloop.first  %}
-        <div class="row">
-            <div class="col-md-6 col-sm-12 col-xs-12 home-testimonials">
-                <span class="test_customer_name"><mark>{{ i.customer_name|title }}</mark></span><span> from</span>
-                <span class="test_customer_city"><mark>{{ i.customer_city | title}}</mark></span><span> had this to say about </span>
-                <span class="test_contractor"><mark>{{ i.contractor| title }}'s</mark> job: </span></br></br>
-                <p class="test_testimonial"><blockquote>{{ i.customer_testimonial }}<BR><BR><footer>{{ i.customer_name|title}} 
-                from <cite title="{{i.customer_city}}">{{ i.customer_city| title }}</cite></footer></blockquote></p>
-            </div>
-    {% else %}
-            <div class="col-md-6 col-sm-12 col-xs-12  home-testimonials">
-                <span class="test_customer_name"><mark>{{ i.customer_name|title }}</mark></span><span> from</span>
-                <span class="test_customer_city"><mark>{{ i.customer_city | title}}</mark></span><span> had this to say about </span>
-                <span class="test_contractor"><mark>{{ i.contractor| title }}'s</mark> job: </span></br></br>
-                <p class="test_testimonial"><blockquote>{{ i.customer_testimonial }}<BR><BR><footer>{{ i.customer_name|title}} 
-                from <cite title="{{i.customer_city}}">{{ i.customer_city| title }}</cite></footer></blockquote></p>
-            </div>
-    {% endif %}
-        {% endfor %}
+        {% if forloop.first  %}
+            <div class="row">
+                <div class="col-md-6 col-sm-12 col-xs-12 home-testimonials">
+                    <span class="test_customer_name"><mark>{{ i.customer.first_name|title }}</mark></span><span> from</span>
+                    <span class="test_customer_city"><mark>{{ i.customer.city | title}}</mark></span><span> had this to say about </span>
+                    <span class="test_contractor"><mark>{{ i.contractor| title }}'s</mark> job: </span></br></br>
+                    <p class="test_testimonial"><blockquote>{{ i.customer_testimonial }}<BR><BR><footer>{{ i.customer.first_name|title}} 
+                    from <cite title="{{i.customer.city}}">{{ i.customer.city| title }}</cite></footer></blockquote></p>
+                </div>
+        {% else %}
+                <div class="col-md-6 col-sm-12 col-xs-12  home-testimonials">
+                    <span class="test_customer_name"><mark>{{ i.customer.first_name|title }}</mark></span><span> from</span>
+                    <span class="test_customer_city"><mark>{{ i.customer.city | title}}</mark></span><span> had this to say about </span>
+                    <span class="test_contractor"><mark>{{ i.contractor| title }}'s</mark> job: </span></br></br>
+                    <p class="test_testimonial"><blockquote>{{ i.customer_testimonial }}<BR><BR><footer>{{ i.customer.first_name|title}} 
+                    from <cite title="{{i.customer.city}}">{{ i.customer.city| title }}</cite></footer></blockquote></p>
+                </div>
+        {% endif %}
+    {% endfor %}
   </div>
 </div> 
 {% endblock  %}

@@ -49,22 +49,22 @@
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 gallery">  
                         <ul>
                         {% for i in gallery %}
-                            <li><img class="gallery-pic" src="/media/{{i.picture}}"></br>
+                            <li><img class="gallery-pic" src="/media/{{i.testimonial.job_pic}}"></br>
                             {% if i.sourceURL %}
-                                <a  class="view-source-image" href="{{i.sourceURL}}">view source...</a></br>
+                                <a  class="view-source-image" href="{{i.testimonial.job_pic_url}}">view source...</a></br>
                             {%endif%}
                             <p class="description">{{i.caption}}</p>
-                            <h3>Author: {{i.author}}</h3>
+                            <h3>Author: {{i.testimonial.customer.first_name}}</h3>
                             
-                            {% if i.hashtags %}
+                            {% if i.testimonial.hashtags %}
                                 <span>Hashtags:</span>
-                                <a href=""class="hashtags">{{ i.hashtags }}</a></br>
+                                <a href=""class="hashtags">{{ i.testimonial.hashtags }}</a></br>
                             {% endif %}
-                            {% if i.socialtags %} 
+                            {% if i.testimonial.socialtags %} 
                                <span>Socialtags:</span>
-                               <a href="" class="socialtags">{{ i.socialtags }}</a></br>
+                               <a href="" class="socialtags">{{ i.testimonial.socialtags }}</a></br>
                             {% endif  %}
-                            <h5>Date: {{i.picdate}}</h5>
+                            <h5>Date: {{i.testimonial.customer_date}}</h5>
                             <a href="#" class="unslider-arrow prev"><span class="glyphicon glyphicon-chevron-left"></span>Previous slide</a>
                             <a href="#" class="unslider-arrow next"><span class="glyphicon glyphicon-chevron-right"></span>Next slide</a>
                             </li>

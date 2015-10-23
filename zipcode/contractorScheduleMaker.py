@@ -1,10 +1,12 @@
 import random
 import datetime
+import glob
+import os
 from faker import Faker
 from django.core.exceptions import ValidationError
 
-
 fake = Faker()
+gallery_pics = glob.glob(os.path.expanduser('~/Desktop/gallery/*.*'))
 
 def begining_of_the_month():
     d = datetime.datetime.now()
@@ -17,7 +19,6 @@ def end_of_the_month():
     return d
 
 while True:
-    #import pdb; pdb.set_trace()
     cust = Customer( first_name = fake.first_name(),
                           last_name = fake.last_name(),
                           email = fake.email(),
@@ -31,7 +32,6 @@ while True:
                           special_notes = fake.paragraph() , 
                         )
     cust.save()
-
 
     fn = Contractor.objects.get(id=random.randint(1,2))
     sd = fake.date_time_between_dates(datetime_start = begining_of_the_month(), datetime_end= end_of_the_month())
@@ -60,7 +60,6 @@ while True:
                         title=tt,
                         description=dc,
                       )
-    print('start and end: ', sd,ed) 
 
     try:
        # c.start_date_before_now()
@@ -75,6 +74,21 @@ while True:
         c.before_prefered_start_time()
         c.after_prefered_end_time()
         c.save()
+        
+        testi = Testimonial(customer= cust,
+                            customer_testimonial = fake.paragraph(),
+                            customer_date = fake.date_time_between_dates(datetime_start = begining_of_the_month(), datetime_end= end_of_the_month()),
+                            contractor = c.firstname,
+                            job = c,
+                            job_pic = random.choice(gallery_pics),
+                            job_pic_url = fake.uri() + fake.uri_path(),
+                            hashtags = '#' + fake.word(),
+                            socialtags = '@'+ fake.company_email().split('@')[1].split('.')[0],
+                            approved_status = random.randint(0,1),
+                            best_of = random.randint(0,1),
+                    )
+        testi.save()
+        print "MADE ONE!! ", c.id
 
     except ValidationError as v:
         cust.delete()
@@ -83,3 +97,5 @@ while True:
     else:
         break
 
+
+    

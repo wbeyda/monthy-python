@@ -62,7 +62,7 @@ class ContractorScheduleAdmin(admin.ModelAdmin):
 
 
 class GalleryAdmin(admin.ModelAdmin):
-    list_display = ('author','picdate','picture','caption','sourceURL','contractor','job','testimonial','hashtags','socialtags')
+    list_display = ('caption','testimonial',)
 
     def get_queryset(self, request):
         qs = super(GalleryAdmin, self).get_queryset(request)
