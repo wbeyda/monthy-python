@@ -1,0 +1,11 @@
+<div class="row">
+	<div class ="col-lg-2"></div>
+	<div class ="col-lg-8">
+		<form id="customer-create" action="#" class="form-horizontal" enctype="multipart/form-data" method="post">
+			{% csrf_token %}
+      {{ customer }}
+      <button type="submit" id="customer-create-submit" value="Submit" class="btn btn-default">Submit</button>
+		</form>
+	</div>
+	<div class ="col-lg-2"></div>
+</div>
