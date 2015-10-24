@@ -35,7 +35,7 @@ class CareerResumeAdmin(admin.ModelAdmin):
 class ContractorScheduleAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('firstname', 'customer', ('requested','pending','completed'),'title', ('start_date', 'end_date'),( 'all_day', 'estimate', 'repair', 'maintenance', 'installation',),'description',)
+            'fields': ('firstname', 'customer', ('requested','pending','completed','cancelled'),'title', ('start_date', 'end_date'),( 'all_day', 'estimate', 'repair', 'maintenance', 'installation',),'description',)
         }),
         ('Location', {
             'classes': ('collapse',),
@@ -43,7 +43,7 @@ class ContractorScheduleAdmin(admin.ModelAdmin):
         }),
     )
 
-    list_display = ('id','firstname','getCustomerName', 'title', 'start_date', 'end_date','all_day',  'requested', 'pending', 'completed')
+    list_display = ('id','firstname','getCustomerName', 'title', 'start_date', 'end_date','all_day',  'requested', 'pending', 'completed','cancelled')
     list_filter = ['id']
     list_display_links = ('firstname',)
     search_fields = ['title']
@@ -62,7 +62,12 @@ class ContractorScheduleAdmin(admin.ModelAdmin):
 
 
 class GalleryAdmin(admin.ModelAdmin):
-    list_display = ('caption','testimonial',)
+    list_display = ('get_customer_name','caption')
+    fields = ('caption',) 
+
+    def get_customer_name(self, obj):
+        return obj.testimonial.customer.last_name + ", " + obj.testimonial.customer.first_name
+    get_customer_name.short_description = "Customer Name"
 
     def get_queryset(self, request):
         qs = super(GalleryAdmin, self).get_queryset(request)
@@ -70,18 +75,18 @@ class GalleryAdmin(admin.ModelAdmin):
             return qs
         return qs.filter(contractor__user__username = request.user.username)
 
-class TestimonialAdmin(admin.ModelAdmin):
+class TestimonialAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ('approved_status',
+                    'best_of',
                     'contractor',
-                    'customer',
+                    'get_customer_name',
                     'customer_date',
                     'truncate_words',
                     'job',
                     'image_tag',
                     'job_pic_url',
                     'hashtags',
-                    'socialtags',
-                    'best_of',)
+                    'socialtags',)
 
     '''if User.is_staff:
         has_change_permission(best_of) = True
@@ -95,6 +100,10 @@ class TestimonialAdmin(admin.ModelAdmin):
                     'fields': ('image_tag'),
                     'classes': ('extrapretty'),
                     }
+
+    def get_customer_name(self,obj):
+        return obj.customer.first_name + ", " + obj.customer.last_name
+    get_customer_name.short_description = "Customer Name"
 
     def truncate_words(self, obj, length=350, suffix="..."):
         if len(obj.customer_testimonial) <= length:

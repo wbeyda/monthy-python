@@ -47,7 +47,7 @@ class Customer(models.Model):
     city               = models.CharField(max_length=200)
     state              = USStateField() 
     zipcode            = USZipCodeField() 
-    subscribed         = models.BooleanField(default=True)
+    subscribed         = models.BooleanField(default=True, help_text="Click to Subscribe to Our Monthly Newsletter")
     special_notes      = models.TextField(default='', blank=True)
 
     def __unicode__(self):
@@ -80,6 +80,7 @@ class ContractorSchedule(models.Model):
     completed    = models.BooleanField(_('completed'), default=False)
     pending      = models.BooleanField(_('pending'), default=False)
     requested    = models.BooleanField(_('requested'), default=True)
+    cancelled    = models.BooleanField(_('cancelled'), default=False)
 
 
     def incorrect_status(self):
@@ -93,6 +94,8 @@ class ContractorSchedule(models.Model):
             raise ValidationError('All statuses cannot be checked please uncheck something', code="all are checked")
         if self.pending is False and self.completed is True:
             raise ValidationError(_('Was this job completed without a pending phase? If not please check pending also'), code='this is just wrong')
+        if self.cancelled is True and self.completed is True:
+            raise ValidationError(_('This job is being cancelled please uncheck completed'), code="cancelled job")
 
     def dispatch_number(self):
         pk = str(self.pk).zfill(5)
@@ -358,12 +361,13 @@ class Testimonial(models.Model):
     customer_date        = models.DateTimeField(_("customer date"), auto_now_add=True)
     contractor           = models.ForeignKey(Contractor)
     job                  = models.ForeignKey(ContractorSchedule, unique=True)
-    job_pic              = models.FileField(upload_to='testimonial/%Y/%m/d/%H%M')
+    job_pic              = models.ImageField(upload_to='testimonial/%Y/%m/d/%H%M')
     job_pic_url          = models.CharField(_('job pic url'), max_length=255, blank=True)
     hashtags             = models.CharField(_('hashtags'), max_length=255, blank=True)
     socialtags           = models.CharField(_('socialtags'), max_length=255, blank=True)
     approved_status      = models.BooleanField(default=False)
     best_of              = models.BooleanField(default=False)
+    cropping             = ImageRatioField('job_pic', '600x800')
 
     def __unicode__(self):
         return unicode(self.customer) 
@@ -372,6 +376,11 @@ class Testimonial(models.Model):
         return u'<img class="admin_img_preview" style="max-height:20em;" src=' + self.job_pic.url +'/>'
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True   
+
+    def bestof_without_approved(self):
+        if self.approved_status is False and self.best_of is True:
+            self.approved_status = True
+            return self.approved_status 
 
     def customer_job_mismatch(self):
         if self.customer.id != self.job.customer.id: 

@@ -134,6 +134,7 @@
               </div>
             </div>
             <div class="schedule-form"></div>
+            <div class="customer-form"></div>
 
               
 			</div>
@@ -719,6 +720,11 @@ $(function() {
       $(this).parent().fadeToggle().removeClass('selected').css({'visibility': 'hidden', 'display': 'none'});
   });
 
+ $("body").on("click",  ".no-phone-close", function(){
+      $(this).parent().fadeToggle().removeClass('selected').css({'visibility': 'hidden', 'display': 'none'});
+  });
+
+
 //copied from https://docs.djangoproject.com/en/1.7/ref/contrib/csrf/
 function getCookie(name) {
     var cookieValue = null;
@@ -736,17 +742,11 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function create_post() {
+function schedule_post() {
     var mydata = $('#schedule-form').serializeArray();
-   // var csrftoken = getCookie('csrftoken');
-    //mydata.push({ firstname: {% for i in con %} "{{i.id | safe}}" {% endfor %} }); 
-    //mydata.push(csrftoken);
-   // mydata[9][name] = 'firstname';
-    //mydata[9][value] = {%  for i in con %} "{{i.id | safe}}" {% endfor %};
-    //console.table(mydata);
     $.ajax({
         url : "/schedule/" + {%  for i in con %} "{{i.id | safe}}" {% endfor %}, // the endpoint
-        type : "POST", // http method
+        type : "POST", 
         data : { 
                   'firstname': {%  for i in con %} "{{i.id | safe}}" {% endfor %},
                   'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val(), 
@@ -767,6 +767,15 @@ function create_post() {
                   'location': $('#id_location :selected').val(),
                }, // data sent with the post request
         success : function(json) {
+                      if (json.error == "Customer matching query does not exist.") {
+                          $('#schedule-post-text').html("<button class='close no-phone-close'>&times;</button>"+ 
+                                                        "<div class='alert-box alert radius'"+
+                                                        " data-hide>Oops! We don't know that phone number."+
+                                                        " Maybe you mistyped it. Click Okay to join us.<br>"+
+                                                        "<button type='button' class='okay-customer btn btn-default btn-warning'>Okay</button>"+ 
+                                                        "</div>").css({"visibility":"visible", "display": "block"}); 
+                          return true;
+                      }
                       if (json.success == false) {
                           if (json.__all__[0].code.length > 0) { //bring feild with error into focus
                               var m = json.__all__[0].code 
@@ -781,25 +790,68 @@ function create_post() {
                                 $(this).val('');
                               } 
                           });
-
                       }
                       console.log(json); // log the returned json to the console
                 },
-        // handle a non-successful response
-        error : function(xhr,errmsg,err) {
-            $('#schedule-post-text').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+' '+err+
-                '<button class="close" data-dismiss="alert">&times;</button> </div>'); // add the error to the dom
-            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-        }
+           }).fail(function(xhr, errmsg, err){
+                 $('#schedule-post-text').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+' '+err+
+                 '<button class="close" data-dismiss="alert">&times;</button> </div>'); // add the error to the dom
+                 console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
     });    
 };
+
+function customer_post(){
+    console.log("creatin' a user!");
+    var mydata = $('#customer-create').serializeArray();
+    console.log(mydata);
+    $.post("/customer/", mydata, function(){
+        console.log('posted'); 
+    }).done(function(){
+        console.log('done');
+        $('#customer-create-submit').attr({"type": "button", "class": "customer-back-to-previous-btn btn btn-lg btn-success",
+                                           "data-placement":"top", "data-toggle": "popover",
+                                           "title": "Success! You Have Joined Us.","role": "button", 
+                                           "data-content": "Click here to go back to your Schedule Request and input your phone number"});
+        $('#customer-create-submit').popover('show');
+    }).fail(function(xhr, errmsg, err){
+        console.log('failed');
+        console.log("xhr:", xhr);
+        console.log("errmsg:", errmsg);
+        console.log("err:", err);
+    });
+}
+
+  $('body').on('click', '.customer-back-to-previous-btn', function(event) {
+      $('.customer-form').fadeToggle();
+      $('.schedule-form').fadeToggle();
+      if ( $("#id_phone_number").val() != "") {
+          customer_phone_number = $("#id_phone_number").val();
+          $("#id_customer").val(customer_phone_number);
+      }
+  });
+
+  $('body').on('click', '.okay-customer', function(event) {
+      $('#schedule-post-text').fadeToggle();
+      $('.schedule-form').fadeToggle();
+      $.get("/customer/", function(data){
+          $('.customer-form').html(data);
+      });
+  });
+
+  $('body').on('submit', '#customer-create', function(event) {
+      if ( $("#customer-create").children(".error-message") ){
+          $('.error-message').remove();
+      }      
+      event.preventDefault();
+      customer_post();
+  });
 
   $('body').on('submit', '#schedule-form', function(event) {
       if ( $("#schedule-form").children(".error-message") ){
           $('.error-message').remove();
       }      
       event.preventDefault();
-      create_post();
+      schedule_post();
   });
 
 }); 

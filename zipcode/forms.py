@@ -67,6 +67,10 @@ class CustomerForm(forms.ModelForm):
         model = Customer
         fields = ['first_name', 'last_name', 'email', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'state', 'zipcode', 'subscribed'] 
         exclude = ['special_notes']
+        widgets = {
+                      'special_notes': HiddenInput(),
+                  }
+
 
 
 

@@ -8,3 +8,4 @@ db.sqlite3
 zipcode/migrations/*
 robots.txt
 static/*
+athomeservices/*pyc

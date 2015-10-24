@@ -6,14 +6,42 @@
   top: 2em;
   left: 3em;
 }
+div.popover {
+  color: black;
+}
+select#id_state {
+  width: 100%;
+  margin: 1em;
+}
+button#customer-create-submit {
+  width: 100%;
+}
+#customer-create input {
+  margin: 1em;
+  display: block;
+  width: 100%;
+}
+form#customer-create {
+  background-color: deepskyblue;
+  width: 42em;
+  padding: 2em;
+  position: relative;
+  bottom: 50em;
+  left: 7em;
+  color: white;
+}
 #schedule-form input:focus {
   border-style: solid;
   border-color: red;
 }
 .alert {
-  background-color: red;
+  background-color: #ef3b70;
   width: 10em;
   color: white;
+}
+.no-phone-close {
+  position: relative;
+  left: 5em;
 }
 .schedule-btn {
   background: #f9d907;

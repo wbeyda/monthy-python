@@ -93,7 +93,11 @@ def post_testimonial(request, id):
 def request_event(request, id, month=None, day=None, year=None, hour=None):
     data = request.POST if request.POST else None
     if request.method == 'POST':
-        cust = Customer.objects.get(phone_number = data['customer'])
+        try:
+            cust = Customer.objects.get(phone_number = data['customer'])
+        except Customer.DoesNotExist as e:
+            customer_error = {'error': str(e)}
+            return JsonResponse(data=customer_error)
         data = request.POST.copy()
         data['customer'] = cust.pk
         requested_event = ContractorScheduleForm(data)
@@ -105,7 +109,7 @@ def request_event(request, id, month=None, day=None, year=None, hour=None):
         requested_event.firstname_id = id
         requested_event.save()
         return HttpResponse("Thanks! We'll be in contact shortly")
-    if data is not None and requested_event.errors.as_data() is not None:
+    elif data is not None and requested_event.errors.as_data() is not None:
         errors = {f: e.get_json_data() for f, e in requested_event.errors.items()}
         errors['success'] = False
         return JsonResponse(data=errors)    
@@ -142,7 +146,7 @@ def get_resume(request):
 
 
 def show_gallery(request):
-    gallery = Gallery.objects.all().prefetch_related()
+    gallery = Gallery.objects.filter(testimonial__approved_status = True, testimonial__best_of = True)
     time_image = day_or_night() 
     return render(request, 'gallery.html', {'gallery':gallery,'time_image': time_image})
     
@@ -423,7 +427,7 @@ def contractor_detail_view(request, f,id,l):
     con = Contractor.objects.filter(id=id).prefetch_related()
     avail = Availability.objects.filter(contractor_id=id).prefetch_related()
     avail = serializers.serialize("json", avail)
-    testimonials = Testimonial.objects.filter(contractor_id=id).prefetch_related().exclude(approved_status=False)
+    testimonials = Testimonial.objects.filter(contractor_id=id, approved_status = True).prefetch_related()
     htmlcalendar = contractor_calendar(con)
     from django.forms.models import inlineformset_factory
     conschedule = ContractorSchedule.objects.filter(firstname_id=id)
@@ -442,7 +446,15 @@ def contractor_detail_view(request, f,id,l):
                                                       'cal_man_cells': cal_man_cells
                                                       })
 
-
 def customer_create(request):
-    customer = "" 
-    return customer
+    if request.method == 'POST':
+        customer = CustomerForm(request.POST)
+        if customer.is_valid():
+            customer.save()
+            thanks = {'thanks': "Thanks for joining us!"}
+            return JsonResponse(data=thanks)
+    else:
+        customer = CustomerForm()
+    return render(request, 'customer_create.html', {'customer': customer})
+
+
