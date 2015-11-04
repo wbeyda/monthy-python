@@ -10,6 +10,7 @@ from zipcode.calendars import *
 from django.views.generic.detail import DetailView
 from django.core import serializers
 from django.core.context_processors import csrf
+from django.core.mail import send_mail
 
 
 def day_or_night():
@@ -91,6 +92,7 @@ def post_testimonial(request, id):
 
 
 def request_event(request, id, month=None, day=None, year=None, hour=None):
+    import pdb; pdb.set_trace()
     data = request.POST if request.POST else None
     if request.method == 'POST':
         try:
@@ -108,6 +110,19 @@ def request_event(request, id, month=None, day=None, year=None, hour=None):
         requested_event.save(commit=False)
         requested_event.firstname_id = id
         requested_event.save()
+
+        contractor_subject = "You have a new job request!"
+        contractor_message = "you have a new job request for job number" + str(requested_event.id)
+        contractor_from    = "admin@athomehero.net"
+        contractor_to      = requested_event.firstname.user.email
+        send_mail(contractor_subject, contractor_message, contractor_from, contractor_to, fail_silently = False)
+
+        customer_subject = "At home Services Job Request Submission For Job Number" + str(requested_event.id)
+        customer_message = "Thanks for requesting this job"
+        customer_from = requested_event.firstname.user.email
+        customer_to = requested_event.customer.email
+        send_mail(customer_subject, customer_message, customer_from, customer_to, fail_silently = False)   
+
         return HttpResponse("Thanks! We'll be in contact shortly")
     elif data is not None and requested_event.errors.as_data() is not None:
         errors = {f: e.get_json_data() for f, e in requested_event.errors.items()}

@@ -5,7 +5,7 @@
 <meta name="description" content="{% for i in testimonials %} {{i.customer_testimonial }} {% endfor %}  ">
 {% endblock %}
 
-{% block title %} {% for i in con %} {{ i.firstname| title }} {{i.lastname| title}} {% endfor %}{% endblock %}
+{% block title %}{% for i in con %}{{i.firstname|title}} {{i.lastname|title}} Schedule{% endfor %}{% endblock %}
 {% load staticfiles %}
 {% block nav %}
 <div class="header">

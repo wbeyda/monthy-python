@@ -18,6 +18,10 @@ SECRET_KEY = '5(_7bbfo6qv-e76ce#n_-sa2u=*j1nye0))+3ryi$8wm&zxc=r'
 
 DEBUG = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+
 TEMPLATE_DEBUG = True
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR,'templates'), 'zipcode/templates/zipcode']
