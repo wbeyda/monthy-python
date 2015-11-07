@@ -15,6 +15,21 @@ from localflavor.us.models import PhoneNumberField
 from localflavor.us.models import USZipCodeField 
 from localflavor.us.models import USStateField 
 
+class Customer(models.Model):
+    first_name         = models.CharField(max_length=20)
+    last_name          = models.CharField(max_length=20)
+    email              = models.CharField(max_length=254)
+    phone_number       = PhoneNumberField()
+    address_line_1     = models.CharField(max_length=200)
+    address_line_2     = models.CharField(max_length=200, blank=True)
+    city               = models.CharField(max_length=200)
+    state              = USStateField() 
+    zipcode            = USZipCodeField() 
+    subscribed         = models.BooleanField(default=True, help_text="Click to Subscribe to Our Monthly Newsletter")
+    special_notes      = models.TextField(default='', blank=True)
+
+    def __unicode__(self):
+        return self.phone_number
 
 
 class Contractor(models.Model):
@@ -37,31 +52,6 @@ class Contractor(models.Model):
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True 
 
-class Customer(models.Model):
-    first_name         = models.CharField(max_length=20)
-    last_name          = models.CharField(max_length=20)
-    email              = models.CharField(max_length=254)
-    phone_number       = PhoneNumberField()
-    address_line_1     = models.CharField(max_length=200)
-    address_line_2     = models.CharField(max_length=200, blank=True)
-    city               = models.CharField(max_length=200)
-    state              = USStateField() 
-    zipcode            = USZipCodeField() 
-    subscribed         = models.BooleanField(default=True, help_text="Click to Subscribe to Our Monthly Newsletter")
-    special_notes      = models.TextField(default='', blank=True)
-
-    def __unicode__(self):
-        print self.phone_number
-        return unicode(self.phone_number)
-
-class CareerResume(models.Model):
-    name    = models.CharField(max_length=20)
-    address = models.CharField(max_length=20)
-    email   = models.EmailField(max_length=254)
-    phone   = models.IntegerField(max_length=10)
-    resume  = models.FileField(upload_to='files/%Y/%m/%d')
-
-
 class ContractorSchedule(models.Model):
     firstname    = models.ForeignKey(Contractor)
     customer     = models.OneToOneField(Customer)
@@ -81,7 +71,6 @@ class ContractorSchedule(models.Model):
     pending      = models.BooleanField(_('pending'), default=False)
     requested    = models.BooleanField(_('requested'), default=True)
     cancelled    = models.BooleanField(_('cancelled'), default=False)
-
 
     def incorrect_status(self):
         if self.requested == self.pending:
@@ -181,7 +170,6 @@ class ContractorSchedule(models.Model):
                                            params = {'value': i.id},
                                           )
 
-
     def two_hour_blocks(self):
         if self.start_date.day == self.end_date.day and self.start_date < self.end_date:
             block = self.end_date - self.start_date
@@ -259,8 +247,6 @@ class ContractorSchedule(models.Model):
         except ValidationError as e:
             return e
 
-HOURS = ['Midnight','12:15AM','12:30AM,12:45AM']
-
 class Availability(models.Model):
     contractor              = models.ForeignKey(Contractor)
     evenings                = models.BooleanField(default=False)
@@ -274,7 +260,6 @@ class Availability(models.Model):
         contractor_name = self.contractor.firstname +' ' + self.contractor.lastname
         return contractor_name
 
-		
 class Location(models.Model):
     name           = models.CharField(_('Name'), max_length=255)
     address_line_1 = models.CharField(_('Address Line 1'), max_length=255, blank=True)
@@ -433,3 +418,11 @@ class MonthlySpecial(models.Model):
 
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True 
+
+
+class CareerResume(models.Model):
+    name    = models.CharField(max_length=20)
+    address = models.CharField(max_length=20)
+    email   = models.EmailField(max_length=254)
+    phone   = models.IntegerField(max_length=10)
+    resume  = models.FileField(upload_to='files/%Y/%m/%d')

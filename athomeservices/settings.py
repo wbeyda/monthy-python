@@ -21,7 +21,12 @@ DEBUG = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
-
+from model_mommy.generators import gen_string
+MOMMY_CUSTOM_FIELDS_GEN = {
+    'localflavor.us.models.PhoneNumberField': gen_string,
+    'localflavor.us.models.USZipCodeField': gen_string,
+    'localflavor.us.models.USStateField': gen_string,
+}
 TEMPLATE_DEBUG = True
 
 TEMPLATE_DIRS = [os.path.join(BASE_DIR,'templates'), 'zipcode/templates/zipcode']

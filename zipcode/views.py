@@ -11,6 +11,7 @@ from django.views.generic.detail import DetailView
 from django.core import serializers
 from django.core.context_processors import csrf
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 
 def day_or_night():
@@ -44,7 +45,7 @@ def get_zip(request):
     if request.method == 'POST':
         form = ZipForm(request.POST)
         if form.is_valid():
-            c = Contractor.objects.filter(areacode=request.POST['zipsearch'])                             
+            c = Contractor.objects.filter(areacode=request.POST['zipsearch'])
             contractor = ""
             for i in c:
                 contractor += '/'+ i.firstname +'/'+  str(i.id) +'/'+ i.lastname
@@ -69,7 +70,7 @@ def get_contact(request):
                     message=message,
                     from_email='wbeyda@gmail.com',
                     recipient_list=['wbeyda@gmail.com'],
-            )                               
+            )
             return HttpResponseRedirect('/thanks/')
     else:
             contactform = ContactForm(auto_id="contact_%s")
@@ -90,46 +91,43 @@ def post_testimonial(request, id):
             testimonial_form = TestimonialForm()
             return HttpResponse('error')
 
-
 def request_event(request, id, month=None, day=None, year=None, hour=None):
-    import pdb; pdb.set_trace()
-    data = request.POST if request.POST else None
     if request.method == 'POST':
         try:
-            cust = Customer.objects.get(phone_number = data['customer'])
+            cust = Customer.objects.get(phone_number = request.POST['customer'])
         except Customer.DoesNotExist as e:
             customer_error = {'error': str(e)}
             return JsonResponse(data=customer_error)
         data = request.POST.copy()
         data['customer'] = cust.pk
         requested_event = ContractorScheduleForm(data)
-    else:
-        start_date = datetime.datetime(int(year),int(month),int(day),int(hour)) 
+    elif request.method == 'GET':
+        start_date = datetime.datetime(int(request.GET['year']),int(request.GET['month']),int(request.GET['day']),int(request.GET['hour'])) 
         requested_event = ContractorScheduleForm(initial = {'start_date': start_date})
-    if requested_event.is_valid():
+        return render(request, 'request_event.html', {'requested_event':requested_event})
+    if requested_event.errors:
+        errors = {f: e.get_json_data() for f, e in requested_event.errors.items()}
+        errors['success'] = False
+        return JsonResponse(data=errors)
+    elif requested_event.is_valid():
         requested_event.save(commit=False)
         requested_event.firstname_id = id
         requested_event.save()
-
+        job = requested_event.save()
         contractor_subject = "You have a new job request!"
-        contractor_message = "you have a new job request for job number" + str(requested_event.id)
+        contractor_message = "you have a new job request for job number " + str(job.pk)
         contractor_from    = "admin@athomehero.net"
-        contractor_to      = requested_event.firstname.user.email
-        send_mail(contractor_subject, contractor_message, contractor_from, contractor_to, fail_silently = False)
+        contractor_email      = job.firstname.user.email
+        send_mail(contractor_subject, contractor_message, contractor_from,
+                 [contractor_email], fail_silently = False, html_message= render_to_string('zipcode/thanks.html'))
 
-        customer_subject = "At home Services Job Request Submission For Job Number" + str(requested_event.id)
+        customer_subject = "At home Services Job Request Submission For Job Number" + str(job.id)
         customer_message = "Thanks for requesting this job"
-        customer_from = requested_event.firstname.user.email
-        customer_to = requested_event.customer.email
-        send_mail(customer_subject, customer_message, customer_from, customer_to, fail_silently = False)   
+        customer_to = job.customer.email
+        send_mail(customer_subject, customer_message, contractor_email,
+                 [customer_to], fail_silently = False, html_message=render_to_string('zipcode/thanks.html'))
 
         return HttpResponse("Thanks! We'll be in contact shortly")
-    elif data is not None and requested_event.errors.as_data() is not None:
-        errors = {f: e.get_json_data() for f, e in requested_event.errors.items()}
-        errors['success'] = False
-        return JsonResponse(data=errors)    
-    return render(request, 'request_event.html', {'requested_event':requested_event})
-
 
 def validate_file_extension(value):
     import os
@@ -156,48 +154,46 @@ def get_resume(request):
         return render(request, 'careers.html', {'careerform':careerform})
     else:
         careerform = CareerForm()
-    time_image = day_or_night 
+    time_image = day_or_night
     return render(request, 'careers.html', {'careerform':careerform, 'time_image': time_image})
 
 
 def show_gallery(request):
     gallery = Gallery.objects.filter(testimonial__approved_status = True, testimonial__best_of = True)
-    time_image = day_or_night() 
+    time_image = day_or_night()
     return render(request, 'gallery.html', {'gallery':gallery,'time_image': time_image})
-    
+
 
 def calendar_manager_cells(request,  currentyear, currentmonth, uid):
     fdom = datetime.datetime(int(currentyear), int(currentmonth), 1,0)
-
-    #import pdb; pdb.set_trace()
 
     if int(currentmonth) == 12:
         ldom = datetime.datetime(int(currentyear)+1,1,1,0)
     else:
         ldom = datetime.datetime(int(currentyear),int(currentmonth)+1,1,0)
     import calendar
-    month_range = calendar.monthrange(int(currentyear),int(currentmonth))[1] 
+    month_range = calendar.monthrange(int(currentyear),int(currentmonth))[1]
 
     avail = Availability.objects.get(contractor_id=int(uid))
     length_of_hours = len(range(avail.prefered_starting_hours.hour, avail.prefered_ending_hours.hour+1))
     full_days = []
     for i in range(1,month_range+1):
-        full_day = calendar_manager_blocks(request,i, uid, currentyear, currentmonth)        
+        full_day = calendar_manager_blocks(request,i, uid, currentyear, currentmonth)
         if type(full_day) == HttpResponse:
             full_day = json.loads(full_day.content)
         if len(full_day) == length_of_hours:
-            full_days.append(i) 
+            full_days.append(i)
     if request.is_ajax():
         full_days_json = json.dumps(full_days)
         return HttpResponse(full_days_json)
     else:
-        return full_days 
+        return full_days
 
     """
     cal_query = ContractorSchedule.objects.filter(firstname_id =int(uid), start_date__gte = fdom, end_date__lt = ldom)
     av = Availability.objects.get(contractor_id=int(uid))
     sh = av.prefered_starting_hours
-    eh = av.prefered_ending_hours  
+    eh = av.prefered_ending_hours
     ah = datetime.datetime.combine(date.today(), eh) - datetime.datetime.combine(date.today(), sh)
     avail_hours = ah.total_seconds() / 3600 #8.0 or 8.5
     alldays = cal_query.filter(all_day = True)
@@ -208,27 +204,27 @@ def calendar_manager_cells(request,  currentyear, currentmonth, uid):
     full_days_in_this_month = sum(full_days, [])
 
     #this is where comments started
-     
+
         if chunk_of_days > 0:
             psh = datetime.datetime.combine(i.start_date, sh)
         if psh == i.start_date:
             full_days.append(i.start_date.day)
 
-    for i in chunk_of_days[1:]: #add the rest of the days from a chunk to full_days 
+    for i in chunk_of_days[1:]: #add the rest of the days from a chunk to full_days
         full_days.append(i)
 
     for i in cal_query:
-        full_days.append(i.start_date.day) 
+        full_days.append(i.start_date.day)
 
     a = [elem for elem in full_days if elem >= avail_hours /2]
     full_days_in_this_month = []
     [full_days_in_this_month.append(item) for item in a if item not in full_days_in_this_month]
-    
+
     if request.is_ajax():
         full_days_json = json.dumps(full_days_in_this_month)
         return HttpResponse(full_days_json)
     else:
-        return full_days_in_this_month 
+        return full_days_in_this_month
     """
 
 
@@ -244,7 +240,7 @@ def next_month_request(request, id, currentyear, currentmonth):
                                                                         ).exclude(
                                                                         start_date__gt=datetime.datetime(nextyear,1,31,23,59,59))
             queryset = []
-            for i in qs: 
+            for i in qs:
                 h,m =  i.start_date.hour, i.start_date.minute
                 if i.start_date.month != i.end_date.month:
                     i.start_date = last_day_of_month(i.start_date) + datetime.timedelta(seconds=1)+ datetime.timedelta(hours=h) + datetime.timedelta(minutes=m)
@@ -258,10 +254,10 @@ def next_month_request(request, id, currentyear, currentmonth):
                 htmlcalendar = LocaleHTMLCalendar().formatmonth(nextyear,1)
                 return HttpResponse(htmlcalendar)
         elif int(request.GET.get('currentmonth')) != 12 :
-            cid = int(request.GET.get("id"))     
+            cid = int(request.GET.get("id"))
             nextmonth = int(request.GET.get('currentmonth')) +1
             cy = int(request.GET.get('currentyear'))
-            d = datetime.datetime(cy,nextmonth,1) 
+            d = datetime.datetime(cy,nextmonth,1)
             qs = ContractorSchedule.objects.filter(firstname_id=cid).exclude(
                           start_date__lt=first_day_of_month(datetime.datetime(cy,int(currentmonth),1))).exclude(
                           start_date__gt=last_day_of_month(d))
@@ -272,13 +268,13 @@ def next_month_request(request, id, currentyear, currentmonth):
                 if i.start_date.month < i.end_date.month and i.end_date.month == nextmonth:
                     i.start_date = last_day_of_month(i.start_date) + datetime.timedelta(seconds=1)+ datetime.timedelta(hours=h) + datetime.timedelta(minutes=m)
                     queryset.append(i)
-                elif i.start_date.month == nextmonth: 
+                elif i.start_date.month == nextmonth:
                     queryset.append(i)
             if not queryset:
-                htmlcalendar = LocaleHTMLCalendar().formatmonth(cy,nextmonth) 
+                htmlcalendar = LocaleHTMLCalendar().formatmonth(cy,nextmonth)
             else:
                 htmlcalendar = next_last_month_contractor_calendar(queryset)
-        return HttpResponse(htmlcalendar) 
+        return HttpResponse(htmlcalendar)
 
 def last_month_request(request, id, currentyear, currentmonth):
     if request.is_ajax():
@@ -286,7 +282,7 @@ def last_month_request(request, id, currentyear, currentmonth):
             lastyear = int(currentyear) -1
             qs = ContractorSchedule.objects.filter(firstname_id=int(request.GET.get("id"))).exclude(
                         start_date__gt=datetime.datetime(lastyear,12,31,23,59,59)).exclude(
-                        end_date__lt=datetime.datetime(lastyear,11,1)  
+                        end_date__lt=datetime.datetime(lastyear,11,1)
                       )
             queryset = []
             for i in qs:
@@ -310,16 +306,16 @@ def last_month_request(request, id, currentyear, currentmonth):
                            start_date__gt = last_day_of_month(d)).exclude(
                            end_date__lt = d)
             queryset = []
-            
+
             for i in qs:
                 h,m = i.start_date.hour, i.start_date.minute
-                if i.end_date.month == lastmonth and i.start_date.month < lastmonth: 
+                if i.end_date.month == lastmonth and i.start_date.month < lastmonth:
                     i.start_date = last_day_of_month(i.start_date) + datetime.timedelta(seconds=1)+ datetime.timedelta(hours=h) + datetime.timedelta(minutes=m)
                     queryset.append(i)
                 elif i.start_date.month == lastmonth:
                     queryset.append(i)
             if not queryset:
-                htmlcalendar = LocaleHTMLCalendar().formatmonth(cy,lastmonth) 
+                htmlcalendar = LocaleHTMLCalendar().formatmonth(cy,lastmonth)
                 return HttpResponse(htmlcalendar)
             else:
                 htmlcalendar = next_last_month_contractor_calendar(queryset)
@@ -332,11 +328,11 @@ def calendar_manager_blocks(request, currentdate, uid, currentyear, currentmonth
     today = datetime.datetime(int(currentyear),int( currentmonth), int(currentdate), 0)
     import calendar
     last_day_of_month  = calendar.monthrange(int(currentyear), int(currentmonth))[1]
-    if int(currentdate) == last_day_of_month and int(currentmonth) == 12: 
+    if int(currentdate) == last_day_of_month and int(currentmonth) == 12:
         tomorrow = datetime.datetime(int(currentyear)+1, 1,1,0)
     elif int(currentdate) == last_day_of_month and int(currentmonth) <= 11:
         tomorrow = datetime.datetime(int(currentyear), int(currentmonth)+1, 1, 0)
-    else:  
+    else:
         tomorrow = datetime.datetime(int(currentyear), int(currentmonth), int(currentdate)+1, 0)
     uid = int(uid)
     all_the_days = []
@@ -383,8 +379,8 @@ def calendar_manager_blocks(request, currentdate, uid, currentyear, currentmonth
                 all_the_hours.remove(i)
             if i > avail.prefered_ending_hours.hour:
                 all_the_hours.remove(i)
-        
-        calendardays = ContractorSchedule.objects.filter(firstname_id=uid, 
+
+        calendardays = ContractorSchedule.objects.filter(firstname_id=uid,
                                                          start_date__gte = today,
                                                          end_date__lt = tomorrow
                                                         ).order_by('start_date')
@@ -395,8 +391,8 @@ def calendar_manager_blocks(request, currentdate, uid, currentyear, currentmonth
                                                            start_date__lte = tomorrow
                                                            ).order_by('start_date')
 
-        middle_of_a_chunk_of_days = ContractorSchedule.objects.filter(firstname_id = uid, 
-                                                                      start_date__lte = today, 
+        middle_of_a_chunk_of_days = ContractorSchedule.objects.filter(firstname_id = uid,
+                                                                      start_date__lte = today,
                                                                       end_date__gte = tomorrow,
                                                                       all_day = True,
                                                                      ).order_by('start_date')
@@ -405,38 +401,38 @@ def calendar_manager_blocks(request, currentdate, uid, currentyear, currentmonth
                                                                    end_date__gte = today,
                                                                    end_date__lte = tomorrow,
                                                                    all_day = True,
-                                                                  ).order_by('start_date') 
+                                                                  ).order_by('start_date')
 
 
         if first_day_of_chunks_of_days.exists():
            all_the_days.append(first_day_of_chunks_of_days)
         else :
             first_day = ""
-            all_the_days.append(first_day) 
+            all_the_days.append(first_day)
 
         if middle_of_a_chunk_of_days.exists():
             all_the_days.append(middle_of_a_chunk_of_days)
         else:
             middle = ""
             all_the_days.append(middle)
-        
+
         if end_of_a_chunk_of_days.exists():
-            all_the_days.append( end_of_a_chunk_of_days) 
+            all_the_days.append( end_of_a_chunk_of_days)
         else:
             end = ""
             all_the_days.append( end)
-        
+
         if calendardays.exists():
             all_the_days.append(calendardays)
         else:
             caldays = ""
             all_the_days.append( caldays )
-        
+
         filtered_days = [elem for elem in all_the_days if elem != ""]
         all_days = list(itertools.chain(filtered_days[0]))
-        data = serializers.serialize('json', all_days, use_natural_keys=True ) 
+        data = serializers.serialize('json', all_days, use_natural_keys=True )
         return HttpResponse(data, content_type="application/json")
-        """ 
+        """
 
 def contractor_detail_view(request, f,id,l):
     con = Contractor.objects.filter(id=id).prefetch_related()
@@ -450,10 +446,10 @@ def contractor_detail_view(request, f,id,l):
     time_image = day_or_night()
     monthly_specials = MonthlySpecial.objects.filter(special_active=True)
     cal_man_cells = calendar_manager_cells(request, datetime.datetime.today().year, datetime.datetime.today().month, id)
-    
-    return render(request, 'contractor_detail.html', {'con': con, 
-                                                      'htmlcalendar': htmlcalendar, 
-                                                      'testimonials': testimonials, 
+
+    return render(request, 'contractor_detail.html', {'con': con,
+                                                      'htmlcalendar': htmlcalendar,
+                                                      'testimonials': testimonials,
                                                       'testimonial_form': testimonial_form,
                                                       'availability': avail,
                                                       'time_image': time_image,
@@ -471,5 +467,3 @@ def customer_create(request):
     else:
         customer = CustomerForm()
     return render(request, 'customer_create.html', {'customer': customer})
-
-

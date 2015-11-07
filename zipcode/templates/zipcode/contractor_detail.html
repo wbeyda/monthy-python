@@ -696,7 +696,7 @@ $(function() {
       var cid = {%  for i in con %} "{{i.id | safe}}" {% endfor %};
       var url = "/schedule/" + cid + "/" + $.CurrentDate.month + "/" + $.CurrentDate.day + "/" + $.CurrentDate.year + "/" + hour;
  
-      $.get( url, function(data) {
+      $.get( url, {"id": cid, "month": $.CurrentDate.month, "day": $.CurrentDate.day, "year": $.CurrentDate.year, "hour": hour}, function(data) {
 
         if ($('.event-popup').hasClass('selected')) {
             $('.event-popup').fadeToggle(0).removeClass('selected');
