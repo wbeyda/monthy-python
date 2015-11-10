@@ -1,3 +1,4 @@
+var = nothing = "dicks";
 if (window.jQuery) {
     $(document).ready(function() {
 
