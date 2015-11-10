@@ -1,12 +1,12 @@
 from django.shortcuts import render
 import json, itertools, datetime
 from django.http import HttpResponseRedirect
-from django.http import HttpRequest, HttpResponse 
+from django.http import HttpRequest, HttpResponse
 from django.http import JsonResponse
-from zipcode.models import * 
+from zipcode.models import *
 from zipcode.forms import *
 from django.core.mail import send_mail
-from zipcode.calendars import * 
+from zipcode.calendars import *
 from django.views.generic.detail import DetailView
 from django.core import serializers
 from django.core.context_processors import csrf
@@ -126,8 +126,8 @@ def request_event(request, id, month=None, day=None, year=None, hour=None):
         customer_to = job.customer.email
         send_mail(customer_subject, customer_message, contractor_email,
                  [customer_to], fail_silently = False, html_message=render_to_string('zipcode/thanks.html'))
-
-        return HttpResponse("Thanks! We'll be in contact shortly")
+        thanks = {"success": True, "customer_name": job.customer.first_name, "customer_email": job.customer.email}
+        return JsonResponse(data=thanks)
 
 def validate_file_extension(value):
     import os

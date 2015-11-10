@@ -37,7 +37,6 @@
         <h3 id="schedule">MY SKILLS</h3>
         <h4>{{ i.trade }}</h4>
         <h4>{{ i.secondaryTrades }}</h4>
-        
     </div>
     <div id="sidebar-ad" class="hidden-xs hidden-sm" >
         <h3>HAVE AN EMERGENCY?</h3>
@@ -62,13 +61,11 @@
             <hr>
           </div>
         </div>
-      
         <div class="row">
           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <h2 class="monthly">{{ i.firstname | capfirst }}'s Monthly Special</h2>
           </div>
         </div>
-
         <div class="row gallery-contractor-detail ">
               <ul class="monthly-specials-list">
               {% for i in monthly_specials %}
@@ -111,8 +108,6 @@
               </div>
               <div class="col-lg-2 col-md-2 hidden-sm hidden-xs"></div>
             </div>
-                   
-
            <div class="row event-popup">
               <div class="col-lg-4 col-md-4 hidden-sm hidden-xs"></div>
               <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
@@ -130,7 +125,6 @@
                 <div class="col-time-spacer"></div><div class="availablity-block"></div>
  -->             </div>
               <div class="col-lg-4 col-md-4 hidden-sm hidden-xs">
-
               </div>
             </div>
             <div class="schedule-form"></div>
@@ -790,8 +784,34 @@ function schedule_post() {
                                 $(this).val('');
                               } 
                           });
+                        
+                          $('#schedule-submit').attr({"type": "button",
+                                                      "class": "schedule-create-success-btn btn btn-lg btn-success",
+                                                      "data-placement":"top", 
+                                                      "data-toggle": "popover",
+                                                      "data-trigger": "focus",
+                                                      "title": "Success! You Have Joined Us.",
+                                                      "role": "button", 
+                                                      "data-content": "<div id='schedule-success-popover'><h2>Thanks "
+                                                           + json.customer_name + "!</h2>" + 
+                                                           "We sent you an email to: <b>"
+                                                           + json.customer_email + "</b></br>" +  
+                                                           " Please check your email  and make sure everything \
+                                                           looks right. We'll send you another email as \
+                                                           soon as the contractor approves it</div>",
+                                                      "data-html": true
+                                                      
+                          });
+                          $('#schedule-submit').popover('show');
+                          $(function() {
+                              setTimeout(function() {
+                                  $('#schedule-submit').popover('hide');
+                                  $('#schedule-submit').hide(500);
+                                  $('.schedule-form').hide(500);
+                              }, 5000);
+                              
+                          });
                       }
-                      console.log(json); // log the returned json to the console
                 },
            }).fail(function(xhr, errmsg, err){
                  $('#schedule-post-text').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+' '+err+
@@ -805,9 +825,7 @@ function customer_post(){
     var mydata = $('#customer-create').serializeArray();
     console.log(mydata);
     $.post("/customer/", mydata, function(){
-        console.log('posted'); 
     }).done(function(){
-        console.log('done');
         $('#customer-create-submit').attr({"type": "button", "class": "customer-back-to-previous-btn btn btn-lg btn-success",
                                            "data-placement":"top", "data-toggle": "popover",
                                            "title": "Success! You Have Joined Us.","role": "button", 

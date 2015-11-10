@@ -2,14 +2,11 @@
 <div class="row">
 	<div class ="col-lg-2"></div>
 	<div class ="col-lg-8">
-
-{% if requested_event.errors %}
-    <p style="color: red;">
-        Please correct the error{{ requested_event.errors|pluralize }} below.
-    </p>
-{% endif %}
-
-
+    {% if requested_event.errors %}
+        <p style="color: red;">
+            Please correct the error{{ requested_event.errors|pluralize }} below.
+        </p>
+    {% endif %}
 		<form id="schedule-form" action="#" class="form-horizontal" enctype="multipart/form-data" method="post">
 			{% csrf_token %}
       {{ requested_event }}
@@ -21,7 +18,6 @@
     <div id="schedule-post-text"></div> 
   </div>
 </div>
-
 <script src="{% static 'zipcode/js/jquery-timepicker-master/jquery.timepicker.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'zipcode/js/jquery-timepicker-master/jquery.timepicker.css' %}"/>
 
