@@ -1,4 +1,3 @@
-{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,22 +8,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="author" content="">
 {% block extra-meta %}{% endblock %}
-<!--
-<link rel="icon" href="{% static 'zipcode/images/favicon.ico' %}">
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans" >
-<link rel="stylesheet" type="text/css" href="{% static 'zipcode/css/bootstrap.min.css' %}" >
-<link rel="stylesheet" type="text/css" href="{% static 'zipcode/js/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'zipcode/css/main.css' %}" >
-<link rel="stylesheet" type="text/css" href="{% static 'zipcode/css/normalize.min.css' %}" >
-<link rel="stylesheet" type="text/css" href="{% static 'zipcode/css/font-awesome.min.css' %}" >
-
-<link rel="stylesheet" type="text/css" href="{% static 'zipcode/css/style.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'zipcode/css/calendar.css' %}" />
-!-->
+{% load staticfiles %}
 <link rel="stylesheet" type="text/css" href="{% static 'zipcode/css/site.min.css' %}" />
-
 {% block extra-css %}{% endblock %}
-
 <!--<script src="{% static 'zipcode/js/jquery-2.1.1.js' %}"></script>-->
 <script>
 /*  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -35,9 +35,11 @@ module.exports = function(grunt) {
                       "../js/jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.js",
                       "../js/bootstrap.js",
                       "../js/animatescroll.js", 
+                      "../js/jquery-timepicker-master/jquery.timepicker.js",
                       "../js/main.js",
                       "../js/plugins.js",
                       "../js/vendor/modernizr-2.8.3.min.js",
+                      "../js/unslider.js",
                      ],
                 dest:'../js/ugly.min.js',
 

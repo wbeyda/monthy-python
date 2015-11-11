@@ -1,1 +1,1 @@
-var dicks = 700;
+var dicks = 900;

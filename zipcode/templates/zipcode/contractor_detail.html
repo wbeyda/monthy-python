@@ -1,16 +1,14 @@
 {% extends "base.html" %}
+{% block title %}{% for i in con %}{{i.firstname|title}} {{i.lastname|title}} Schedule{% endfor %}{% endblock %}
 {% block extra-meta %}
 {% load zipcode_extras %}
 <meta name="keywords" content="at home services,{% for i in testimonials %} {{i.hashtags | remove_hashtags }} {% endfor %}">
 <meta name="description" content="{% for i in testimonials %} {{i.customer_testimonial }} {% endfor %}  ">
 {% endblock %}
-{% block title %}{% for i in con %}{{i.firstname|title}} {{i.lastname|title}} Schedule{% endfor %}{% endblock %}
 {% load staticfiles %}
-
 {% block extra-css%}
 <link rel="stylesheet" type="text/css" href="{% static 'zipcode/js/jquery-timepicker-master/jquery.timepicker.css' %}"/>
 {% endblock %}
-
 {% block nav %}
 <div class="header">
     <div>
@@ -203,8 +201,7 @@
 {% endblock %}
 
 {% block extra-javascript %}
-<script src="{% static 'zipcode/js/unslider.js' %}"></script>
-<script src="{% static 'zipcode/js/jquery-timepicker-master/jquery.timepicker.js' %}"></script>
+<!--<script src="{% static 'zipcode/js/jquery-timepicker-master/jquery.timepicker.js' %}"></script>-->
 <script type="text/javascript">
 $( document ).ready(function() {
  
