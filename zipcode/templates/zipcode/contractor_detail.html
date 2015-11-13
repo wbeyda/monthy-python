@@ -763,7 +763,7 @@ function schedule_post() {
         success : function(json) {
                       if (json.error == "Customer matching query does not exist.") {
                           $('#schedule-post-text').html("<button class='close no-phone-close'>&times;</button>"+ 
-                                                        "<div class='alert-box alert radius'"+
+                                                        "<div class='alert-box oops alert radius'"+
                                                         " data-hide>Oops! We don't know that phone number."+
                                                         " Maybe you mistyped it. Click Okay to join us.<br>"+
                                                         "<button type='button' class='okay-customer btn btn-default btn-warning'>Okay</button>"+ 

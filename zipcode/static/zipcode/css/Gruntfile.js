@@ -35,11 +35,26 @@ module.exports = function(grunt) {
                   'site.css',
                   'bootstrap.min.css',
                   'font-awesome.min.css',
-                  'jquery.mobile-1.4.5.css',
+                  //'jquery.mobile-1.4.5.css',
                   '../js/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css',
                   'normalize.min.css'
                 ],
-        dest: 'site.css',
+            dest: 'site.css',
+        },
+
+        dev: {
+            src: ["style.css",
+                  "calendar.css",
+                  "gallery.css",
+                  'main.css',
+                  'site.css',
+                  'bootstrap.min.css',
+                  'font-awesome.min.css',
+                  //'jquery.mobile-1.4.5.css',
+                  '../js/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css',
+                  'normalize.min.css'
+                ],
+            dest: 'site.min.css',
         }
     }, 
 
@@ -94,12 +109,12 @@ module.exports = function(grunt) {
         },
         concat: {
             files: ["*.css","!site.min.css", "!site.css"],
-            tasks: ["concat"],
+            tasks: ["concat:dev"],
             options: {
                 debounceDelay: 1500,
             },
         },
-
+/*
         cssmin: {
             files: ['site.css'],
             tasks: ['cssmin'],
@@ -107,7 +122,7 @@ module.exports = function(grunt) {
                 debounceDelay: 1600,
             },
         },
-
+*/
         uglify: {
             files: ["../js/*.js"],
             tasks: ["uglify:dev"],

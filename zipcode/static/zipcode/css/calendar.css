@@ -1,9 +1,14 @@
 .no-phone-close {
   position: relative;
-  left: 3em;
+  left: -27em;
+  z-index: 1;
 }
-.fuck {
-  color: red;
+.fuckingassholes {
+  color: #000;
+}
+.oops {
+  position: relative;
+  right: 39em;
 }
 #schedule-success-popover {
   background-color: #57b249;
