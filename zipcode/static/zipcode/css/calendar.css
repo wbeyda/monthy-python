@@ -1,3 +1,10 @@
+.no-phone-close {
+  position: relative;
+  left: 3em;
+}
+.fuck {
+  color: red;
+}
 #schedule-success-popover {
   background-color: #57b249;
   color: white;
@@ -42,10 +49,6 @@ form#customer-create {
   background-color: #ef3b70;
   width: 10em;
   color: white;
-}
-.no-phone-close {
-  position: relative;
-  left: 5em;
 }
 .schedule-btn {
   background: #f9d907;

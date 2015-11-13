@@ -685,8 +685,6 @@ $(function() {
 
 
   $('body').on("click", ".availablity-block", function() { 
-      console.log('schedulin some stuff!!');
-      console.log($.CurrentDate);
       var get = $.grep(this.className.split(' '), function(v,i) { return v.indexOf('schedule-block-time-') ===0;}).join();
       var hour = get.split('-')[3];
       var cid = {%  for i in con %} "{{i.id | safe}}" {% endfor %};
