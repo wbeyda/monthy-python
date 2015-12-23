@@ -5,6 +5,7 @@ import os
 from django.core.files import File
 from faker import Faker
 from django.core.exceptions import ValidationError
+from zipcode import models 
 
 fake = Faker()
 gallery_pics = glob.glob(os.path.expanduser('~/Desktop/gallery/*.*'))
@@ -16,7 +17,10 @@ def begining_of_the_month():
 
 def end_of_the_month():
     d = datetime.datetime.now()
-    d = d.replace(month = d.month +1 % 12, day=1, hour=0, minute=0, microsecond =0)
+    if d.month == 12:
+        d = d.replace(year = d.year + 1, month=1, day=1, hour=0, minute=0, microsecond=0)
+    else:
+        d = d.replace(month = d.month +1 % 12, day=1, hour=0, minute=0, microsecond =0)
     return d
 
 while True:
@@ -30,7 +34,7 @@ while True:
                           state = fake.state_abbr(),
                           zipcode = fake.postcode(),
                           subscribed = True,
-                          special_notes = fake.paragraph() , 
+                          special_notes = fake.paragraph() ,
                         )
     cust.save()
 
