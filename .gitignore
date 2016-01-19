@@ -9,3 +9,4 @@ zipcode/migrations/*
 robots.txt
 static/*
 athomeservices/*pyc
+db\ \(copy\).sqlite3
