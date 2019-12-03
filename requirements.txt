@@ -8,7 +8,7 @@ django-extensions==1.5.5
 django-image-cropping==1.0.2
 django-localflavor==1.1
 easy-thumbnails==2.2
-ecdsa==0.13
+ecdsa==0.13.3
 Fabric==1.10.2
 factory-boy==2.5.2
 fake-factory==0.5.3
