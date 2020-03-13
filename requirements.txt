@@ -24,7 +24,7 @@ Pillow==2.7.0
 pycrypto==2.6.1
 Pygments==2.0.2
 pytb==0.0.10
-python-gnupg==0.3.7
+python-gnupg==0.4.4
 pytz==2015.4
 PyYAML==3.11
 six==1.9.0
