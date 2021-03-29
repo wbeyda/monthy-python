@@ -22,7 +22,7 @@ pbr==1.8.0
 pdb==0.1
 Pillow==2.7.0
 pycrypto==2.6.1
-Pygments==2.0.2
+Pygments==2.7.4
 pytb==0.0.10
 python-gnupg==0.3.7
 pytz==2015.4
